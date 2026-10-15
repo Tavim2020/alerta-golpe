@@ -1,5 +1,7 @@
-import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import type { Video } from '@/lib/types';
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { removeMimeType } from "@/utils/format/strings";
+import { formatDateToBr } from "@/utils/format/dates";
+import { Video } from "@/types/global.type";
 
 type Database = {
   public: {
@@ -32,33 +34,69 @@ type Database = {
   };
 };
 
-export const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+export const SITE = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export function db(): SupabaseClient<Database> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!url || !serviceRoleKey) {
-    throw new Error('NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devem estar configuradas.');
+    throw new Error(
+      "NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devem estar configuradas.",
+    );
   }
 
   return createClient<Database>(url, serviceRoleKey);
 }
 
-export async function getVideos(limit?: number): Promise<Video[]> {
-  try {
-    let query = db().from('videos').select('*').order('created_at', { ascending: false });
-    if (limit) query = query.limit(limit);
-    return (await query).data ?? [];
-  } catch {
-    return [];
-  }
+interface IGetVideos {
+  offset?: number;
+  limit?: number;
+  fileId?: string;
 }
 
-export async function getVideo(slug: string): Promise<Video | null> {
+export async function getVideos(params?: IGetVideos): Promise<Video[]> {
+  const { offset, limit, fileId } = {
+    offset: params?.offset || 0,
+    limit: params?.limit || 50,
+    fileId: params?.fileId,
+  };
+
   try {
-    return (await db().from('videos').select('*').eq('slug', slug).maybeSingle()).data;
-  } catch {
-    return null;
+    const bucket = db().storage.from("videos");
+
+    const { data: files, error } = await bucket.list(undefined, {
+      search: fileId,
+      offset,
+      limit: limit,
+      sortBy: {
+        column: "created_at",
+        order: "desc",
+      },
+    });
+
+    if (error) throw error;
+
+    const videos = (files || []).reduce((acc, file) => {
+      if (!file.id) return acc;
+
+      const { data } = bucket.getPublicUrl(file.name);
+
+      return (acc = [
+        ...acc,
+        {
+          id: file.id,
+          slug: removeMimeType(file.name),
+          title: removeMimeType(file.name),
+          video_url: data.publicUrl,
+          created_at: formatDateToBr(file.created_at),
+        },
+      ]);
+    }, [] as Video[]);
+
+    return videos;
+  } catch (error) {
+    console.error("Erro ao buscar vídeos do Storage:", error);
+    return [];
   }
 }
