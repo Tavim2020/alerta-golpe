@@ -2,6 +2,7 @@ import Link from "next/link";
 import AdSlot from "@/components/AdSlot";
 import VideoCard from "@/components/VideoCard";
 import { getVideos } from "@/lib/server";
+import { TesteAds } from "./teste-ads/teste-ads";
 
 export const revalidate = 60;
 export const metadata = { alternates: { canonical: "/" } };
@@ -27,14 +28,7 @@ export default async function Home() {
           </Link>
         </div>
         <div>
-          <ins
-            className="adsbygoogle"
-            style={{ display: "block" }}
-            data-ad-client="ca-pub-5256290346878469"
-            data-ad-slot="2944582241"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          ></ins>
+          <TesteAds />
         </div>
         <div className="hazard" />
       </section>

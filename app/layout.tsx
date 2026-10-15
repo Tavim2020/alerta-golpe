@@ -47,11 +47,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
               </Link>
             </nav>
           </div>
-          <script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5256290346878469"
-            crossOrigin="anonymous"
-          ></script>
         </header>
         <main>{children}</main>
         <footer className="mt-16 bg-ink px-4 py-8 text-center text-sm text-white/70">
