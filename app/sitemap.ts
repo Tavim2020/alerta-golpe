@@ -7,7 +7,9 @@ export const revalidate = 3600;
 const { NEXT_PUBLIC_SITE_URL } = SERVER_ENVIRONMENT;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const videos = await getVideos();
+  const { data: videos, success } = await getVideos({ limit: 50 });
+
+  if (!success) throw new Error("Tivemos problemas os vídeos");
 
   return [
     { url: NEXT_PUBLIC_SITE_URL, changeFrequency: "daily", priority: 1 },
