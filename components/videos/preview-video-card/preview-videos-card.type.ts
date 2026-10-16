@@ -1,5 +1,5 @@
 import { Video } from "@/types/global.type";
 
-export interface IShowVideosProps {
+export interface IPreviewVideosProps {
   videos: Video[];
 }

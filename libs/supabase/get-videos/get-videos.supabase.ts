@@ -1,7 +1,10 @@
 import { Video } from "@/types/global.type";
 import { db } from "@/libs/supabase/server";
-import { removeMimeType } from "@/utils/format/strings";
 import { formatDateToBr } from "@/utils/format/dates";
+import { generateBucketUrl } from "@/utils/generate/links";
+
+const videoBucket = db().storage.from("videos");
+const thumbnailBucket = db().storage.from("thumbnails");
 
 interface IGetVideos {
   offset?: number;
@@ -10,47 +13,52 @@ interface IGetVideos {
 }
 
 export async function getVideos(params?: IGetVideos): Promise<Video[]> {
-  const { offset, limit, fileId } = {
-    offset: params?.offset || 0,
-    limit: params?.limit || 50,
-    fileId: params?.slug,
-  };
+  const { offset = 0, limit = 50, slug } = params ?? {};
+
+  const maxVideos = offset + limit - 1;
 
   try {
-    const bucket = db().storage.from("videos");
+    let query = db()
+      .from("videos")
+      .select(
+        `
+        *,
+        sub_category:sub_categories!videos_sub_category_id_fkey (
+          id,
+          name,
+          category:categories!sub_categories_category_id_fkey (
+            id,
+            name
+          )
+        )
+      `,
+      )
+      .order("created_at", { ascending: false })
+      .range(offset, maxVideos);
 
-    const { data: files, error } = await bucket.list(undefined, {
-      search: fileId,
-      offset,
-      limit: limit,
-      sortBy: {
-        column: "created_at",
-        order: "desc",
-      },
-    });
+    if (slug) query = query.eq("slug", slug);
+
+    const { data, error } = await query;
 
     if (error) throw error;
 
-    const videos = (files || []).reduce((acc, file) => {
-      if (!file.id) return acc;
+    return (data ?? []).map((video) => {
+      const { data: videoData } = videoBucket.getPublicUrl(video.file_name);
+      const { data: thumbnailData } = thumbnailBucket.getPublicUrl(
+        video.thumbnail,
+      );
 
-      const { data } = bucket.getPublicUrl(file.name);
-
-      return (acc = [
-        ...acc,
-        {
-          id: file.id,
-          slug: removeMimeType(file.name),
-          title: removeMimeType(file.name),
-          video_url: data.publicUrl,
-          created_at: formatDateToBr(file.created_at),
-        },
-      ]);
-    }, [] as Video[]);
-
-    return videos;
+      return {
+        ...video,
+        created_at: formatDateToBr(video.created_at),
+        updated_at: formatDateToBr(video.created_at),
+        video_url: generateBucketUrl(videoData.publicUrl),
+        thumbnail_url: generateBucketUrl(thumbnailData.publicUrl),
+        tips: video.tips === "string" ? JSON.parse(video.tips) : video.tips,
+      };
+    });
   } catch (error) {
-    console.error("Erro ao buscar vídeos do Storage:", error);
+    console.error("Erro ao buscar vídeos:", error);
     return [];
   }
 }
