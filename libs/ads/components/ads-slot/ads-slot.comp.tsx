@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { EmptyAds } from "./components/empty-ads";
 import { CLIENT_ENVIRONMENT } from "@/environments/client.environment";
 import { AdsSlotProps } from "./ads-slot.type";
@@ -10,10 +10,17 @@ const { NEXT_PUBLIC_ADSENSE_CLIENT } = CLIENT_ENVIRONMENT;
 const isProduction = process.env.NODE_ENV === "production";
 
 export const AdsSlot = ({ slotNumber }: AdsSlotProps) => {
+  const initialized = useRef(false);
+
   useEffect(() => {
-    if (!(NEXT_PUBLIC_ADSENSE_CLIENT && slotNumber)) return;
-    window.adsbygoogle = window.adsbygoogle || [];
-    window.adsbygoogle?.push({});
+    if (!slotNumber || initialized.current) return;
+
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      initialized.current = true;
+    } catch (err) {
+      console.error(err);
+    }
   }, [slotNumber]);
 
   if (!slotNumber) return isProduction ? null : <EmptyAds />;

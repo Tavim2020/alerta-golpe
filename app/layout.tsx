@@ -4,7 +4,7 @@ import { Footer } from "@/components/footer";
 import { fontAnton, fontPublicSans } from "@/fonts/global.font";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
 import type { RootLayoutProps } from "@/types/global.type";
-import { AdsScript } from "@/lib/ads/scripts";
+import { AdsScript } from "@/libs/ads/scripts";
 import { APP_INFO } from "@/constants/app.constant";
 
 import "./globals.css";
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(NEXT_PUBLIC_SITE_URL),
   title: {
     default: `${APP_INFO.name} | Veja como os golpistas agem e não caia`,
-    template: `%s | ${APP_INFO.name}`,
+    template: `${APP_INFO.name} | %s`,
   },
   description:
     "Vídeos reais de golpes sofridos por pessoas comuns. Entenda como os criminosos agem e proteja você e sua família.",

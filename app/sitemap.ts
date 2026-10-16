@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getVideos } from "@/lib/server";
+import { getVideos } from "@/libs/supabase/server";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
 
 export const revalidate = 3600;

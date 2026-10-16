@@ -1,8 +1,8 @@
-import { AdsSlot } from "@/lib/ads/components/ads-slot";
+import { AdsSlot } from "@/libs/ads/components/ads-slot";
 import { EmptyVideos } from "@/components/videos/empty-videos";
 import { ShowVideos } from "@/components/videos/show-videos";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
-import { getVideos } from "@/lib/server";
+import { getVideos } from "@/libs/supabase/server";
 
 const { NEXT_PUBLIC_ADSENSE_SLOT } = SERVER_ENVIRONMENT;
 
