@@ -1,0 +1,2 @@
+[functions.super-service]
+verify_jwt = false
