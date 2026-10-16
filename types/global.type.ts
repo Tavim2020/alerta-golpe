@@ -1,13 +1,24 @@
+import { IPreventionTipProps } from "@/app/frauds/[slug]/components/prevention-tip/prevention-tip.type";
+import { Database } from "@/libs/supabase/types/database.type";
 import { ReactNode } from "react";
 
 export type RootLayoutProps = Readonly<{
   children: ReactNode;
 }>;
 
-export type Video = {
-  id: string;
-  slug: string;
-  title: string;
+export type Video = Omit<
+  Database["public"]["Tables"]["videos"]["Row"],
+  "tips"
+> & {
+  sub_category: {
+    id: string;
+    name: string;
+    category: {
+      id: string;
+      name: string;
+    };
+  };
   video_url: string;
-  created_at: string;
+  thumbnail_url: string;
+  tips: Array<Omit<IPreventionTipProps, "index">>;
 };

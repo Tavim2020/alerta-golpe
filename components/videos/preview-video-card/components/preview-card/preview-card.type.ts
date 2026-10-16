@@ -1,5 +1,5 @@
 import { Video } from "@/types/global.type";
 
-export type VideoCardProps = {
+export interface IPreviewCardProps {
   video: Video;
-};
+}

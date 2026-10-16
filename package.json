@@ -7,11 +7,12 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "generate:types": "npx supabase gen types typescript --project-id eqxwuazfjgkewzejxdku > libs/supabase/database.type.ts"
+    "generate:types": "npx supabase gen types typescript --project-id eqxwuazfjgkewzejxdku > libs/supabase/types/database.type.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
     "jose": "^5.9.0",
+    "lucide-react": "^1.58.0",
     "next": "^15.5.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
