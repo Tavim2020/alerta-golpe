@@ -1,4 +1,4 @@
-export interface IShowTipProps {
+export interface ITipCardProps {
   title: string;
   description: string;
 }

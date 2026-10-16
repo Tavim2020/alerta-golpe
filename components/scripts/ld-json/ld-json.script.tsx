@@ -7,6 +7,7 @@ export const LdJsonScript = ({ video }: LdJsonScriptProps) => {
     "@type": "VideoObject",
     name: video.title,
     description: video.title,
+    thumbnailUrl: video.thumbnail_url,
     uploadDate: video.created_at,
     contentUrl: video.video_url,
   };

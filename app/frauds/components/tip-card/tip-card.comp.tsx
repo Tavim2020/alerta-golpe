@@ -1,7 +1,6 @@
-import React from "react";
-import { IShowTipProps } from "./show-tip.type";
+import { ITipCardProps } from "./tip-card.type";
 
-export const ShowTip = ({ title, description }: IShowTipProps) => {
+export const TipCard = ({ title, description }: ITipCardProps) => {
   return (
     <li className="border-l-8 border-sun bg-white p-4">
       <h2 className="font-bold">{title}</h2>
