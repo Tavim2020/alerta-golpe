@@ -1,5 +1,4 @@
 import { IPreventionTipProps } from "@/app/frauds/[slug]/components/prevention-tip/prevention-tip.type";
-import { IShowTipProps } from "@/app/frauds/components/tip-card/tip-card.type";
 import { Database } from "@/libs/supabase/types/database.type";
 import { ReactNode } from "react";
 
