@@ -9,7 +9,10 @@ import { getVideoBySlug } from "./utils/get-video-by-slug";
 import { generateWhatsAppShareLink } from "@/utils/generate/links";
 import { LdJsonScript } from "@/components/scripts/ld-json";
 import { getOtherRecentVideos } from "./utils/get-other-recent-videos";
-import { VideoCard } from "@/components/videos/show-videos/components/video-card";
+import { PreviewCard } from "@/components/videos/preview-video-card/components/preview-card";
+import { BadgeCategory } from "@/components/badges/badge-category";
+import { BadgeSubCategory } from "@/components/badges/badge-sub-category";
+import { PreventionTip } from "./components/prevention-tip";
 
 export const revalidate = 60;
 
@@ -43,7 +46,7 @@ export default async function VideoPage({ params }: TVideoPageProps) {
   const otherRecentFrauds = await getOtherRecentVideos(video.id);
 
   return (
-    <article className="mx-auto max-w-4xl px-4 py-8">
+    <article className="mx-auto max-w-4xl px-4 py-10">
       <LdJsonScript video={video} />
 
       <Link
@@ -61,20 +64,88 @@ export default async function VideoPage({ params }: TVideoPageProps) {
         className="mt-4 aspect-video w-full bg-black"
       />
 
-      <h1 className="mt-6 font-display text-4xl leading-tight sm:text-5xl">
-        {video.title}
-      </h1>
+      <div className="py-4">
+        {(video?.sub_category?.category?.name || video.sub_category?.name) && (
+          <div className="mb-3 flex flex-wrap gap-2">
+            {video?.sub_category?.category?.name && (
+              <BadgeCategory>{video.sub_category.category.name}</BadgeCategory>
+            )}
 
-      <p className="mt-2 text-sm text-ink/60">{video.created_at}</p>
+            {video?.sub_category?.name && (
+              <BadgeSubCategory>{video.sub_category.name}</BadgeSubCategory>
+            )}
+          </div>
+        )}
 
-      <a
-        href={generateWhatsAppShareLink({ videoTitle: video.title, slug })}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-6 inline-block bg-ink px-5 py-3 font-bold text-sun hover:bg-black"
-      >
-        Compartilhar no WhatsApp
-      </a>
+        {video?.title && (
+          <h3 className="line-clamp-2 text-lg font-bold leading-snug">
+            {video.title}
+          </h3>
+        )}
+
+        {video?.description && (
+          <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-ink/70">
+            {video.description}
+          </p>
+        )}
+
+        {video.updated_at && (
+          <p className="mt-3 text-xs text-ink/60">
+            Atualizado em {video.updated_at}
+          </p>
+        )}
+
+        {video?.context && (
+          <section className="border-t border-ink/15 py-6">
+            <h2 className="font-display text-2xl font-bold">
+              Contexto do golpe
+            </h2>
+
+            <p className="mt-3 whitespace-pre-line leading-relaxed text-ink/80">
+              {video.context}
+            </p>
+          </section>
+        )}
+
+        {video?.content && (
+          <section className="border-t border-ink/15 py-6">
+            <h2 className="font-display text-2xl font-bold">
+              Como o golpe funciona
+            </h2>
+
+            <div className="mt-3 whitespace-pre-line leading-relaxed text-ink/80">
+              {video.content}
+            </div>
+          </section>
+        )}
+
+        {video.tips?.length > 0 && (
+          <section className="border-t border-ink/15 py-6">
+            <h2 className="font-display text-2xl font-bold">
+              Como se proteger
+            </h2>
+
+            <ul className="mt-4 space-y-3">
+              {video.tips.map((tip, index) => (
+                <PreventionTip
+                  key={`${tip.title}-${index}`}
+                  index={index}
+                  {...tip}
+                />
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <Link
+          href={generateWhatsAppShareLink({ videoTitle: video.title, slug })}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-6 inline-block bg-ink px-5 py-3 font-bold text-sun hover:bg-black"
+        >
+          Compartilhar no WhatsApp
+        </Link>
+      </div>
 
       <AdsSlot slotNumber={NEXT_PUBLIC_ADSENSE_SLOT} />
 
@@ -84,7 +155,7 @@ export default async function VideoPage({ params }: TVideoPageProps) {
 
           <div className="grid gap-6 sm:grid-cols-3">
             {otherRecentFrauds.map((recentVideos) => (
-              <VideoCard key={recentVideos.id} video={recentVideos} />
+              <PreviewCard key={recentVideos.id} video={recentVideos} />
             ))}
           </div>
         </section>

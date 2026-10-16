@@ -22,8 +22,8 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: `/uploads/:path*`,
-        destination: `${SERVER_ENVIRONMENT.NEXT_PUBLIC_SITE_URL}/uploads/:path*`,
+        source: `/storage/:path*`,
+        destination: `${SERVER_ENVIRONMENT.NEXT_PUBLIC_SUPABASE_URL}/storage/:path*`,
       },
     ];
   },
