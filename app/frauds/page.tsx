@@ -7,6 +7,7 @@ import { EmptyVideos } from "@/components/videos/empty-videos";
 import { APP_ROUTE } from "@/routes/app.route";
 import { TipCard } from "./components/tip-card";
 import { fraudsPageTips } from "./constants/frauds.constant";
+import { IFraudPageProps } from "./page.type";
 
 const { NEXT_PUBLIC_ADSENSE_SLOT } = SERVER_ENVIRONMENT;
 
@@ -18,8 +19,15 @@ export const metadata: Metadata = {
   alternates: { canonical: APP_ROUTE.FRAUDS.ROOT },
 };
 
-export default async function Frauds() {
-  const videos = await getVideos();
+export default async function Frauds({ searchParams }: IFraudPageProps) {
+  const { page } = await searchParams;
+
+  if (page && isNaN(Number(page)))
+    throw new Error("Parâmetro de busca(page) inválido!");
+
+  const pageNumber = Number(page);
+
+  const videos = await getVideos({ offset: Number(page) || 0 });
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">

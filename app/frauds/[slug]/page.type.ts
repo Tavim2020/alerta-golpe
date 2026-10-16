@@ -1,5 +1,5 @@
-export type TFraudIdPageParam = Promise<{ slug: string }>;
+export type TSlugPageParam = Promise<{ slug: string }>;
 
 export type TVideoPageProps = {
-  params: TFraudIdPageParam;
+  params: TSlugPageParam;
 };
