@@ -2,4 +2,7 @@ node_modules
 .next
 .env.local
 *.tsbuildinfo
-*.env*
+
+# environemnts
+.env
+*.env.*

@@ -1,69 +1,40 @@
-import "./globals.css";
-import Link from "next/link";
-import Script from "next/script";
-import { Anton, Public_Sans } from "next/font/google";
 import type { Metadata } from "next";
-import { SITE } from "@/lib/server";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
+import { fontAnton, fontPublicSans } from "@/fonts/global.font";
+import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
+import type { RootLayoutProps } from "@/types/global.type";
+import { AdsScript } from "@/libs/ads/scripts";
+import { APP_INFO } from "@/constants/app.constant";
 
-const display = Anton({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--f-display",
-});
-const body = Public_Sans({ subsets: ["latin"], variable: "--f-body" });
-const ads = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
+import "./globals.css";
+
+const { NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_ADSENSE_CLIENT } = SERVER_ENVIRONMENT;
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE),
+  metadataBase: new URL(NEXT_PUBLIC_SITE_URL),
   title: {
-    default: "Alerta Golpe | Veja como os golpistas agem e não caia",
-    template: "%s | Alerta Golpe",
+    default: `${APP_INFO.name} | Veja como os golpistas agem e não caia`,
+    template: `${APP_INFO.name} | %s`,
   },
   description:
     "Vídeos reais de golpes sofridos por pessoas comuns. Entenda como os criminosos agem e proteja você e sua família.",
-  openGraph: { type: "website", locale: "pt_BR", siteName: "Alerta Golpe" },
-  ...(ads && { other: { "google-adsense-account": ads } }),
+  openGraph: { type: "website", locale: "pt_BR", siteName: APP_INFO.name },
+  other: { "google-adsense-account": NEXT_PUBLIC_ADSENSE_CLIENT },
 };
-
-type RootLayoutProps = Readonly<{
-  children: React.ReactNode;
-}>;
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="pt-BR" className={`${display.variable} ${body.variable}`}>
-      <body className="bg-paper font-body text-ink antialiased">
-        <header className="bg-ink text-white">
-          <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-            <Link href="/" className="font-display text-2xl text-sun">
-              Alerta Golpe
-            </Link>
-            <nav className="flex gap-5 text-sm font-semibold">
-              <Link href="/" className="hover:text-sun">
-                Início
-              </Link>
-              <Link href="/golpes" className="hover:text-sun">
-                Golpes sofridos
-              </Link>
-            </nav>
-          </div>
-        </header>
+    <html
+      lang="pt-BR"
+      className={`${fontAnton.variable} ${fontPublicSans.variable}`}
+    >
+      <body className="bg-paper min-h-dvh font-body flex flex-col text-ink antialiased">
+        <Header />
         <main>{children}</main>
-        <footer className="mt-16 bg-ink px-4 py-8 text-center text-sm text-white/70">
-          <p>
-            Os relatos são de pessoas reais. Foi vítima de golpe? Registre um
-            boletim de ocorrência.
-          </p>
-          <p className="mt-1">© {new Date().getFullYear()} Alerta Golpe</p>
-        </footer>
-        {ads && (
-          <Script
-            async
-            crossOrigin="anonymous"
-            strategy="afterInteractive"
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ads}`}
-          />
-        )}
+        <Footer />
+
+        <AdsScript />
       </body>
     </html>
   );
