@@ -1,11 +1,13 @@
 {
   "name": "alerta-golpe",
   "private": true,
+  "version": "1.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "generate:types": "npx supabase gen types typescript --project-id eqxwuazfjgkewzejxdku > libs/supabase/database.type.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",

@@ -1,4 +1,4 @@
-export type TFraudIdPageParam = Promise<{ "fraud-id": string }>;
+export type TFraudIdPageParam = Promise<{ slug: string }>;
 
 export type TVideoPageProps = {
   params: TFraudIdPageParam;
