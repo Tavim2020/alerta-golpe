@@ -74,8 +74,13 @@ export async function POST(req: NextRequest) {
   const { error } = await supabase.from("videos").insert({
     slug,
     title: body.title,
-    description: body.description || null,
-    video_url: publicFile.publicUrl,
+    description: body.description || "",
+    file_name: publicFile.publicUrl,
+    content: "",
+    context: "",
+    sub_category_id: "",
+    tips: [],
+    thumbnail: "",
   });
   if (error)
     return NextResponse.json({ error: error.message }, { status: 500 });
