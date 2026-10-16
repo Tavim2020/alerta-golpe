@@ -5,11 +5,11 @@ const { NEXT_PUBLIC_SITE_URL } = CLIENT_ENVIRONMENT;
 
 interface IGenerateWhatsAppShareLink {
   videoTitle: string;
-  fraudId: string;
+  slug: string;
 }
 
 export const generateWhatsAppShareLink = ({
   videoTitle,
-  fraudId,
+  slug,
 }: IGenerateWhatsAppShareLink) =>
-  `https://wa.me/?text=${encodeURIComponent(`${videoTitle} ${NEXT_PUBLIC_SITE_URL}${APP_ROUTE.FRAUDS.SLUG(fraudId)}`)}`;
+  `https://wa.me/?text=${encodeURIComponent(`Olha esse golpe: ${videoTitle} \n${NEXT_PUBLIC_SITE_URL}${APP_ROUTE.FRAUDS.SLUG(slug)}`)}`;

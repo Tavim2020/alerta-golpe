@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { getVideos } from "@/lib/server";
+import { getVideos } from "@/libs/supabase/get-videos";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
-import { AdsSlot } from "@/lib/ads/components/ads-slot";
+import { AdsSlot } from "@/libs/ads/components/ads-slot";
 import { ShowVideos } from "@/components/videos/show-videos";
 import { EmptyVideos } from "@/components/videos/empty-videos";
 import { APP_ROUTE } from "@/routes/app.route";
