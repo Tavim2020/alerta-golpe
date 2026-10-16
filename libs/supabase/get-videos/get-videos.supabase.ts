@@ -7,15 +7,30 @@ const videoBucket = db().storage.from("videos");
 const thumbnailBucket = db().storage.from("thumbnails");
 
 interface IGetVideos {
-  offset?: number;
-  limit?: number;
+  page?: number;
+  limit: number;
   slug?: string;
 }
 
-export async function getVideos(params?: IGetVideos): Promise<Video[]> {
-  const { offset = 0, limit = 50, slug } = params ?? {};
+type TReturnGetVideos =
+  | {
+      data: Video[];
+      totalPages: number;
+      success: true;
+    }
+  | {
+      data?: undefined;
+      totalPages?: undefined;
+      success: false;
+    };
 
-  const maxVideos = offset + limit - 1;
+export async function getVideos({
+  page = 1,
+  limit,
+  slug,
+}: IGetVideos): Promise<TReturnGetVideos> {
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
 
   try {
     let query = db()
@@ -32,33 +47,41 @@ export async function getVideos(params?: IGetVideos): Promise<Video[]> {
           )
         )
       `,
+        { count: "exact" },
       )
-      .order("created_at", { ascending: false })
-      .range(offset, maxVideos);
+      .order("created_at", { ascending: false });
 
     if (slug) query = query.eq("slug", slug);
 
-    const { data, error } = await query;
+    const { data, error, count } = await query.range(from, to);
 
     if (error) throw error;
 
-    return (data ?? []).map((video) => {
-      const { data: videoData } = videoBucket.getPublicUrl(video.file_name);
-      const { data: thumbnailData } = thumbnailBucket.getPublicUrl(
-        video.thumbnail,
-      );
+    const total = count ?? 0;
 
-      return {
-        ...video,
-        created_at: formatDateToBr(video.created_at),
-        updated_at: formatDateToBr(video.created_at),
-        video_url: generateBucketUrl(videoData.publicUrl),
-        thumbnail_url: generateBucketUrl(thumbnailData.publicUrl),
-        tips: video.tips === "string" ? JSON.parse(video.tips) : video.tips,
-      };
-    });
+    return {
+      data: (data ?? []).map((video) => {
+        const { data: videoData } = videoBucket.getPublicUrl(video.file_name);
+        const { data: thumbnailData } = thumbnailBucket.getPublicUrl(
+          video.thumbnail,
+        );
+
+        return {
+          ...video,
+          created_at: formatDateToBr(video.created_at),
+          updated_at: formatDateToBr(video.created_at),
+          video_url: generateBucketUrl(videoData.publicUrl),
+          thumbnail_url: generateBucketUrl(thumbnailData.publicUrl),
+          tips: video.tips === "string" ? JSON.parse(video.tips) : video.tips,
+        };
+      }),
+      totalPages: Math.ceil(total / limit),
+      success: true,
+    };
   } catch (error) {
     console.error("Erro ao buscar vídeos:", error);
-    return [];
+    return {
+      success: false,
+    };
   }
 }
