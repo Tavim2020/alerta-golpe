@@ -7,7 +7,10 @@ import { getVideos } from "@/libs/supabase/get-videos";
 const { NEXT_PUBLIC_ADSENSE_SLOT } = SERVER_ENVIRONMENT;
 
 export const LastVideos = async () => {
-  const videos = await getVideos({ limit: 12 });
+  const { data: videos, success } = await getVideos({ limit: 12 });
+
+  if (!success)
+    throw new Error("Tivemos problemas ao buscar os últimos vídeos");
 
   return (
     <div className="mx-auto max-w-6xl px-4">
