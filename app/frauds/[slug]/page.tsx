@@ -5,10 +5,10 @@ import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
 import { AdsSlot } from "@/libs/ads/components/ads-slot";
 import { APP_ROUTE } from "@/routes/app.route";
 import { TVideoPageProps } from "./page.type";
-import { getVideoBySlug } from "./utils/get-video-by-slug";
+import { getFraudBySlug } from "./utils/get-fraud-by-slug";
 import { generateWhatsAppShareLink } from "@/utils/generate/links";
 import { LdJsonScript } from "@/components/scripts/ld-json";
-import { getOtherRecentVideos } from "./utils/get-other-recent-videos";
+import { getOtherRecentFrauds } from "./utils/get-other-recent-frauds";
 import { PreviewCard } from "@/components/videos/preview-video-card/components/preview-card";
 import { BadgeCategory } from "@/components/badges/badge-category";
 import { BadgeSubCategory } from "@/components/badges/badge-sub-category";
@@ -21,43 +21,49 @@ const { NEXT_PUBLIC_ADSENSE_SLOT } = SERVER_ENVIRONMENT;
 export async function generateMetadata({
   params,
 }: TVideoPageProps): Promise<Metadata> {
-  const { video, slug } = await getVideoBySlug(params);
-  if (!video) return {};
+  const { fraud, slug } = await getFraudBySlug(params);
+  if (!fraud) return {};
 
-  const description = `Veja como funcionou este golpe: ${video.title}`;
+  const description = `Veja como funcionou este golpe: ${fraud.title}`;
   return {
-    title: video.title,
+    title: fraud.title,
     description,
     alternates: { canonical: APP_ROUTE.FRAUDS.SLUG(slug) },
     openGraph: {
       type: "video.other",
-      title: video.title,
+      title: fraud.title,
       description,
-      videos: [{ url: video.video_url }],
+      videos: [{ url: fraud.video_url }],
     },
   };
 }
 
 export default async function VideoPage({ params }: TVideoPageProps) {
-  const { video, slug } = await getVideoBySlug(params);
+  const { fraud, slug } = await getFraudBySlug(params);
 
-  if (!video) return notFound();
+  if (!fraud) return notFound();
 
-  const otherRecentFrauds = await getOtherRecentVideos(video.id);
+  const otherRecentFrauds = await getOtherRecentFrauds(fraud.id);
 
   return (
     <article className="mx-auto max-w-4xl px-4 py-10">
-      <LdJsonScript video={video} />
+      <LdJsonScript fraud={fraud} />
 
       <Link
-        href={APP_ROUTE.FRAUDS.ROOT}
+        href={APP_ROUTE.FRAUDS.ROOT()}
         className="text-sm font-semibold underline"
       >
         Voltar para golpes sofridos
       </Link>
 
+      {fraud.updated_at && (
+        <p className="mt-3 text-xs text-ink/60">
+          Atualizado em {fraud.updated_at}
+        </p>
+      )}
+
       <video
-        src={video.video_url}
+        src={fraud.video_url}
         controls
         preload="metadata"
         playsInline
@@ -65,68 +71,62 @@ export default async function VideoPage({ params }: TVideoPageProps) {
       />
 
       <div className="py-4">
-        {(video?.sub_category?.category?.name || video.sub_category?.name) && (
+        {(fraud?.sub_category?.category?.name || fraud.sub_category?.name) && (
           <div className="mb-3 flex flex-wrap gap-2">
-            {video?.sub_category?.category?.name && (
-              <BadgeCategory>{video.sub_category.category.name}</BadgeCategory>
+            {fraud?.sub_category?.category?.name && (
+              <BadgeCategory>{fraud.sub_category.category.name}</BadgeCategory>
             )}
 
-            {video?.sub_category?.name && (
-              <BadgeSubCategory>{video.sub_category.name}</BadgeSubCategory>
+            {fraud?.sub_category?.name && (
+              <BadgeSubCategory>{fraud.sub_category.name}</BadgeSubCategory>
             )}
           </div>
         )}
 
-        {video?.title && (
+        {fraud?.title && (
           <h3 className="line-clamp-2 text-lg font-bold leading-snug">
-            {video.title}
+            {fraud.title}
           </h3>
         )}
 
-        {video?.description && (
+        {fraud?.description && (
           <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-ink/70">
-            {video.description}
+            {fraud.description}
           </p>
         )}
 
-        {video.updated_at && (
-          <p className="mt-3 text-xs text-ink/60">
-            Atualizado em {video.updated_at}
-          </p>
-        )}
-
-        {video?.context && (
+        {fraud?.context && (
           <section className="border-t border-ink/15 py-6">
             <h2 className="font-display text-2xl font-bold">
               Contexto do golpe
             </h2>
 
             <p className="mt-3 whitespace-pre-line leading-relaxed text-ink/80">
-              {video.context}
+              {fraud.context}
             </p>
           </section>
         )}
 
-        {video?.content && (
+        {fraud?.content && (
           <section className="border-t border-ink/15 py-6">
             <h2 className="font-display text-2xl font-bold">
               Como o golpe funciona
             </h2>
 
             <div className="mt-3 whitespace-pre-line leading-relaxed text-ink/80">
-              {video.content}
+              {fraud.content}
             </div>
           </section>
         )}
 
-        {video.tips?.length > 0 && (
+        {fraud.tips?.length > 0 && (
           <section className="border-t border-ink/15 py-6">
             <h2 className="font-display text-2xl font-bold">
               Como se proteger
             </h2>
 
             <ul className="mt-4 space-y-3">
-              {video.tips.map((tip, index) => (
+              {fraud.tips.map((tip, index) => (
                 <PreventionTip
                   key={`${tip.title}-${index}`}
                   index={index}
@@ -138,7 +138,7 @@ export default async function VideoPage({ params }: TVideoPageProps) {
         )}
 
         <Link
-          href={generateWhatsAppShareLink({ videoTitle: video.title, slug })}
+          href={generateWhatsAppShareLink({ fraudTitle: fraud.title, slug })}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-6 inline-block bg-ink px-5 py-3 font-bold text-sun hover:bg-black"
@@ -155,7 +155,7 @@ export default async function VideoPage({ params }: TVideoPageProps) {
 
           <div className="grid gap-6 sm:grid-cols-3">
             {otherRecentFrauds.map((recentVideos) => (
-              <PreviewCard key={recentVideos.id} video={recentVideos} />
+              <PreviewCard key={recentVideos.id} fraud={recentVideos} />
             ))}
           </div>
         </section>

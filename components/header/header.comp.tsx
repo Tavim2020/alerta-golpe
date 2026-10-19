@@ -19,7 +19,7 @@ export const Header = () => {
             Início
           </Link>
 
-          <Link href={APP_ROUTE.FRAUDS.ROOT} className="hover:text-sun">
+          <Link href={APP_ROUTE.FRAUDS.ROOT()} className="hover:text-sun">
             Golpes sofridos
           </Link>
         </nav>
