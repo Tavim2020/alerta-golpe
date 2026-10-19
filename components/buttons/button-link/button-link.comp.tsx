@@ -9,6 +9,7 @@ export const ButtonLink = ({
   children,
   href,
   target,
+  rel,
 }: IButtonLinkProps) => {
   const variantClassName = buttonVariants[variant];
 
@@ -21,6 +22,7 @@ export const ButtonLink = ({
         variantClassName,
         className,
       )}
+      rel={rel}
     >
       {children}
     </Link>
