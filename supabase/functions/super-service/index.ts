@@ -2,22 +2,13 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 Deno.serve(async (req) => {
   if (req.method !== "POST") {
-    return Response.json(
-      { error: "Method not allowed" },
-      { status: 405 },
-    );
+    return Response.json({ error: "Method not allowed" }, { status: 405 });
   }
 
   const secret = Deno.env.get("VIDEO_WORKER_SECRET");
 
-  if (
-    !secret ||
-    req.headers.get("x-worker-secret") !== secret
-  ) {
-    return Response.json(
-      { error: "Unauthorized" },
-      { status: 401 },
-    );
+  if (!secret || req.headers.get("x-worker-secret") !== secret) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const supabase = createClient(
@@ -31,18 +22,17 @@ Deno.serve(async (req) => {
     },
   );
 
-  const { data: jobs, error: claimError } =
-    await supabase.rpc("claim_video_deletion_jobs", {
+  const { data: jobs, error: claimError } = await supabase.rpc(
+    "claim_video_deletion_jobs",
+    {
       p_limit: 10,
-    });
+    },
+  );
 
   if (claimError) {
     console.error("Failed to claim jobs:", claimError.message);
 
-    return Response.json(
-      { error: "Failed to claim jobs" },
-      { status: 500 },
-    );
+    return Response.json({ error: "Failed to claim jobs" }, { status: 500 });
   }
 
   let processed = 0;
@@ -56,7 +46,7 @@ Deno.serve(async (req) => {
         .remove([job.video_path]);
 
       if (videoError) {
-        throw new Error(`Video: ${videoError.message}`);
+        throw new Error(`TFraud: ${videoError.message}`);
       }
 
       // Remove a thumbnail.
@@ -86,8 +76,7 @@ Deno.serve(async (req) => {
 
       processed++;
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : String(error);
+      const message = error instanceof Error ? error.message : String(error);
 
       console.error(`Job ${job.id} failed:`, message);
 
@@ -114,10 +103,7 @@ Deno.serve(async (req) => {
         .eq("status", "processing");
 
       if (updateError) {
-        console.error(
-          `Could not update job ${job.id}:`,
-          updateError.message,
-        );
+        console.error(`Could not update job ${job.id}:`, updateError.message);
       }
 
       failed++;
