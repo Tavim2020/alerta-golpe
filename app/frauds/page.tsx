@@ -11,9 +11,10 @@ import { IFraudPageProps } from "./page.type";
 import { Pagination } from "./components/pagination";
 import { FormSearch } from "./components/form-search";
 
+export const revalidate = 3600;
+
 const { NEXT_PUBLIC_ADSENSE_SLOT } = SERVER_ENVIRONMENT;
 
-export const revalidate = 60;
 export const metadata: Metadata = {
   title: "Golpes sofridos",
   description:

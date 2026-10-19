@@ -14,7 +14,7 @@ import { BadgeCategory } from "@/components/badges/badge-category";
 import { BadgeSubCategory } from "@/components/badges/badge-sub-category";
 import { PreventionTip } from "./components/prevention-tip";
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 const { NEXT_PUBLIC_ADSENSE_SLOT } = SERVER_ENVIRONMENT;
 
