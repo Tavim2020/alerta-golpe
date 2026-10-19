@@ -6,8 +6,8 @@ export type RootLayoutProps = Readonly<{
   children: ReactNode;
 }>;
 
-export type Video = Omit<
-  Database["public"]["Tables"]["videos"]["Row"],
+export type TFraud = Omit<
+  Database["public"]["Tables"]["frauds"]["Row"],
   "tips"
 > & {
   sub_category: {

@@ -1,4 +1,4 @@
-import { Video } from "@/types/global.type";
+import { TFraud } from "@/types/global.type";
 import { db } from "@/libs/supabase/server";
 import { formatDateToBr } from "@/utils/format/dates";
 import { generateBucketUrl } from "@/utils/generate/links";
@@ -6,15 +6,16 @@ import { generateBucketUrl } from "@/utils/generate/links";
 const videoBucket = db().storage.from("videos");
 const thumbnailBucket = db().storage.from("thumbnails");
 
-interface IGetVideos {
+interface IGetFrauds {
   page?: number;
   limit: number;
   slug?: string;
+  search?: string;
 }
 
-type TReturnGetVideos =
+type TReturnGetFrauds =
   | {
-      data: Video[];
+      data: TFraud[];
       totalPages: number;
       success: true;
     }
@@ -24,17 +25,18 @@ type TReturnGetVideos =
       success: false;
     };
 
-export async function getVideos({
+export async function getFrauds({
   page = 1,
   limit,
   slug,
-}: IGetVideos): Promise<TReturnGetVideos> {
+  search,
+}: IGetFrauds): Promise<TReturnGetFrauds> {
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
   try {
     let query = db()
-      .from("videos")
+      .from("frauds")
       .select(
         `
         *,
@@ -53,6 +55,29 @@ export async function getVideos({
 
     if (slug) query = query.eq("slug", slug);
 
+    if (search?.trim()) {
+      const { data: matchingIds, error: searchError } = await db().rpc(
+        "search_frauds",
+        {
+          search_term: search.trim(),
+        },
+      );
+
+      if (searchError) throw searchError;
+
+      const ids = (matchingIds ?? []) as string[];
+
+      if (ids.length === 0) {
+        return {
+          data: [],
+          totalPages: 0,
+          success: true,
+        };
+      }
+
+      query = query.in("id", ids);
+    }
+
     const { data, error, count } = await query.range(from, to);
 
     if (error) throw error;
@@ -69,7 +94,7 @@ export async function getVideos({
         return {
           ...video,
           created_at: formatDateToBr(video.created_at),
-          updated_at: formatDateToBr(video.created_at),
+          updated_at: formatDateToBr(video.updated_at),
           video_url: generateBucketUrl(videoData.publicUrl),
           thumbnail_url: generateBucketUrl(thumbnailData.publicUrl),
           tips: video.tips === "string" ? JSON.parse(video.tips) : video.tips,

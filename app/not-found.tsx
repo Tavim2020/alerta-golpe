@@ -39,7 +39,7 @@ export default function NotFoundPage() {
           </Link>
 
           <Link
-            href={APP_ROUTE.FRAUDS.ROOT}
+            href={APP_ROUTE.FRAUDS.ROOT()}
             className="inline-flex items-center justify-center gap-2 border border-ink/20 px-5 py-3 font-bold text-ink transition hover:bg-ink/5"
           >
             <AlertCircle className="size-4" aria-hidden="true" />

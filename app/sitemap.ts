@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getVideos } from "@/libs/supabase/get-videos";
+import { getFrauds } from "@/libs/supabase/get-videos";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
 
 export const revalidate = 3600;
@@ -7,7 +7,7 @@ export const revalidate = 3600;
 const { NEXT_PUBLIC_SITE_URL } = SERVER_ENVIRONMENT;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const { data: videos, success } = await getVideos({ limit: 50 });
+  const { data: videos, success } = await getFrauds({ limit: 50 });
 
   if (!success) throw new Error("Tivemos problemas os vídeos");
 

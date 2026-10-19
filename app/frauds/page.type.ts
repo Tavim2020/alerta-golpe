@@ -1,3 +1,3 @@
 export interface IFraudPageProps {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; search?: string }>;
 }
