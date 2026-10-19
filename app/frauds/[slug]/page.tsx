@@ -13,6 +13,8 @@ import { PreviewCard } from "@/components/videos/preview-video-card/components/p
 import { BadgeCategory } from "@/components/badges/badge-category";
 import { BadgeSubCategory } from "@/components/badges/badge-sub-category";
 import { PreventionTip } from "./components/prevention-tip";
+import { RenderMarkdown } from "./components/render-markdown";
+import { ButtonLink } from "@/components/buttons/button-link";
 
 export const revalidate = 3600;
 
@@ -46,15 +48,12 @@ export default async function VideoPage({ params }: TVideoPageProps) {
   const otherRecentFrauds = await getOtherRecentFrauds(fraud.id);
 
   return (
-    <article className="mx-auto max-w-4xl px-4 py-10">
+    <main className="mx-auto max-w-4xl px-4 py-10">
       <LdJsonScript fraud={fraud} />
 
-      <Link
-        href={APP_ROUTE.FRAUDS.ROOT()}
-        className="text-sm font-semibold underline"
-      >
+      <ButtonLink variant="underline" href={APP_ROUTE.FRAUDS.ROOT()}>
         Voltar para golpes sofridos
-      </Link>
+      </ButtonLink>
 
       {fraud.updated_at && (
         <p className="mt-3 text-xs text-ink/60">
@@ -84,44 +83,40 @@ export default async function VideoPage({ params }: TVideoPageProps) {
         )}
 
         {fraud?.title && (
-          <h3 className="line-clamp-2 text-lg font-bold leading-snug">
+          <h1 className="text-2xl font-bold leading-tight tracking-tight sm:text-3xl">
             {fraud.title}
-          </h3>
+          </h1>
         )}
 
         {fraud?.description && (
-          <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-ink/70">
+          <p className="mt-3 text-base leading-7 text-ink/70 sm:text-lg sm:leading-8">
             {fraud.description}
           </p>
         )}
 
         {fraud?.context && (
           <section className="border-t border-ink/15 py-6">
-            <h2 className="font-display text-2xl font-bold">
+            <h2 className="mb-5 font-display text-2xl font-bold leading-tight tracking-tight sm:text-3xl">
               Contexto do golpe
             </h2>
 
-            <p className="mt-3 whitespace-pre-line leading-relaxed text-ink/80">
-              {fraud.context}
-            </p>
+            <RenderMarkdown>{fraud.context}</RenderMarkdown>
           </section>
         )}
 
         {fraud?.content && (
           <section className="border-t border-ink/15 py-6">
-            <h2 className="font-display text-2xl font-bold">
+            <h2 className="mb-5 font-display text-2xl font-bold leading-tight tracking-tight sm:text-3xl">
               Como o golpe funciona
             </h2>
 
-            <div className="mt-3 whitespace-pre-line leading-relaxed text-ink/80">
-              {fraud.content}
-            </div>
+            <RenderMarkdown>{fraud.content}</RenderMarkdown>
           </section>
         )}
 
         {fraud.tips?.length > 0 && (
           <section className="border-t border-ink/15 py-6">
-            <h2 className="font-display text-2xl font-bold">
+            <h2 className="mb-5 font-display text-2xl font-bold leading-tight tracking-tight sm:text-3xl">
               Como se proteger
             </h2>
 
@@ -137,14 +132,14 @@ export default async function VideoPage({ params }: TVideoPageProps) {
           </section>
         )}
 
-        <Link
+        <ButtonLink
           href={generateWhatsAppShareLink({ fraudTitle: fraud.title, slug })}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-6 inline-block bg-ink px-5 py-3 font-bold text-sun hover:bg-black"
+          className="mt-6"
         >
           Compartilhar no WhatsApp
-        </Link>
+        </ButtonLink>
       </div>
 
       <AdsSlot slotNumber={NEXT_PUBLIC_ADSENSE_SLOT} />
@@ -160,6 +155,6 @@ export default async function VideoPage({ params }: TVideoPageProps) {
           </div>
         </section>
       )}
-    </article>
+    </main>
   );
 }
