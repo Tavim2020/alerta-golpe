@@ -1,15 +1,15 @@
 import Script from "next/script";
 import { LdJsonScriptProps } from "./ld-json.script.type";
 
-export const LdJsonScript = ({ video }: LdJsonScriptProps) => {
+export const LdJsonScript = ({ fraud }: LdJsonScriptProps) => {
   const ld = {
     "@context": "https://schema.org",
     "@type": "VideoObject",
-    name: video.title,
-    description: video.title,
-    thumbnailUrl: video.thumbnail_url,
-    uploadDate: video.created_at,
-    contentUrl: video.video_url,
+    name: fraud.title,
+    description: fraud.title,
+    thumbnailUrl: fraud.thumbnail_url,
+    uploadDate: fraud.created_at,
+    contentUrl: fraud.video_url,
   };
 
   return (

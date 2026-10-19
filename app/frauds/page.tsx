@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getVideos } from "@/libs/supabase/get-videos";
+import { getFrauds } from "@/libs/supabase/get-videos";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
 import { AdsSlot } from "@/libs/ads/components/ads-slot";
 import { PreviewVideosCard } from "@/components/videos/preview-video-card";
@@ -9,19 +9,21 @@ import { TipCard } from "./components/tip-card";
 import { fraudsPageTips } from "./constants/frauds.constant";
 import { IFraudPageProps } from "./page.type";
 import { Pagination } from "./components/pagination";
+import { FormSearch } from "./components/form-search";
+
+export const revalidate = 3600;
 
 const { NEXT_PUBLIC_ADSENSE_SLOT } = SERVER_ENVIRONMENT;
 
-export const revalidate = 60;
 export const metadata: Metadata = {
   title: "Golpes sofridos",
   description:
     "Relatos em vídeo de golpes reais: PIX, WhatsApp, falsa central, boletos e mais. Aprenda a reconhecer cada um.",
-  alternates: { canonical: APP_ROUTE.FRAUDS.ROOT },
+  alternates: { canonical: APP_ROUTE.FRAUDS.ROOT() },
 };
 
 export default async function Frauds({ searchParams }: IFraudPageProps) {
-  const { page } = await searchParams;
+  const { page, search } = await searchParams;
 
   const pageNumber = Number(page);
 
@@ -31,16 +33,18 @@ export default async function Frauds({ searchParams }: IFraudPageProps) {
   const currentPage = pageNumber || 1;
 
   const {
-    data: videos,
+    data: frauds,
     success,
     totalPages,
-  } = await getVideos({ page: currentPage, limit: 24 });
+  } = await getFrauds({ page: currentPage, limit: 24, search });
 
   if (!success) throw new Error("Tivemos problemas ao buscar os videos");
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
       <h1 className="font-display text-5xl">Golpes sofridos</h1>
+
+      <FormSearch />
 
       <p className="mt-3 max-w-2xl text-lg">
         Cada vídeo mostra um golpe que realmente aconteceu. Compartilhe com quem
@@ -55,10 +59,10 @@ export default async function Frauds({ searchParams }: IFraudPageProps) {
 
       <AdsSlot slotNumber={NEXT_PUBLIC_ADSENSE_SLOT} />
 
-      {videos.length ? <PreviewVideosCard videos={videos} /> : <EmptyVideos />}
+      {frauds.length ? <PreviewVideosCard frauds={frauds} /> : <EmptyVideos />}
 
       <Pagination
-        basePath={APP_ROUTE.FRAUDS.ROOT}
+        basePath={APP_ROUTE.FRAUDS.ROOT()}
         totalPages={totalPages}
         currentPage={currentPage}
       />

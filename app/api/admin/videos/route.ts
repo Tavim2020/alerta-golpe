@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
       .replace(/[^a-z0-9]/g, "");
     const path = `${Date.now()}-${rand()}.${ext}`;
     const { data, error } = await supabase.storage
-      .from("videos")
+      .from("frauds")
       .createSignedUploadUrl(path);
     if (error)
       return NextResponse.json({ error: error.message }, { status: 500 });
@@ -68,10 +68,10 @@ export async function POST(req: NextRequest) {
   }
 
   const { data: publicFile } = supabase.storage
-    .from("videos")
+    .from("frauds")
     .getPublicUrl(body.path);
   const slug = `${slugify(body.title)}-${rand()}`;
-  const { error } = await supabase.from("videos").insert({
+  const { error } = await supabase.from("frauds").insert({
     slug,
     title: body.title,
     description: body.description || "",
