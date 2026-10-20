@@ -3,6 +3,9 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
+import { APP_ROUTE } from "@/routes/app.route";
+import { API_ROUTE } from "@/routes/api.route";
+import { ControlledTextArea } from "@/components/form/controlled-text-area";
 
 type PostResult = {
   error?: string;
@@ -20,7 +23,7 @@ type SavedVideo = PostResult & {
 async function post<T extends PostResult>(
   body: Record<string, string>,
 ): Promise<T> {
-  const response = await fetch("/api/admin/videos", {
+  const response = await fetch(API_ROUTE.FRAUDS, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
@@ -37,7 +40,7 @@ function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
-export default function Admin() {
+export default function AdminDashboard() {
   const router = useRouter();
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
@@ -86,51 +89,37 @@ export default function Admin() {
     }
   }
 
-  async function sair() {
-    await fetch("/api/login", { method: "DELETE" });
-    router.push("/acesso-adm");
-  }
-
   return (
-    <div className="mx-auto max-w-xl px-4 py-10">
-      <div className="flex items-center justify-between">
-        <h1 className="font-display text-4xl">Publicar vídeo</h1>
-        <button onClick={sair} className="text-sm font-semibold underline">
-          Sair
-        </button>
-      </div>
-      <form
-        onSubmit={publicar}
-        className="mt-6 space-y-4 border border-ink/15 bg-white p-6"
+    <form
+      onSubmit={publicar}
+      className="mt-6 space-y-4 border border-ink/15 bg-white p-6"
+    >
+      <input
+        name="title"
+        required
+        maxLength={120}
+        placeholder="Título (ex: Golpe da falsa central do banco)"
+        className="w-full border border-ink/30 p-3"
+      />
+
+      <ControlledTextArea control={control} />
+
+      <input
+        name="file"
+        type="file"
+        accept="video/*"
+        required
+        className="w-full border border-dashed border-ink/40 p-4"
+      />
+
+      <button
+        disabled={busy}
+        className="w-full bg-sun py-3 font-bold hover:brightness-95 disabled:opacity-50"
       >
-        <input
-          name="title"
-          required
-          maxLength={120}
-          placeholder="Título (ex: Golpe da falsa central do banco)"
-          className="w-full border border-ink/30 p-3"
-        />
-        <textarea
-          name="description"
-          rows={5}
-          placeholder="Descreva como o golpe aconteceu e como evitar"
-          className="w-full border border-ink/30 p-3"
-        />
-        <input
-          name="file"
-          type="file"
-          accept="video/*"
-          required
-          className="w-full border border-dashed border-ink/40 p-4"
-        />
-        <button
-          disabled={busy}
-          className="w-full bg-sun py-3 font-bold hover:brightness-95 disabled:opacity-50"
-        >
-          {busy ? "Publicando…" : "Publicar vídeo"}
-        </button>
-        {status && <p className="text-sm font-semibold">{status}</p>}
-      </form>
-    </div>
+        {busy ? "Publicando…" : "Publicar vídeo"}
+      </button>
+
+      {status && <p className="text-sm font-semibold">{status}</p>}
+    </form>
   );
 }

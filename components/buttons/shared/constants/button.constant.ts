@@ -1,7 +1,7 @@
 import { TButtonVariants } from "../types/buttons.type";
 
 const defaultClassName =
-  "inline-flex items-center justify-center gap-2 text-nowrap cursor-pointer";
+  "inline-flex items-center justify-center gap-2 text-nowrap cursor-pointer disabled:opacity-50";
 
 export const buttonVariants: Record<TButtonVariants, string | undefined> = {
   contain: `${defaultClassName} bg-ink px-5 py-3 font-bold text-sun transition hover:bg-black`,

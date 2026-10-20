@@ -1,5 +1,6 @@
 import { jwtVerify } from "jose";
 import { NextResponse, type NextRequest } from "next/server";
+import { APP_ROUTE } from "./routes/app.route";
 
 export async function proxy(req: NextRequest) {
   let ok = false;
@@ -16,17 +17,17 @@ export async function proxy(req: NextRequest) {
   }
 
   const { pathname } = req.nextUrl;
-  if (!ok && pathname.startsWith("/api")) {
+  if (!ok && pathname.startsWith("/api"))
     return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
-  }
-  if (!ok && pathname.startsWith("/admin")) {
-    return NextResponse.redirect(new URL("/acesso-adm", req.url));
-  }
+
+  if (!ok && pathname === APP_ROUTE.ADMIN.DASHBOARD)
+    return NextResponse.redirect(new URL(APP_ROUTE.ADMIN.LOGIN, req.url));
+
   const res = NextResponse.next();
   res.headers.set("X-Robots-Tag", "noindex, nofollow");
   return res;
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*", "/acesso-adm"],
+  matcher: ["/admin/:path*", "/api/admin/:path*"],
 };

@@ -1,3 +1,5 @@
+"use client";
+
 import { Controller, FieldValues } from "react-hook-form";
 import { IControlledInputText } from "./controlled-input-text.type";
 import { ErrorMessageCustom } from "../error-message-custom";
@@ -29,6 +31,7 @@ export const ControlledInputText = <GProps extends FieldValues>({
             onChange={({ target }) =>
               field.onChange(formatOnChange(target.value))
             }
+            name={name}
             type={type}
             id={name}
             placeholder={placeholder}

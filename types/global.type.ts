@@ -22,3 +22,16 @@ export type TFraud = Omit<
   thumbnail_url: string;
   tips: Array<Omit<IPreventionTipProps, "index">>;
 };
+
+export type CustomError = {
+  name: string;
+  action: string;
+  message: string;
+  statusCode: number;
+};
+
+export type TSlugPageParam = Promise<{ slug: string }>;
+
+export type TSlugPageProps = {
+  params: TSlugPageParam;
+};
