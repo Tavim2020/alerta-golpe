@@ -12,8 +12,22 @@ export const APP_ROUTE = {
       `${FRAUDS_ROOT}${addSearchParams(objectWithParams)}`,
     SLUG: (slug: string) => `${FRAUDS_ROOT}/${slug}`,
   },
+  LOGIN: {
+    ROOT: "/login",
+  },
   ADMIN: {
-    LOGIN: `${ADMIN_PREFIX}/login`,
-    DASHBOARD: `${ADMIN_PREFIX}/dashboard`,
+    DASHBOARD: {
+      ROOT: `${ADMIN_PREFIX}/dashboard`,
+    },
+    FRAUD: {
+      CREATE: `${ADMIN_PREFIX}/fraud/create`,
+      EDIT: (slug: string) => `${ADMIN_PREFIX}/fraud/edit/${slug}`,
+    },
+    CATEGORIES: {
+      ROOT: `${ADMIN_PREFIX}/categories`,
+    },
+    LAWYERS: {
+      ROOT: `${ADMIN_PREFIX}/lawyers`,
+    },
   },
 } as const;

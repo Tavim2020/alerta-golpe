@@ -6,7 +6,7 @@ import { APP_ROUTE } from "@/routes/app.route";
 const cleanupCookies: Middleware = async (req) => {
   await new CookiesInstance().deleteCookies();
 
-  return NextResponse.redirect(new URL(APP_ROUTE.ADMIN.LOGIN, req.url));
+  return NextResponse.redirect(new URL(APP_ROUTE.LOGIN.ROOT, req.url));
 };
 
 export async function GET(req: NextRequest) {
