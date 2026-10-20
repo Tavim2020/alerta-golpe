@@ -29,7 +29,10 @@ export const ControlledTextArea = <GProps extends FieldValues>({
             id={name}
             name={name}
             placeholder={placeholder}
-            className={cn("w-full border border-ink/30 p-3", textAreaClassName)}
+            className={cn(
+              "w-full border border-ink/30 p-3 min-h-50 resize-none",
+              textAreaClassName,
+            )}
             disabled={disabled}
             minLength={minLength}
             maxLength={maxLength}

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-export type TButtonVariants = "contain" | "outline" | "clear" | "underline";
+export type TButtonVariants = "contain" | "outline" | "clean" | "underline";
 
 export interface IButtonProps {
   variant?: TButtonVariants;

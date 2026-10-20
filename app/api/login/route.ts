@@ -2,7 +2,7 @@ import { timingSafeEqual } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 import { handlerMiddleware, Middleware } from "../utils/middleware";
 import { validateRequestData } from "../utils/validators";
-import { adminLoginSchema } from "@/app/admin/login/schemas/admin-login.schema";
+import { adminLoginSchema } from "@/app/login/schemas/admin-login.schema";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
 import { CookiesInstance } from "@/utils/cookies";
 

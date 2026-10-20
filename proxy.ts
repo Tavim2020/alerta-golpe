@@ -20,8 +20,8 @@ export async function proxy(req: NextRequest) {
   if (!ok && pathname.startsWith("/api"))
     return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
 
-  if (!ok && pathname === APP_ROUTE.ADMIN.DASHBOARD)
-    return NextResponse.redirect(new URL(APP_ROUTE.ADMIN.LOGIN, req.url));
+  if (!ok && pathname === APP_ROUTE.ADMIN.DASHBOARD.ROOT)
+    return NextResponse.redirect(new URL(APP_ROUTE.LOGIN.ROOT, req.url));
 
   const res = NextResponse.next();
   res.headers.set("X-Robots-Tag", "noindex, nofollow");

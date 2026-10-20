@@ -6,6 +6,6 @@ const defaultClassName =
 export const buttonVariants: Record<TButtonVariants, string | undefined> = {
   contain: `${defaultClassName} bg-ink px-5 py-3 font-bold text-sun transition hover:bg-black`,
   outline: `${defaultClassName} border border-ink/20 px-5 py-3 font-bold text-ink transition hover:bg-ink/5`,
-  clear: defaultClassName,
+  clean: defaultClassName,
   underline: `${defaultClassName} text-sm font-semibold underline`,
 };

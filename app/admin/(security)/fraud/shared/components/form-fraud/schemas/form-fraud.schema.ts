@@ -2,6 +2,24 @@ import { imagePropsVerification } from "@/app/admin/(security)/fraud/shared/comp
 import { videoPropsVerification } from "@/app/admin/(security)/fraud/shared/components/form-fraud/constants/video.constant";
 import z from "zod";
 
+const fileOrUrlSchema = (config: {
+  maxSize: number;
+  mbSize: number;
+  accepts: string[];
+  formats: string;
+  label: string;
+}) =>
+  z
+    .custom<File>(
+      (value) => typeof File !== "undefined" && value instanceof File,
+    )
+    .refine((file) => file.size <= config.maxSize, {
+      message: `${config.label} muito grande. Tamanho máximo: ${config.mbSize}MB`,
+    })
+    .refine((file) => config.accepts.includes(file.type), {
+      message: `Formato de ${config.label.toLowerCase()} inválido. Formatos: ${config.formats}`,
+    });
+
 export const formFraudSchema = z.object({
   title: z
     .string({ error: "O campo deve ser uma string" })
@@ -26,52 +44,28 @@ export const formFraudSchema = z.object({
       }),
     )
     .refine((value) => value.length, { error: "Deve sempre haver uma dica" }),
-  video_file: z
-    .instanceof(File, { message: "Imagem obrigatória" })
-    .nullable()
-    .refine(
-      (file) => {
-        if (!file) return false;
-
-        return file.size <= videoPropsVerification.maxSize;
-      },
-      {
-        message: `Vídeo não encontrado ou muito grande. Tamanho máximo: ${videoPropsVerification.mbSize}MB`,
-      },
-    )
-    .refine(
-      (file) => {
-        if (!file) return false;
-
-        return videoPropsVerification.videosAccepts.includes(file.type);
-      },
-      {
-        message: `Vídeo não encontrado ou com formato inválido. Formatos: ${videoPropsVerification.formats}`,
-      },
-    ),
-  thumbnail_file: z
-    .instanceof(File, { message: "Imagem obrigatória" })
-    .nullable()
-    .refine(
-      (file) => {
-        if (!file) return false;
-
-        return file.size <= imagePropsVerification.maxSize;
-      },
-      {
-        message: `Imagem não encontrada ou muito grande. Tamanho máximo: ${imagePropsVerification.mbSize}MB`,
-      },
-    )
-    .refine(
-      (file) => {
-        if (!file) return false;
-
-        return imagePropsVerification.imagesAccepts.includes(file.type);
-      },
-      {
-        message: `Imagem não encontrada ou com formato inválido. Formatos: ${imagePropsVerification.formats}`,
-      },
-    ),
+  video_file: z.union([
+    z.string({ error: "O valor deve ser uma string" }),
+    fileOrUrlSchema({
+      maxSize: videoPropsVerification.maxSize,
+      mbSize: videoPropsVerification.mbSize,
+      accepts: videoPropsVerification.videosAccepts,
+      formats: videoPropsVerification.formats,
+      label: "Vídeo",
+    }),
+    z.null(),
+  ]),
+  thumbnail_file: z.union([
+    z.string({ error: "O valor deve ser uma string" }),
+    fileOrUrlSchema({
+      maxSize: imagePropsVerification.maxSize,
+      mbSize: imagePropsVerification.mbSize,
+      accepts: imagePropsVerification.imagesAccepts,
+      formats: imagePropsVerification.formats,
+      label: "Imagem",
+    }),
+    z.null(),
+  ]),
 });
 
 export type FormFraudSchema = z.infer<typeof formFraudSchema>;

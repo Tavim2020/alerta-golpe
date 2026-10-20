@@ -21,8 +21,8 @@ export const FormFraud = ({ isPending, submit, fraud }: IFormFraudProps) => {
       context: fraud?.context || "",
       content: fraud?.content || "",
       tips: fraud?.tips || [],
-      video_file: null,
-      thumbnail_file: null,
+      video_file: fraud?.video_url || null,
+      thumbnail_file: fraud?.thumbnail_url || null,
     },
   });
 
