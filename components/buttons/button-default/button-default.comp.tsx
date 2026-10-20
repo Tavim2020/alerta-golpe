@@ -8,6 +8,7 @@ export const ButtonDefault = ({
   onClick,
   type = "button",
   children,
+  disabled,
 }: IButtonDefaultProps) => {
   const variantClassName = buttonVariants[variant];
 
@@ -16,6 +17,7 @@ export const ButtonDefault = ({
       type={type}
       onClick={onClick}
       className={cn(variantClassName, className)}
+      disabled={disabled}
     >
       {children}
     </button>

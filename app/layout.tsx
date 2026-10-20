@@ -6,8 +6,10 @@ import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
 import type { RootLayoutProps } from "@/types/global.type";
 import { AdsScript } from "@/libs/ads/scripts";
 import { APP_INFO } from "@/constants/app.constant";
+import { ToastContainer } from "@/libs/react-toastify/components/toast-container";
 
 import "./globals.css";
+import { QueryProvider } from "@/libs/react-query/contexts/query-provider";
 
 const { NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_ADSENSE_CLIENT } = SERVER_ENVIRONMENT;
 
@@ -30,11 +32,14 @@ export default function RootLayout({ children }: RootLayoutProps) {
       className={`${fontAnton.variable} ${fontPublicSans.variable}`}
     >
       <body className="bg-paper min-h-dvh font-body flex flex-col text-ink antialiased">
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <QueryProvider>
+          <Header />
+          <ToastContainer />
+          <main>{children}</main>
+          <Footer />
 
-        <AdsScript />
+          <AdsScript />
+        </QueryProvider>
       </body>
     </html>
   );
