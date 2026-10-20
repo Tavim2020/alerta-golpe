@@ -1,20 +1,7 @@
+import { addSearchParams } from "./utils/add-search-params";
+
 const FRAUDS_ROOT = "/frauds";
-
-const addSearchParams = (objectWithParams?: object) => {
-  if (!objectWithParams) return "";
-
-  const newSearchParams = new URLSearchParams();
-
-  Object.entries(objectWithParams).forEach(([key, value]) => {
-    if (value) {
-      newSearchParams.append(key, String(value));
-    }
-  });
-
-  const newValueSearchParams = newSearchParams.toString();
-
-  return `${newValueSearchParams ? `?${newValueSearchParams}` : ""}`;
-};
+const ADMIN_PREFIX = "/admin";
 
 export const APP_ROUTE = {
   HOME: {
@@ -24,5 +11,9 @@ export const APP_ROUTE = {
     ROOT: (objectWithParams?: { page?: string | number; search?: string }) =>
       `${FRAUDS_ROOT}${addSearchParams(objectWithParams)}`,
     SLUG: (slug: string) => `${FRAUDS_ROOT}/${slug}`,
+  },
+  ADMIN: {
+    LOGIN: `${ADMIN_PREFIX}/login`,
+    DASHBOARD: `${ADMIN_PREFIX}/dashboard`,
   },
 } as const;

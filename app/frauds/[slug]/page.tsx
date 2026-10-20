@@ -4,8 +4,7 @@ import type { Metadata } from "next";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
 import { AdsSlot } from "@/libs/ads/components/ads-slot";
 import { APP_ROUTE } from "@/routes/app.route";
-import { TVideoPageProps } from "./page.type";
-import { getFraudBySlug } from "./utils/get-fraud-by-slug";
+import { getFraudBySlug } from "@/utils/frauds/get-fraud-by-slug";
 import { generateWhatsAppShareLink } from "@/utils/generate/links";
 import { LdJsonScript } from "@/components/scripts/ld-json";
 import { getOtherRecentFrauds } from "./utils/get-other-recent-frauds";
@@ -15,6 +14,7 @@ import { BadgeSubCategory } from "@/components/badges/badge-sub-category";
 import { PreventionTip } from "./components/prevention-tip";
 import { RenderMarkdown } from "./components/render-markdown";
 import { ButtonLink } from "@/components/buttons/button-link";
+import { TSlugPageProps } from "@/types/global.type";
 
 export const revalidate = 3600;
 
@@ -22,7 +22,7 @@ const { NEXT_PUBLIC_ADSENSE_SLOT } = SERVER_ENVIRONMENT;
 
 export async function generateMetadata({
   params,
-}: TVideoPageProps): Promise<Metadata> {
+}: TSlugPageProps): Promise<Metadata> {
   const { fraud, slug } = await getFraudBySlug(params);
   if (!fraud) return {};
 
@@ -40,7 +40,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function VideoPage({ params }: TVideoPageProps) {
+export default async function VideoPage({ params }: TSlugPageProps) {
   const { fraud, slug } = await getFraudBySlug(params);
 
   if (!fraud) return notFound();
