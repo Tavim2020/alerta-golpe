@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { Control, FieldValues, Path } from "react-hook-form";
 
 export interface IControlledInputText<GProps extends FieldValues> {
@@ -5,6 +6,7 @@ export interface IControlledInputText<GProps extends FieldValues> {
   inputClassName?: string;
   name: Path<GProps>;
   control: Control<GProps>;
+  label?: ReactNode;
   type?: "text" | "password" | "email";
   formatOnValue?: (value: string) => string;
   formatOnChange?: (value: string) => string;
