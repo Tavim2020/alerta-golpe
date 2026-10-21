@@ -9,6 +9,8 @@ export const ButtonDefault = ({
   type = "button",
   children,
   disabled,
+  "aria-label": ariaLabel,
+  role,
 }: IButtonDefaultProps) => {
   const variantClassName = buttonVariants[variant];
 
@@ -18,6 +20,8 @@ export const ButtonDefault = ({
       onClick={onClick}
       className={cn(variantClassName, className)}
       disabled={disabled}
+      aria-label={ariaLabel}
+      role={role}
     >
       {children}
     </button>
