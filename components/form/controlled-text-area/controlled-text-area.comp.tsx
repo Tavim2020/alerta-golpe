@@ -4,6 +4,7 @@ import { Controller, FieldValues } from "react-hook-form";
 import { IControlledTextArea } from "./controlled-text-area.type";
 import { cn } from "@/libs/utils";
 import { ErrorMessageCustom } from "../error-message-custom";
+import { Label } from "../label";
 
 export const ControlledTextArea = <GProps extends FieldValues>({
   name,
@@ -11,6 +12,7 @@ export const ControlledTextArea = <GProps extends FieldValues>({
   wrapperClassName,
   rows,
   placeholder,
+  label,
   textAreaClassName,
   disabled,
   minLength,
@@ -23,6 +25,8 @@ export const ControlledTextArea = <GProps extends FieldValues>({
       control={control}
       render={({ field, formState: { errors } }) => (
         <div className={cn("w-full", wrapperClassName)}>
+          <Label htmlFor={name}>{label}</Label>
+
           <textarea
             {...field}
             rows={rows}

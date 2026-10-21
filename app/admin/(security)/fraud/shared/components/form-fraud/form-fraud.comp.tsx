@@ -11,6 +11,7 @@ import { ControlledFile } from "@/components/form/controlled-file";
 import { imagePropsVerification } from "./constants/image.constant";
 import { videoPropsVerification } from "./constants/video.constant";
 import { ControlledMarkdown } from "@/components/form/controlled-markdown";
+import { ControlledAutocomplete } from "@/components/form/controlled-autocomplete";
 
 export const FormFraud = ({ isPending, submit, fraud }: IFormFraudProps) => {
   const { control, handleSubmit } = useForm<FormFraudSchema>({
@@ -18,6 +19,8 @@ export const FormFraud = ({ isPending, submit, fraud }: IFormFraudProps) => {
     defaultValues: {
       title: fraud?.title || "",
       description: fraud?.description || "",
+      category: fraud?.sub_category?.category?.id || "",
+      sub_category: fraud?.sub_category?.id || "",
       context: fraud?.context || "",
       content: fraud?.content || "",
       tips: fraud?.tips || [],
@@ -39,6 +42,7 @@ export const FormFraud = ({ isPending, submit, fraud }: IFormFraudProps) => {
       <ControlledInputText
         control={control}
         name="title"
+        label="Título: *"
         required
         maxLength={100}
         placeholder="Título (ex: Golpe da falsa central do banco)..."
@@ -47,15 +51,39 @@ export const FormFraud = ({ isPending, submit, fraud }: IFormFraudProps) => {
       <ControlledTextArea
         control={control}
         name="description"
+        label="Descrição: *"
         placeholder="Descrição do golpe..."
         rows={5}
         minLength={30}
         maxLength={255}
       />
 
+      <ControlledAutocomplete
+        control={control}
+        name="category"
+        required
+        options={[
+          { label: "abc", value: "44848809-aa0d-4d7a-b12f-14bffcfe03e8" },
+        ]}
+        label={"Categoria: *"}
+        placeholder="Ex: Online..."
+      />
+
+      <ControlledAutocomplete
+        control={control}
+        name="sub_category"
+        required
+        options={[
+          { label: "abc", value: "44848809-aa0d-4d7a-b12f-14bffcfe03e8" },
+        ]}
+        label={"Sub Categoria: *"}
+        placeholder="Ex: Banco..."
+      />
+
       <ControlledMarkdown
         control={control}
         name="context"
+        label="Contexto: *"
         placeholder="Contexto da fraude..."
         required
       />
@@ -63,6 +91,7 @@ export const FormFraud = ({ isPending, submit, fraud }: IFormFraudProps) => {
       <ControlledMarkdown
         control={control}
         name="content"
+        label="Conteúdo: *"
         placeholder="Conteúdo da fraude..."
         required
       />
@@ -72,7 +101,6 @@ export const FormFraud = ({ isPending, submit, fraud }: IFormFraudProps) => {
           <h2 className="font-display text-xl">Dicas de prevenção</h2>
 
           <ButtonDefault
-            type="button"
             onClick={() =>
               append({
                 title: "",
@@ -126,14 +154,16 @@ export const FormFraud = ({ isPending, submit, fraud }: IFormFraudProps) => {
         control={control}
         name={"video_file"}
         accept={videoPropsVerification.videosAccepts.join(", ")}
-        placeholder="Selecione o vídeo da fraud"
+        label="Vídeo da fraud: *"
+        required
       />
 
       <ControlledFile
         control={control}
         name={"thumbnail_file"}
         accept={imagePropsVerification.imagesAccepts.join(", ")}
-        placeholder="Selecione a imagem de Thumbnail"
+        label="Imagem de Thumbnail da fraud: *"
+        required
       />
 
       <ButtonDefault

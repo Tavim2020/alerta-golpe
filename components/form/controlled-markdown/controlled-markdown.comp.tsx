@@ -6,12 +6,14 @@ import { cn } from "@/libs/utils";
 import { ErrorMessageCustom } from "../error-message-custom";
 import MDEditor from "@uiw/react-md-editor";
 import rehypeSanitize from "rehype-sanitize";
+import { Label } from "../label";
 
 export const ControlledMarkdown = <GProps extends FieldValues>({
   name,
   control,
   wrapperClassName,
   placeholder,
+  label,
   markdownClassName,
   disabled,
   minLength,
@@ -24,6 +26,8 @@ export const ControlledMarkdown = <GProps extends FieldValues>({
       control={control}
       render={({ field, formState: { errors } }) => (
         <div className={cn("w-full", wrapperClassName)}>
+          <Label htmlFor={name}>{label}</Label>
+
           <MDEditor
             {...field}
             textareaProps={{

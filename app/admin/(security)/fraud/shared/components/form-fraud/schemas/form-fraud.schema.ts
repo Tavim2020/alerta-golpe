@@ -20,25 +20,29 @@ const fileOrUrlSchema = (config: {
       message: `Formato de ${config.label.toLowerCase()} inválido. Formatos: ${config.formats}`,
     });
 
+const stringError = "O campo deve ser uma string";
+
 export const formFraudSchema = z.object({
   title: z
-    .string({ error: "O campo deve ser uma string" })
+    .string({ error: stringError })
     .max(100, { error: "Máximo 100 caracteres" }),
   description: z
-    .string({ error: "O campo deve ser uma string" })
+    .string({ error: stringError })
     .min(30, { error: "Mínimo 30 caracteres" })
     .max(255, { error: "Máximo 255 caracteres" }),
-  context: z.string({ error: "O campo deve ser uma string" }),
-  content: z.string({ error: "O campo deve ser uma string" }),
+  category: z.string({ error: stringError }),
+  sub_category: z.string({ error: stringError }),
+  context: z.string({ error: stringError }),
+  content: z.string({ error: stringError }),
   tips: z
     .array(
       z.object({
         title: z
-          .string({ error: "O campo deve ser uma string" })
+          .string({ error: stringError })
           .min(5, { error: "Mínimo 5 caracteres" })
           .max(50, { error: "Máximo 50 caracteres" }),
         description: z
-          .string({ error: "O campo deve ser uma string" })
+          .string({ error: stringError })
           .min(15, { error: "Mínimo 15 caracteres" })
           .max(150, { error: "Máximo 150 caracteres" }),
       }),

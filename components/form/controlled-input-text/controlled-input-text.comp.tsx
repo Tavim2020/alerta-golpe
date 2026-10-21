@@ -4,6 +4,7 @@ import { Controller, FieldValues } from "react-hook-form";
 import { IControlledInputText } from "./controlled-input-text.type";
 import { ErrorMessageCustom } from "../error-message-custom";
 import { cn } from "@/libs/utils";
+import { Label } from "../label";
 
 export const ControlledInputText = <GProps extends FieldValues>({
   wrapperClassName,
@@ -13,6 +14,7 @@ export const ControlledInputText = <GProps extends FieldValues>({
   formatOnValue = (value) => value,
   formatOnChange = (value) => value,
   type = "text",
+  label,
   placeholder,
   disabled,
   minLength,
@@ -25,6 +27,8 @@ export const ControlledInputText = <GProps extends FieldValues>({
       control={control}
       render={({ field, formState: { errors } }) => (
         <div className={cn("w-full", wrapperClassName)}>
+          <Label htmlFor={name}>{label}</Label>
+
           <input
             {...field}
             value={formatOnValue(field.value)}

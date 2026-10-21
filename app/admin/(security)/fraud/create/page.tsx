@@ -6,6 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { FormFraudSchema } from "../shared/components/form-fraud/schemas/form-fraud.schema";
 import { APP_ROUTE } from "@/routes/app.route";
+import { BackButton } from "../../shared/components/back-button";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -24,5 +25,11 @@ export default function AdminDashboard() {
       toast.error(error?.message || "Tivemos problemas ao cadastrar a fraude."),
   });
 
-  return <FormFraud isPending={isPending} submit={(data) => mutate(data)} />;
+  return (
+    <>
+      <BackButton title="Cadastro de Fraud" />
+
+      <FormFraud isPending={isPending} submit={(data) => mutate(data)} />
+    </>
+  );
 }
