@@ -48,28 +48,46 @@ export const formFraudSchema = z.object({
       }),
     )
     .refine((value) => value.length, { error: "Deve sempre haver uma dica" }),
-  video_file: z.union([
-    z.string({ error: "O valor deve ser uma string" }),
-    fileOrUrlSchema({
-      maxSize: videoPropsVerification.maxSize,
-      mbSize: videoPropsVerification.mbSize,
-      accepts: videoPropsVerification.videosAccepts,
-      formats: videoPropsVerification.formats,
-      label: "Vídeo",
+  video_file: z
+    .union([
+      z.string({ error: "O valor deve ser uma string" }),
+      fileOrUrlSchema({
+        maxSize: videoPropsVerification.maxSize,
+        mbSize: videoPropsVerification.mbSize,
+        accepts: videoPropsVerification.videosAccepts,
+        formats: videoPropsVerification.formats,
+        label: "Vídeo",
+      }),
+      z.null(),
+    ])
+    .superRefine((value, ctx) => {
+      if (value === null) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Vídeo é obrigatório",
+        });
+      }
     }),
-    z.null(),
-  ]),
-  thumbnail_file: z.union([
-    z.string({ error: "O valor deve ser uma string" }),
-    fileOrUrlSchema({
-      maxSize: imagePropsVerification.maxSize,
-      mbSize: imagePropsVerification.mbSize,
-      accepts: imagePropsVerification.imagesAccepts,
-      formats: imagePropsVerification.formats,
-      label: "Imagem",
+  thumbnail_file: z
+    .union([
+      z.string({ error: "O valor deve ser uma string" }),
+      fileOrUrlSchema({
+        maxSize: imagePropsVerification.maxSize,
+        mbSize: imagePropsVerification.mbSize,
+        accepts: imagePropsVerification.imagesAccepts,
+        formats: imagePropsVerification.formats,
+        label: "Imagem",
+      }),
+      z.null(),
+    ])
+    .superRefine((value, ctx) => {
+      if (value === null) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Imagem é obrigatória",
+        });
+      }
     }),
-    z.null(),
-  ]),
 });
 
 export type FormFraudSchema = z.infer<typeof formFraudSchema>;

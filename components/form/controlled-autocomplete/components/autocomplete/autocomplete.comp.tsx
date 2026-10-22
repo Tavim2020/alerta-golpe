@@ -23,6 +23,7 @@ export const Autocomplete = <GProps extends FieldValues>({
   field,
   label,
   errors,
+  onChange,
 }: IAutoCompleteProps<GProps>) => {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -61,6 +62,8 @@ export const Autocomplete = <GProps extends FieldValues>({
       setIsOpen(true);
       return;
     }
+
+    onChange?.(option);
 
     field.onChange(option.value);
     setSearch("");

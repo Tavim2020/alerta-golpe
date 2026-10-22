@@ -1,10 +1,8 @@
-import { TFraud } from "@/types/global.type";
+import { TFraud, TServerDefaultResponse } from "@/types/global.type";
 import { db } from "@/libs/supabase/server";
 import { formatDateToBr } from "@/utils/format/dates";
 import { generateBucketUrl } from "@/utils/generate/links";
-
-const videoBucket = db().storage.from("videos");
-const thumbnailBucket = db().storage.from("thumbnails");
+import { thumbnailBucket, videoBucket } from "../../storages/supabase.storage";
 
 interface IGetFrauds {
   page?: number;
@@ -13,24 +11,12 @@ interface IGetFrauds {
   search?: string;
 }
 
-type TReturnGetFrauds =
-  | {
-      data: TFraud[];
-      totalPages: number;
-      success: true;
-    }
-  | {
-      data?: undefined;
-      totalPages?: undefined;
-      success: false;
-    };
-
 export async function getFrauds({
   page = 1,
   limit,
   slug,
   search,
-}: IGetFrauds): Promise<TReturnGetFrauds> {
+}: IGetFrauds): Promise<TServerDefaultResponse<TFraud[]>> {
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
@@ -104,7 +90,7 @@ export async function getFrauds({
       success: true,
     };
   } catch (error) {
-    console.error("Erro ao buscar vídeos:", error);
+    console.error("Erro ao buscar as fraudes:", error);
     return {
       success: false,
     };
