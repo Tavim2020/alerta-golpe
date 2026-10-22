@@ -6,14 +6,14 @@ import { logger } from "@/utils/logging";
 export type Middleware<GParams = unknown> = (
   req: NextRequest,
   next: VoidFunction,
-  params?: Promise<GParams>,
+  otherProps?: GParams,
 ) => Promise<Response | void>;
 
 const execMiddleware = async <GParams>(
   req: NextRequest,
   middlewares: Middleware<GParams>[],
   index = 0,
-  params?: Promise<GParams>,
+  otherProps?: GParams,
 ): Promise<Response | void> => {
   const current = middlewares[index];
   if (!current) return;
@@ -21,9 +21,9 @@ const execMiddleware = async <GParams>(
   return current(
     req,
     async () => {
-      return execMiddleware(req, middlewares, index + 1, params);
+      return execMiddleware(req, middlewares, index + 1, otherProps);
     },
-    params,
+    otherProps,
   );
 };
 
@@ -40,9 +40,9 @@ const errorNameDefaultResponse = [
 
 export const handlerMiddleware =
   <GParams = unknown>(...middleware: Middleware<GParams>[]) =>
-  async (req: NextRequest, params?: Promise<GParams>): Promise<Response> => {
+  async (req: NextRequest, otherProps?: GParams): Promise<Response> => {
     try {
-      const result = await execMiddleware(req, middleware, 0, params);
+      const result = await execMiddleware(req, middleware, 0, otherProps);
 
       if (!result) {
         return new Response("Not Found", { status: 404 });

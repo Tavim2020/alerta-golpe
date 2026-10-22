@@ -1,4 +1,4 @@
-import { getFrauds } from "@/libs/supabase/get-videos";
+import { getFrauds } from "@/libs/supabase/frauds/get-frauds";
 import { TSlugPageParam } from "@/types/global.type";
 import { notFound } from "next/navigation";
 
