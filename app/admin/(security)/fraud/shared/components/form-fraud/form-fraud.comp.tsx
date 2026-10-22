@@ -1,7 +1,7 @@
 "use client";
 
 import { ControlledTextArea } from "@/components/form/controlled-text-area";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { formFraudSchema, FormFraudSchema } from "./schemas/form-fraud.schema";
 import { IFormFraudProps } from "./form-fraud.type";
 import { ButtonDefault } from "@/components/buttons/button-default";
@@ -12,9 +12,17 @@ import { imagePropsVerification } from "./constants/image.constant";
 import { videoPropsVerification } from "./constants/video.constant";
 import { ControlledMarkdown } from "@/components/form/controlled-markdown";
 import { ControlledAutocomplete } from "@/components/form/controlled-autocomplete";
+import { IAutocompleteOption } from "@/components/form/controlled-autocomplete/components/autocomplete/autocomplete.type";
+import { useMemo } from "react";
 
-export const FormFraud = ({ isPending, submit, fraud }: IFormFraudProps) => {
-  const { control, handleSubmit } = useForm<FormFraudSchema>({
+export const FormFraud = ({
+  isPending,
+  submit,
+  fraud,
+  allCategoriesOptions,
+  allSubCategoriesOptions,
+}: IFormFraudProps) => {
+  const { control, handleSubmit, setValue } = useForm<FormFraudSchema>({
     resolver: zodResolver(formFraudSchema),
     defaultValues: {
       title: fraud?.title || "",
@@ -29,10 +37,25 @@ export const FormFraud = ({ isPending, submit, fraud }: IFormFraudProps) => {
     },
   });
 
+  const categoryValue = useWatch({ control, name: "category" });
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "tips",
   });
+
+  const resetSubCategoryByCategory = (option: IAutocompleteOption) => {
+    if (categoryValue !== option.value) setValue("sub_category", "");
+  };
+
+  const subCategoriesFiltered = useMemo(
+    () =>
+      allSubCategoriesOptions.filter(
+        (subCategory) =>
+          categoryValue && subCategory.categoryId === categoryValue,
+      ),
+    [allSubCategoriesOptions, categoryValue],
+  );
 
   return (
     <form
@@ -62,22 +85,20 @@ export const FormFraud = ({ isPending, submit, fraud }: IFormFraudProps) => {
         control={control}
         name="category"
         required
-        options={[
-          { label: "abc", value: "44848809-aa0d-4d7a-b12f-14bffcfe03e8" },
-        ]}
+        options={allCategoriesOptions}
         label={"Categoria: *"}
         placeholder="Ex: Online..."
+        onChange={resetSubCategoryByCategory}
       />
 
       <ControlledAutocomplete
         control={control}
         name="sub_category"
         required
-        options={[
-          { label: "abc", value: "44848809-aa0d-4d7a-b12f-14bffcfe03e8" },
-        ]}
+        options={subCategoriesFiltered}
         label={"Sub Categoria: *"}
         placeholder="Ex: Banco..."
+        disabled={Boolean(categoryValue) === false}
       />
 
       <ControlledMarkdown
@@ -155,7 +176,6 @@ export const FormFraud = ({ isPending, submit, fraud }: IFormFraudProps) => {
         name={"video_file"}
         accept={videoPropsVerification.videosAccepts.join(", ")}
         label="Vídeo da fraud: *"
-        required
       />
 
       <ControlledFile
@@ -163,12 +183,12 @@ export const FormFraud = ({ isPending, submit, fraud }: IFormFraudProps) => {
         name={"thumbnail_file"}
         accept={imagePropsVerification.imagesAccepts.join(", ")}
         label="Imagem de Thumbnail da fraud: *"
-        required
       />
 
       <ButtonDefault
+        type="submit"
         disabled={isPending}
-        className="w-full bg-sun py-3 hover:brightness-95"
+        className="w-full bg-sun text-black py-3 hover:bg-sun hover:text-black hover:brightness-95"
       >
         {isPending ? "Publicando…" : "Publicar vídeo"}
       </ButtonDefault>

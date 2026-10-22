@@ -27,8 +27,17 @@ export async function validateRequestData<GSchema extends z.ZodTypeAny>({
 
       if (typeof value === "string") {
         if (value === "true") parsedValue = true;
-        else if (value === "false") parsedValue = false;
+        else if (value === "false") {
+          parsedValue = false;
+        } else {
+          try {
+            parsedValue = JSON.parse(value);
+          } catch {
+            parsedValue = value;
+          }
+        }
       }
+
       body[key as keyof typeof body] = parsedValue;
     });
   }

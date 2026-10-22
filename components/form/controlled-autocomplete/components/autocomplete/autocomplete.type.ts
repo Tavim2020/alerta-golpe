@@ -22,4 +22,5 @@ export interface IAutoCompleteProps<GProps extends FieldValues> {
   label: string;
   field: ControllerRenderProps<GProps, Path<GProps>>;
   errors: FieldErrors<GProps>;
+  onChange?: (option: IAutocompleteOption) => void;
 }

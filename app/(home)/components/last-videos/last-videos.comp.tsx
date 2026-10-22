@@ -2,7 +2,7 @@ import { AdsSlot } from "@/libs/ads/components/ads-slot";
 import { EmptyVideos } from "@/components/videos/empty-videos";
 import { PreviewVideosCard } from "@/components/videos/preview-video-card";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
-import { getFrauds } from "@/libs/supabase/get-videos";
+import { getFrauds } from "@/libs/supabase/frauds/get-frauds";
 
 const { NEXT_PUBLIC_ADSENSE_SLOT } = SERVER_ENVIRONMENT;
 

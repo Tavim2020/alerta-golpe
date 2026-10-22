@@ -35,3 +35,15 @@ export type TSlugPageParam = Promise<{ slug: string }>;
 export type TSlugPageProps = {
   params: TSlugPageParam;
 };
+
+export type TServerDefaultResponse<GResponse> =
+  | {
+      data: GResponse;
+      totalPages: number;
+      success: true;
+    }
+  | {
+      data?: undefined;
+      totalPages?: undefined;
+      success: false;
+    };

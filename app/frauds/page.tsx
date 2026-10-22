@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getFrauds } from "@/libs/supabase/get-videos";
+import { getFrauds } from "@/libs/supabase/frauds/get-frauds";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
 import { AdsSlot } from "@/libs/ads/components/ads-slot";
 import { PreviewVideosCard } from "@/components/videos/preview-video-card";

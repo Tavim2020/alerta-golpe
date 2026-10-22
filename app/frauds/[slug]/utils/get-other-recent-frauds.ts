@@ -1,4 +1,4 @@
-import { getFrauds } from "@/libs/supabase/get-videos";
+import { getFrauds } from "@/libs/supabase/frauds/get-frauds";
 
 export const getOtherRecentFrauds = async (fraudId: string) => {
   const { data: frauds, success } = await getFrauds({ limit: 4 });

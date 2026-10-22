@@ -1,35 +1,22 @@
-"use client";
+import { getCategoriesOptions } from "@/libs/supabase/categories/get-categories";
+import { RenderFormCreateFraud } from "./components/render-form-create-fraud";
+import { getSubCategoriesOptions } from "@/libs/supabase/sub-categories/get-sub-categories";
 
-import { useRouter } from "next/navigation";
-import { FormFraud } from "../shared/components/form-fraud";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
-import { FormFraudSchema } from "../shared/components/form-fraud/schemas/form-fraud.schema";
-import { APP_ROUTE } from "@/routes/app.route";
-import { BackButton } from "../../shared/components/back-button";
+export default async function AdminDashboard() {
+  const [
+    { success: successCategoryOptions, data: allCategoriesOptions },
+    { success: successSubCategoryOptions, data: allSubCategoriesOptions },
+  ] = await Promise.all([getCategoriesOptions(), getSubCategoriesOptions()]);
 
-export default function AdminDashboard() {
-  const router = useRouter();
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (data: FormFraudSchema) => {
-      await new Promise((resolver) => setTimeout(resolver, 3000));
-      console.log(data);
-      return true;
-    },
-    onSuccess: () => {
-      toast.success("Fraude cadastradas com sucesso!");
-      router.push(APP_ROUTE.ADMIN.DASHBOARD.ROOT);
-    },
-    onError: (error) =>
-      toast.error(error?.message || "Tivemos problemas ao cadastrar a fraude."),
-  });
+  if (!successCategoryOptions || !successSubCategoryOptions)
+    throw new Error(
+      "Tivemos problemas ao buscar as informações de categoria e sub categoria",
+    );
 
   return (
-    <>
-      <BackButton title="Cadastro de Fraud" />
-
-      <FormFraud isPending={isPending} submit={(data) => mutate(data)} />
-    </>
+    <RenderFormCreateFraud
+      allCategoriesOptions={allCategoriesOptions}
+      allSubCategoriesOptions={allSubCategoriesOptions}
+    />
   );
 }
