@@ -40,7 +40,7 @@ export const RenderFormEditSubCategories = ({
       },
       onSuccess: () => {
         toast.success("Sub categoria editada com sucesso!");
-        router.push(APP_ROUTE.ADMIN.CATEGORIES.ROOT());
+        router.push(APP_ROUTE.ADMIN.SUB_CATEGORIES.ROOT());
       },
       onError: (error) =>
         toast.error(
@@ -54,7 +54,7 @@ export const RenderFormEditSubCategories = ({
   } = useMutation({
     mutationFn: async () => {
       const response = await fetch(
-        API_ROUTE.CATEGORIES.DELETE_BY_ID(subCategoryId),
+        API_ROUTE.SUB_CATEGORIES.DELETE_BY_ID(subCategoryId),
         {
           method: "DELETE",
         },
@@ -72,7 +72,7 @@ export const RenderFormEditSubCategories = ({
     },
     onSuccess: () => {
       toast.success("Sub categoria deletada com sucesso!");
-      router.push(APP_ROUTE.ADMIN.CATEGORIES.ROOT());
+      router.push(APP_ROUTE.ADMIN.SUB_CATEGORIES.ROOT());
     },
     onError: (error) =>
       toast.error(

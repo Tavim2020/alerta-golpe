@@ -4,7 +4,7 @@ const API_PREFIX = "/api";
 const ADMIN_PREFIX = `${API_PREFIX}/admin`;
 const FRAUDS_PREFIX = `${ADMIN_PREFIX}/frauds`;
 const CATEGORIES_PREFIX = `${ADMIN_PREFIX}/categories`;
-const SUB_CATEGORIES_PREFIX = `${ADMIN_PREFIX}/categories`;
+const SUB_CATEGORIES_PREFIX = `${ADMIN_PREFIX}/sub-categories`;
 
 export const API_ROUTE = {
   ADMIN_LOGIN: `${API_PREFIX}/login`,
