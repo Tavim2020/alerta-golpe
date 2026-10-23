@@ -11,7 +11,7 @@ export const Pagination = ({
   if (totalPages <= 1) return null;
 
   const getPageHref = (page: number) =>
-    page === 1 ? basePath : `${basePath}?page=${page}`;
+    page === 1 ? basePath() : `${basePath(page)}`;
 
   const getPages = () => {
     const pages = new Set<number>();

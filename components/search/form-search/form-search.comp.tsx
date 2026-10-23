@@ -4,9 +4,9 @@ import { ButtonDefault } from "@/components/buttons/button-default";
 import { ControlledInputText } from "@/components/form/controlled-input-text";
 import { useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
-import { APP_ROUTE } from "@/routes/app.route";
+import { IFormSearchProps } from "./form-search.type";
 
-export const FormSearch = () => {
+export const FormSearch = ({ currentRoute, placeholder }: IFormSearchProps) => {
   const searchParams = useSearchParams();
   const searchOnUrl = searchParams.get("search") || "";
 
@@ -19,9 +19,9 @@ export const FormSearch = () => {
   });
 
   const addSearchOnUrl = (searchValue: string) =>
-    router.push(APP_ROUTE.FRAUDS.ROOT({ search: searchValue }));
+    router.push(currentRoute(searchValue));
 
-  const clearSearchOnUrl = () => router.push(APP_ROUTE.FRAUDS.ROOT());
+  const clearSearchOnUrl = () => router.push(currentRoute());
 
   return (
     <form
@@ -31,7 +31,7 @@ export const FormSearch = () => {
       <ControlledInputText
         control={control}
         name="search"
-        placeholder="Buscar por título, descrição, contexto, conteúdo, dica...."
+        placeholder={placeholder}
         maxLength={100}
       />
 

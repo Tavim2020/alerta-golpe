@@ -40,3 +40,50 @@ export async function getSubCategoriesOptions(): Promise<
     };
   }
 }
+
+interface IGetAllSubCategories {
+  page?: number;
+  limit: number;
+  id?: string;
+  search?: string;
+}
+
+export async function getAllSubCategories({
+  page = 1,
+  limit,
+  id,
+  search,
+}: IGetAllSubCategories): Promise<
+  TServerDefaultResponse<{ id: string; name: string }[]>
+> {
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  try {
+    let query = db()
+      .from("sub_categories")
+      .select("id, name", { count: "exact" })
+      .order("updated_at", { ascending: false });
+
+    if (id) query = query.eq("id", id);
+
+    if (search?.trim()) query = query.ilike("name", `%${search.trim()}%`);
+
+    const { data, error, count } = await query.range(from, to);
+
+    if (error) throw error;
+
+    const total = count ?? 0;
+
+    return {
+      data: data || [],
+      totalPages: Math.ceil(total / limit),
+      success: true,
+    };
+  } catch (error) {
+    console.error("Erro ao buscar as sub categorias:", error);
+    return {
+      success: false,
+    };
+  }
+}

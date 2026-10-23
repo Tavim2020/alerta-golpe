@@ -1,5 +1,5 @@
 export interface IPaginationProps {
   currentPage: number;
   totalPages: number;
-  basePath: string;
+  basePath: (page?: string | number) => string;
 }
