@@ -52,7 +52,10 @@ export const RenderFormCreateFraud = ({
 
   return (
     <>
-      <BackButton title="Cadastro de Fraud" />
+      <BackButton
+        title="Cadastro de Fraud"
+        href={APP_ROUTE.ADMIN.DASHBOARD.ROOT}
+      />
 
       <FormFraud
         isPending={isPending}

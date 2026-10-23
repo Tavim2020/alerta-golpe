@@ -3,10 +3,10 @@ import { APP_ROUTE } from "@/routes/app.route";
 import { ArrowBigLeft, ArrowLeftCircle } from "lucide-react";
 import { IBackButtonProps } from "./back-button.type";
 
-export const BackButton = ({ title }: IBackButtonProps) => {
+export const BackButton = ({ title, href }: IBackButtonProps) => {
   return (
     <div className="my-5 flex items-center gap-4">
-      <ButtonLink variant="clean" href={APP_ROUTE.ADMIN.DASHBOARD.ROOT}>
+      <ButtonLink variant="clean" href={href}>
         <ArrowLeftCircle className="w-8 h-8 text-black" />
       </ButtonLink>
 

@@ -2,6 +2,9 @@ import { addSearchParams } from "./utils/add-search-params";
 
 const FRAUDS_ROOT = "/frauds";
 const ADMIN_PREFIX = "/admin";
+const ADMIN_FRAUD_PREFIX = `${ADMIN_PREFIX}/fraud`;
+const ADMIN_CATEGORIES_ROOT = `${ADMIN_PREFIX}/categories`;
+const ADMIN_SUB_CATEGORIES_ROOT = `${ADMIN_PREFIX}/sub-categories`;
 
 export const APP_ROUTE = {
   HOME: {
@@ -20,14 +23,23 @@ export const APP_ROUTE = {
       ROOT: `${ADMIN_PREFIX}/dashboard`,
     },
     FRAUD: {
-      CREATE: `${ADMIN_PREFIX}/fraud/create`,
-      EDIT: (slug: string) => `${ADMIN_PREFIX}/fraud/edit/${slug}`,
+      CREATE: `${ADMIN_FRAUD_PREFIX}/create`,
+      EDIT: (slug: string) => `${ADMIN_FRAUD_PREFIX}/edit/${slug}`,
     },
     CATEGORIES: {
-      ROOT: `${ADMIN_PREFIX}/categories`,
+      ROOT: (objectWithParams?: { page?: string | number; search?: string }) =>
+        `${ADMIN_CATEGORIES_ROOT}${addSearchParams(objectWithParams)}`,
+      CREATE: `${ADMIN_CATEGORIES_ROOT}/create`,
+      EDIT: (id: string) => `${ADMIN_CATEGORIES_ROOT}/edit/${id}`,
     },
     LAWYERS: {
       ROOT: `${ADMIN_PREFIX}/lawyers`,
+    },
+    SUB_CATEGORIES: {
+      ROOT: (objectWithParams?: { page?: string | number; search?: string }) =>
+        `${ADMIN_SUB_CATEGORIES_ROOT}${addSearchParams(objectWithParams)}`,
+      CREATE: `${ADMIN_SUB_CATEGORIES_ROOT}/create`,
+      EDIT: (id: string) => `${ADMIN_SUB_CATEGORIES_ROOT}/edit/${id}`,
     },
   },
 } as const;
