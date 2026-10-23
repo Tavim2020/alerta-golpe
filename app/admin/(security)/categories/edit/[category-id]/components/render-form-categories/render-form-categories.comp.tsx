@@ -79,7 +79,10 @@ export const RenderFormCategories = ({
 
   return (
     <>
-      <DeleteButton onDelete={() => mutateDeleteCategory()} />
+      <DeleteButton
+        modalMessage="Essa ação só pode ocorrer se a categoria não tiver sub categoria vinculada a ela. Tem certeza de que deseja excluir este item? Esta ação não poderá ser desfeita."
+        onDelete={() => mutateDeleteCategory()}
+      />
 
       <FormCategories
         isPending={isPendingEditCategory || isPendingDeleteCategory}
