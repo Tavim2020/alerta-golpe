@@ -1,15 +1,20 @@
 import Link from "next/link";
 import { IDashboardManagerButtonProps } from "./dashboard-manager-button.type";
+import { cn } from "@/libs/utils";
 
 export const DashboardManagerButton = ({
   href,
   iconString,
   title,
+  className,
 }: IDashboardManagerButtonProps) => {
   return (
     <Link
       href={href}
-      className="group flex items-center gap-4 border border-ink/15 bg-white p-5 transition hover:border-ink/40"
+      className={cn(
+        "group flex items-center gap-4 border border-ink/15 bg-white p-5 transition hover:border-ink/40",
+        className,
+      )}
     >
       <div className="flex size-12 shrink-0 items-center justify-center bg-sun/30 text-xl">
         <span aria-hidden="true">{iconString}</span>

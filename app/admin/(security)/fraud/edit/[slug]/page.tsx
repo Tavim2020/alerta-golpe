@@ -4,6 +4,7 @@ import { TSlugPageProps } from "@/types/global.type";
 import { BackButton } from "../../../shared/components/back-button";
 import { getCategoriesOptions } from "@/libs/supabase/categories/get-categories";
 import { getSubCategoriesOptions } from "@/libs/supabase/sub-categories/get-sub-categories";
+import { APP_ROUTE } from "@/routes/app.route";
 
 export default async function EditFraud({ params }: TSlugPageProps) {
   const [
@@ -21,7 +22,10 @@ export default async function EditFraud({ params }: TSlugPageProps) {
 
   return (
     <>
-      <BackButton title="Edição de Fraud" />
+      <BackButton
+        title="Edição de Fraud"
+        href={APP_ROUTE.ADMIN.DASHBOARD.ROOT}
+      />
 
       <RenderFormEditFraud
         fraud={fraud}

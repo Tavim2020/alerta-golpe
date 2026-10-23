@@ -8,8 +8,8 @@ import { APP_ROUTE } from "@/routes/app.route";
 import { TipCard } from "./components/tip-card";
 import { fraudsPageTips } from "./constants/frauds.constant";
 import { IFraudPageProps } from "./page.type";
-import { Pagination } from "./components/pagination";
-import { FormSearch } from "./components/form-search";
+import { Pagination } from "../../components/pagination";
+import { WrapperFraudsFormSearch } from "./components/wrapper-frauds-form-search";
 
 export const revalidate = 3600;
 
@@ -44,7 +44,7 @@ export default async function Frauds({ searchParams }: IFraudPageProps) {
     <div className="mx-auto max-w-6xl px-4 py-10">
       <h1 className="font-display text-5xl">Golpes sofridos</h1>
 
-      <FormSearch />
+      <WrapperFraudsFormSearch />
 
       <p className="mt-3 max-w-2xl text-lg">
         Cada vídeo mostra um golpe que realmente aconteceu. Compartilhe com quem
@@ -62,7 +62,7 @@ export default async function Frauds({ searchParams }: IFraudPageProps) {
       {frauds.length ? <PreviewVideosCard frauds={frauds} /> : <EmptyVideos />}
 
       <Pagination
-        basePath={APP_ROUTE.FRAUDS.ROOT()}
+        basePath={(page) => APP_ROUTE.FRAUDS.ROOT({ page, search })}
         totalPages={totalPages}
         currentPage={currentPage}
       />

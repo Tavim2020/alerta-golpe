@@ -37,7 +37,7 @@ export async function getFrauds({
       `,
         { count: "exact" },
       )
-      .order("created_at", { ascending: false });
+      .order("updated_at", { ascending: false });
 
     if (slug) query = query.eq("slug", slug);
 

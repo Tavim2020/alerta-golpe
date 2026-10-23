@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { API_ROUTE } from "@/routes/api.route";
 import { APP_ROUTE } from "@/routes/app.route";
@@ -14,6 +13,7 @@ import { DashboardManagerButton } from "./components/dashboard-manager-button";
 import { SecurityLoading } from "../shared/components/security-loading";
 import { SecurityErrorCard } from "../shared/components/security-error-card";
 import { SecurityEmptyCard } from "../shared/components/security-empty-card";
+import { SecurityInformationCard } from "../shared/components/security-information-card";
 
 async function getFrauds(objectWithParams: {
   page?: string | number;
@@ -35,7 +35,6 @@ async function getFrauds(objectWithParams: {
 export default function AdminDashboard() {
   const searchParams = useSearchParams();
   const page = searchParams.get("page") || "";
-  const limit = searchParams.get("limit") || "";
   const search = searchParams.get("search") || "";
 
   const {
@@ -58,15 +57,22 @@ export default function AdminDashboard() {
 
       <section className="grid gap-4 sm:grid-cols-2">
         <DashboardManagerButton
-          href={APP_ROUTE.ADMIN.CATEGORIES.ROOT}
+          href={APP_ROUTE.ADMIN.CATEGORIES.ROOT()}
           iconString="▤"
           title="categorias"
+        />
+
+        <DashboardManagerButton
+          href={APP_ROUTE.ADMIN.SUB_CATEGORIES.ROOT()}
+          iconString="⤷"
+          title="sub categorias"
         />
 
         <DashboardManagerButton
           href={APP_ROUTE.ADMIN.LAWYERS.ROOT}
           iconString="⚖"
           title="advogados"
+          className="sm:col-span-2"
         />
       </section>
 
@@ -94,31 +100,21 @@ export default function AdminDashboard() {
         {!isPending && !isError && frauds.length > 0 && (
           <div className="divide-y divide-ink/10 border border-ink/15 bg-white">
             {frauds.map((fraud) => (
-              <article
+              <SecurityInformationCard
                 key={fraud.slug}
-                className="flex flex-col gap-4 p-5 transition hover:bg-ink/2 sm:flex-row sm:items-center sm:justify-between"
+                href={APP_ROUTE.ADMIN.FRAUD.EDIT(fraud.slug)}
+                title={fraud.title}
               >
-                <div className="min-w-0 flex-1">
-                  <h3 className="font-medium">{fraud.title}</h3>
+                {fraud.description && (
+                  <p className="mt-1 line-clamp-2 text-sm text-ink/60">
+                    {fraud.description}
+                  </p>
+                )}
 
-                  {fraud.description && (
-                    <p className="mt-1 line-clamp-2 text-sm text-ink/60">
-                      {fraud.description}
-                    </p>
-                  )}
-
-                  {fraud?.slug && (
-                    <p className="text-xs text-gray-500">Slug: {fraud.slug}</p>
-                  )}
-                </div>
-
-                <Link
-                  href={APP_ROUTE.ADMIN.FRAUD.EDIT(fraud.slug)}
-                  className="inline-flex shrink-0 items-center justify-center border border-ink/20 px-4 py-2 text-sm transition hover:bg-ink/5"
-                >
-                  Visualizar / editar →
-                </Link>
-              </article>
+                {fraud?.slug && (
+                  <p className="text-xs text-gray-500">Slug: {fraud.slug}</p>
+                )}
+              </SecurityInformationCard>
             ))}
           </div>
         )}
