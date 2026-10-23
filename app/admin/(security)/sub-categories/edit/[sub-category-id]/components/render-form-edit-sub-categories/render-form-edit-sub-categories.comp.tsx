@@ -82,7 +82,10 @@ export const RenderFormEditSubCategories = ({
 
   return (
     <>
-      <DeleteButton onDelete={() => mutateDeleteSubCategory()} />
+      <DeleteButton
+        modalMessage="Essa ação só pode ocorrer se a sub categoria não tiver fraudes vinculada a ela. Tem certeza de que deseja excluir este item? Esta ação não poderá ser desfeita."
+        onDelete={() => mutateDeleteSubCategory()}
+      />
 
       <FormSubCategories
         isPending={isPendingEditSubCategory || isPendingDeleteSubCategory}

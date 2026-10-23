@@ -6,7 +6,10 @@ import { useState } from "react";
 import { ModalConfirmation } from "./components/modal-confirmation";
 import { IDeleteButtonProps } from "./delete-button.type";
 
-export const DeleteButton = ({ onDelete }: IDeleteButtonProps) => {
+export const DeleteButton = ({
+  modalMessage,
+  onDelete,
+}: IDeleteButtonProps) => {
   const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
 
   const handleConfirm = () => {
@@ -30,6 +33,7 @@ export const DeleteButton = ({ onDelete }: IDeleteButtonProps) => {
         isOpen={openModalConfirmation}
         onCancel={() => setOpenModalConfirmation(false)}
         onConfirm={handleConfirm}
+        message={modalMessage}
       />
     </>
   );
