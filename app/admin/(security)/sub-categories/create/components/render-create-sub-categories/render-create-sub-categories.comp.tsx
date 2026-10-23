@@ -34,7 +34,7 @@ export const RenderCreateSubCategories = ({
     },
     onSuccess: () => {
       toast.success("Sub categoria cadastrada com sucesso!");
-      router.push(APP_ROUTE.ADMIN.CATEGORIES.ROOT());
+      router.push(APP_ROUTE.ADMIN.SUB_CATEGORIES.ROOT());
     },
     onError: (error) =>
       toast.error(

@@ -32,7 +32,8 @@ const updateCategory: Middleware<TIdUpdateRoute> = async (
 
   if (errorGetCategory) throw errorGetCategory;
 
-  if (data) throw new ConflictError("Categoria já cadastrada");
+  if (data && data.id !== id)
+    throw new ConflictError("Categoria já cadastrada");
 
   const { error } = await db()
     .from("categories")

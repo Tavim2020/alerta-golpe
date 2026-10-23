@@ -32,7 +32,7 @@ const updateSubCategory: Middleware<TIdUpdateRoute> = async (
 
   if (errorGetSubCategory) throw errorGetSubCategory;
 
-  if (dataGetSubCategory)
+  if (dataGetSubCategory && dataGetSubCategory.id !== id)
     throw new ConflictError("Sub categoria já cadastrada");
 
   const { data: dataGetCategory, error: errorGetCategory } = await db()
