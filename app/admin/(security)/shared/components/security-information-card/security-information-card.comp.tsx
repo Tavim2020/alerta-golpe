@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { ISecurityInformationCardProps } from "./security-information-card.type";
+import Image from "next/image";
 
 export const SecurityInformationCard = ({
+  imageUrl,
   title,
   children,
   href,
@@ -9,7 +11,21 @@ export const SecurityInformationCard = ({
   return (
     <article className="flex flex-col gap-4 p-5 transition hover:bg-ink/2 sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0 flex-1">
-        <h3 className="font-medium">{title}</h3>
+        <div className="flex flex-col items-center gap-4 sm:flex-row">
+          {imageUrl && (
+            <div className="w-50 h-50 rounded-lg overflow-hidden sm:w-25 sm:h-25 sm:rounded-sm">
+              <Image
+                src={imageUrl}
+                alt={title}
+                width={100}
+                height={100}
+                className="min-w-50 min-h-50 object-contain sm:min-w-25 sm:min-h-25"
+              />
+            </div>
+          )}
+
+          <h3 className="font-medium text-center sm:text-left">{title}</h3>
+        </div>
 
         {children}
       </div>

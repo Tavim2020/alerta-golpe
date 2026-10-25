@@ -32,6 +32,14 @@ export type CustomError = {
 
 export type TSlugPageParam = Promise<{ slug: string }>;
 
+export interface IGetUniqueDefaultParam {
+  value?: string;
+}
+
+export interface IPageParamsProps<GParams> {
+  params: Promise<GParams>;
+}
+
 export type TSlugPageProps = {
   params: TSlugPageParam;
 };
@@ -47,3 +55,21 @@ export type TServerDefaultResponse<GResponse> =
       totalPages?: undefined;
       success: false;
     };
+
+export interface ISearchParamsDefaultProps {
+  searchParams: Promise<{ page?: string; search?: string }>;
+}
+
+export interface ILawyer {
+  id: string;
+  name: string;
+  bio: string;
+  specialty: string[];
+  photo_url: string;
+}
+
+export interface ISubcategory {
+  id: string;
+  name: string;
+  category_id: string;
+}

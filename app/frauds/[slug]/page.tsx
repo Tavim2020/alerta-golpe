@@ -1,10 +1,8 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
 import { AdsSlot } from "@/libs/ads/components/ads-slot";
 import { APP_ROUTE } from "@/routes/app.route";
-import { getFraudBySlug } from "@/utils/frauds/get-fraud-by-slug";
 import { generateWhatsAppShareLink } from "@/utils/generate/links";
 import { LdJsonScript } from "@/components/scripts/ld-json";
 import { getOtherRecentFrauds } from "./utils/get-other-recent-frauds";
@@ -12,9 +10,10 @@ import { PreviewCard } from "@/components/videos/preview-video-card/components/p
 import { BadgeCategory } from "@/components/badges/badge-category";
 import { BadgeSubCategory } from "@/components/badges/badge-sub-category";
 import { PreventionTip } from "./components/prevention-tip";
-import { RenderMarkdown } from "./components/render-markdown";
+import { RenderMarkdown } from "@/components/markdown/render-markdown";
 import { ButtonLink } from "@/components/buttons/button-link";
 import { TSlugPageProps } from "@/types/global.type";
+import { getFraudBySlug } from "@/libs/supabase/frauds/get-frauds";
 
 export const revalidate = 3600;
 

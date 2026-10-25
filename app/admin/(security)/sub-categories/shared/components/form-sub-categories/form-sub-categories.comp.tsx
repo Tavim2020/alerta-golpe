@@ -20,7 +20,7 @@ export const FormSubCategories = ({
   const { control, handleSubmit } = useForm<FormSubCategoriesSchema>({
     resolver: zodResolver(formSubCategoriesSchema),
     defaultValues: {
-      category: subCategory?.category || "",
+      category: subCategory?.category_id || "",
       name: subCategory?.name || "",
     },
   });

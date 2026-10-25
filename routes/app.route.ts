@@ -5,6 +5,7 @@ const ADMIN_PREFIX = "/admin";
 const ADMIN_FRAUD_PREFIX = `${ADMIN_PREFIX}/fraud`;
 const ADMIN_CATEGORIES_ROOT = `${ADMIN_PREFIX}/categories`;
 const ADMIN_SUB_CATEGORIES_ROOT = `${ADMIN_PREFIX}/sub-categories`;
+const ADMIN_LAWYERS_ROOT = `${ADMIN_PREFIX}/lawyers`;
 
 export const APP_ROUTE = {
   HOME: {
@@ -33,7 +34,10 @@ export const APP_ROUTE = {
       EDIT: (id: string) => `${ADMIN_CATEGORIES_ROOT}/edit/${id}`,
     },
     LAWYERS: {
-      ROOT: `${ADMIN_PREFIX}/lawyers`,
+      ROOT: (objectWithParams?: { page?: string | number; search?: string }) =>
+        `${ADMIN_LAWYERS_ROOT}${addSearchParams(objectWithParams)}`,
+      CREATE: `${ADMIN_LAWYERS_ROOT}/create`,
+      EDIT: (id: string) => `${ADMIN_LAWYERS_ROOT}/edit/${id}`,
     },
     SUB_CATEGORIES: {
       ROOT: (objectWithParams?: { page?: string | number; search?: string }) =>
