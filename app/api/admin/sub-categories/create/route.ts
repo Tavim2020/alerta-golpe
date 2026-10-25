@@ -3,7 +3,7 @@ import { handlerMiddleware, Middleware } from "@/app/api/utils/middleware";
 import { validateRequestData } from "@/app/api/utils/validators";
 import { db } from "@/libs/supabase/server";
 import { ConflictError, NotFoundError } from "@/utils/errors";
-import { formSubCategoriesSchema } from "@/app/admin/(security)/sub-categories/shared/components/form-sub-categories/schemas/form-sub-categories.schema";
+import { formSubCategoriesSchema } from "@/app/admin/sub-categories/shared/components/form-sub-categories/schemas/form-sub-categories.schema";
 
 const createSubCategory: Middleware = async (req) => {
   const body = await validateRequestData({
