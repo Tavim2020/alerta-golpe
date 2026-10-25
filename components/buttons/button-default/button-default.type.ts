@@ -1,4 +1,4 @@
-import { ComponentProps, MouseEventHandler, ReactNode } from "react";
+import { ComponentProps, MouseEventHandler } from "react";
 import { IButtonProps } from "../shared/types/buttons.type";
 
 export interface IButtonDefaultProps extends IButtonProps {

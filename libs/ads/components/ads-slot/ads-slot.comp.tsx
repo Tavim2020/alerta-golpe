@@ -4,10 +4,9 @@ import { useEffect, useRef } from "react";
 import { EmptyAds } from "./components/empty-ads";
 import { CLIENT_ENVIRONMENT } from "@/environments/client.environment";
 import { AdsSlotProps } from "./ads-slot.type";
+import { isProduction } from "@/constants/env.constant";
 
 const { NEXT_PUBLIC_ADSENSE_CLIENT } = CLIENT_ENVIRONMENT;
-
-const isProduction = process.env.NODE_ENV === "production";
 
 export const AdsSlot = ({ slotNumber }: AdsSlotProps) => {
   const initialized = useRef(false);
