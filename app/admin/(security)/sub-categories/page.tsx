@@ -2,15 +2,17 @@ import { BackButton } from "../shared/components/back-button";
 import { SecurityEmptyCard } from "../shared/components/security-empty-card";
 import { SecurityInformationCard } from "../shared/components/security-information-card";
 import { APP_ROUTE } from "@/routes/app.route";
-import { ISubCategoriesPageProps } from "./page.type";
 import { Pagination } from "@/components/pagination";
 import { WrapperSubCategoriesFormSearch } from "./components/wrapper-categories-form-search";
 import { ButtonLink } from "@/components/buttons/button-link";
 import { getAllSubCategories } from "@/libs/supabase/sub-categories/get-sub-categories";
+import { ISearchParamsDefaultProps } from "@/types/global.type";
 
 export const dynamic = "force-dynamic";
 
-const SubCategoriesPage = async ({ searchParams }: ISubCategoriesPageProps) => {
+const SubCategoriesPage = async ({
+  searchParams,
+}: ISearchParamsDefaultProps) => {
   const { page, search } = await searchParams;
 
   const pageNumber = Number(page);

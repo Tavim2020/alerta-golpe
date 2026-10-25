@@ -1,6 +1,7 @@
 import { IAutocompleteOption } from "@/components/form/controlled-autocomplete/components/autocomplete/autocomplete.type";
 import { TServerDefaultResponse } from "@/types/global.type";
 import { db } from "../../server";
+import { notFound } from "next/navigation";
 
 export async function getCategoriesOptions(): Promise<
   TServerDefaultResponse<IAutocompleteOption[]>
@@ -74,3 +75,18 @@ export async function getAllCategories({
     };
   }
 }
+
+export const getCategoryById = async (categoryId: string) => {
+  const { success, data } = await getAllCategories({
+    limit: 1,
+    id: categoryId,
+  });
+
+  if (!success) throw new Error("Tivemos problemas ao buscar a categoria");
+
+  const category = data?.[0];
+
+  if (!category) throw notFound();
+
+  return { category };
+};

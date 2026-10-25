@@ -69,7 +69,7 @@ export default function AdminDashboard() {
         />
 
         <DashboardManagerButton
-          href={APP_ROUTE.ADMIN.LAWYERS.ROOT}
+          href={APP_ROUTE.ADMIN.LAWYERS.ROOT()}
           iconString="⚖"
           title="advogados"
           className="sm:col-span-2"

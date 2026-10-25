@@ -22,10 +22,11 @@ export const DeleteButton = ({
       <div className="flex justify-end">
         <ButtonDefault
           variant="clean"
-          className="border p-1"
+          className="border p-1 w-full sm:w-max"
           onClick={() => setOpenModalConfirmation(true)}
         >
           <Trash className="w-8 h-8" />
+          <strong className="sm:hidden">Deletar</strong>
         </ButtonDefault>
       </div>
 

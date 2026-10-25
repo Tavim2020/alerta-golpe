@@ -43,7 +43,7 @@ export const RenderFormCreateFraud = ({
       return response.json();
     },
     onSuccess: () => {
-      toast.success("Fraude cadastradas com sucesso!");
+      toast.success("Fraude cadastrada com sucesso!");
       router.push(APP_ROUTE.ADMIN.DASHBOARD.ROOT);
     },
     onError: (error) =>

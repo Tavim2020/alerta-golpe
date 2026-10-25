@@ -4,6 +4,7 @@ import {
   FieldValuesFromFieldErrors,
 } from "@hookform/error-message";
 import { IErrorMessageCustomProps } from ".";
+import { ParagraphError } from "./components/paragraph-error";
 
 export const ErrorMessageCustom = <GProps extends FieldValues>({
   errors,
@@ -17,9 +18,7 @@ export const ErrorMessageCustom = <GProps extends FieldValues>({
           FieldValuesFromFieldErrors<FieldErrors<GProps>>
         >
       }
-      render={({ message }) => (
-        <p className="mt-2 text-[.625rem] text-red-500">{message}</p>
-      )}
+      render={({ message }) => <ParagraphError>{message}</ParagraphError>}
     />
   );
 };

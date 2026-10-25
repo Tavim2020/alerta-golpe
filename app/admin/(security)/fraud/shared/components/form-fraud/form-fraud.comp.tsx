@@ -8,12 +8,13 @@ import { ButtonDefault } from "@/components/buttons/button-default";
 import { ControlledInputText } from "@/components/form/controlled-input-text";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ControlledFile } from "@/components/form/controlled-file";
-import { imagePropsVerification } from "./constants/image.constant";
-import { videoPropsVerification } from "./constants/video.constant";
+import { imagePropsVerification } from "@/app/admin/(security)/constants/image.constant";
+import { videoPropsVerification } from "@/app/admin/(security)/constants/video.constant";
 import { ControlledMarkdown } from "@/components/form/controlled-markdown";
 import { ControlledAutocomplete } from "@/components/form/controlled-autocomplete";
 import { IAutocompleteOption } from "@/components/form/controlled-autocomplete/components/autocomplete/autocomplete.type";
 import { useMemo } from "react";
+import { DynamicFields } from "@/app/admin/(security)/shared/components/dynamic-fields";
 
 export const FormFraud = ({
   isPending,
@@ -22,7 +23,12 @@ export const FormFraud = ({
   allCategoriesOptions,
   allSubCategoriesOptions,
 }: IFormFraudProps) => {
-  const { control, handleSubmit, setValue } = useForm<FormFraudSchema>({
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<FormFraudSchema>({
     resolver: zodResolver(formFraudSchema),
     defaultValues: {
       title: fraud?.title || "",
@@ -117,40 +123,20 @@ export const FormFraud = ({
         required
       />
 
-      <div className="w-full space-y-4">
-        <div className="flex items-center justify-between gap-3">
-          <h2 className="font-display text-xl">Dicas de prevenção</h2>
-
-          <ButtonDefault
-            onClick={() =>
-              append({
-                title: "",
-                description: "",
-              })
-            }
-            className="bg-sun text-black hover:bg-sun hover:text-black hover:brightness-95"
-          >
-            Adicionar dica
-          </ButtonDefault>
-        </div>
-
-        {fields.length === 0 && (
-          <p className="text-sm text-ink/60">Nenhuma dica adicionada.</p>
-        )}
-
-        {fields.map((item, index) => (
-          <div key={item.id} className="space-y-3 border border-ink/15 p-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-medium">Dica {index + 1}</h3>
-
-              <ButtonDefault
-                onClick={() => remove(index)}
-                className="text-sm text-red-600 bg-white hover:bg-white hover:underline disabled:opacity-50"
-              >
-                Remover
-              </ButtonDefault>
-            </div>
-
+      <DynamicFields
+        title="Dicas de prevenção"
+        addButton={{
+          title: "Adicionar dica",
+          onClick: () =>
+            append({
+              title: "",
+              description: "",
+            }),
+        }}
+        fields={fields}
+        remove={remove}
+        render={(index) => (
+          <>
             <ControlledInputText
               control={control}
               name={`tips.${index}.title`}
@@ -167,9 +153,10 @@ export const FormFraud = ({
               maxLength={150}
               required
             />
-          </div>
-        ))}
-      </div>
+          </>
+        )}
+        fieldError={errors?.tips}
+      />
 
       <ControlledFile
         control={control}
