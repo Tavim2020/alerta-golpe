@@ -1,6 +1,7 @@
 import { IAutocompleteOption } from "@/components/form/controlled-autocomplete/components/autocomplete/autocomplete.type";
-import { TServerDefaultResponse } from "@/types/global.type";
+import { ISubcategory, TServerDefaultResponse } from "@/types/global.type";
 import { db } from "../../server";
+import { notFound } from "next/navigation";
 
 export type TSubCategoriesOptions = IAutocompleteOption & {
   categoryId: string;
@@ -53,16 +54,14 @@ export async function getAllSubCategories({
   limit,
   id,
   search,
-}: IGetAllSubCategories): Promise<
-  TServerDefaultResponse<{ id: string; name: string }[]>
-> {
+}: IGetAllSubCategories): Promise<TServerDefaultResponse<ISubcategory[]>> {
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
   try {
     let query = db()
       .from("sub_categories")
-      .select("id, name", { count: "exact" })
+      .select("id, name, category_id", { count: "exact" })
       .order("updated_at", { ascending: false });
 
     if (id) query = query.eq("id", id);
@@ -87,3 +86,18 @@ export async function getAllSubCategories({
     };
   }
 }
+
+export const getSubCategoryById = async (subCategoryId: string) => {
+  const { success, data } = await getAllSubCategories({
+    limit: 1,
+    id: subCategoryId,
+  });
+
+  if (!success) throw new Error("Tivemos problemas ao buscar a sub categoria");
+
+  const subCategory = data?.[0];
+
+  if (!subCategory) throw notFound();
+
+  return { subCategory };
+};

@@ -3,6 +3,8 @@ import { db } from "@/libs/supabase/server";
 import { formatDateToBr } from "@/utils/format/dates";
 import { generateBucketUrl } from "@/utils/generate/links";
 import { thumbnailBucket, videoBucket } from "../../storages/supabase.storage";
+import { TSlugPageParam } from "@/types/global.type";
+import { notFound } from "next/navigation";
 
 interface IGetFrauds {
   page?: number;
@@ -96,3 +98,19 @@ export async function getFrauds({
     };
   }
 }
+
+export const getFraudBySlug = async (fraudSlug: string) => {
+  const { data: frauds, success } = await getFrauds({
+    limit: 1,
+    slug: fraudSlug,
+  });
+
+  if (!success)
+    throw new Error("Tivemos problemas ao buscar a informação do golpe");
+
+  const fraud = frauds?.[0];
+
+  if (!fraud) return notFound();
+
+  return { fraud };
+};

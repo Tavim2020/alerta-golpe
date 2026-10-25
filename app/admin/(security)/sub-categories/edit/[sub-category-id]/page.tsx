@@ -1,22 +1,26 @@
 import { BackButton } from "@/app/admin/(security)/shared/components/back-button";
 import { RenderFormEditSubCategories } from "./components/render-form-edit-sub-categories";
-import { TSubCategoryIdPageProps } from "./page.type";
-import { getSubCategoryById } from "./utils/get-sub-category-by-id";
 import { APP_ROUTE } from "@/routes/app.route";
 import { getCategoriesOptions } from "@/libs/supabase/categories/get-categories";
+import { getSubCategoryById } from "@/libs/supabase/sub-categories/get-sub-categories";
+import { IPageParamsProps } from "@/types/global.type";
 
-const EditSubCategoryPage = async ({ params }: TSubCategoryIdPageProps) => {
+const EditSubCategoryPage = async ({
+  params,
+}: IPageParamsProps<{ "sub-category-id"?: string }>) => {
   const { "sub-category-id": subCategoryId } = await params;
 
+  if (!subCategoryId) throw new Error("Parâmetro não encontrado!");
+
   const [
-    { success: successGetSubCategory, data: subCategoriesData },
+    { subCategory },
     { success: successCategoryOptions, data: allCategoriesOptions },
   ] = await Promise.all([
     getSubCategoryById(subCategoryId),
     getCategoriesOptions(),
   ]);
 
-  if (!successGetSubCategory || !successCategoryOptions)
+  if (!successCategoryOptions)
     throw new Error("Tivemos problemas ao buscar as informações");
 
   return (
@@ -28,7 +32,7 @@ const EditSubCategoryPage = async ({ params }: TSubCategoryIdPageProps) => {
 
       <RenderFormEditSubCategories
         subCategoryId={subCategoryId}
-        subCategory={subCategoriesData}
+        subCategory={subCategory}
         allCategoriesOptions={allCategoriesOptions}
       />
     </main>

@@ -8,6 +8,7 @@ import {
 export interface IAutocompleteOption {
   value: string;
   label: string;
+  photoUrl?: string;
 }
 
 export interface IAutoCompleteProps<GProps extends FieldValues> {

@@ -68,6 +68,7 @@ export type Database = {
           description: string
           file_name: string
           id: string
+          lawyer_id: string | null
           slug: string
           sub_category_id: string
           thumbnail: string
@@ -82,6 +83,7 @@ export type Database = {
           description: string
           file_name: string
           id?: string
+          lawyer_id?: string | null
           slug: string
           sub_category_id: string
           thumbnail: string
@@ -96,6 +98,7 @@ export type Database = {
           description?: string
           file_name?: string
           id?: string
+          lawyer_id?: string | null
           slug?: string
           sub_category_id?: string
           thumbnail?: string
@@ -105,6 +108,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "frauds_lawyer_id_fkey"
+            columns: ["lawyer_id"]
+            isOneToOne: false
+            referencedRelation: "lawyers"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "videos_sub_category_id_fkey"
             columns: ["sub_category_id"]
             isOneToOne: false
@@ -112,6 +122,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      lawyers: {
+        Row: {
+          bio: string
+          created_at: string
+          file_name: string
+          id: string
+          instagram: string
+          name: string
+          phone: string
+          specialty: string[]
+          updated_at: string
+        }
+        Insert: {
+          bio: string
+          created_at?: string
+          file_name: string
+          id?: string
+          instagram: string
+          name: string
+          phone: string
+          specialty: string[]
+          updated_at?: string
+        }
+        Update: {
+          bio?: string
+          created_at?: string
+          file_name?: string
+          id?: string
+          instagram?: string
+          name?: string
+          phone?: string
+          specialty?: string[]
+          updated_at?: string
+        }
+        Relationships: []
       }
       sub_categories: {
         Row: {
@@ -221,6 +267,22 @@ export type Database = {
       delete_video: { Args: { p_video_id: string }; Returns: string }
       generate_unique_slug: { Args: { title_text: string }; Returns: string }
       search_frauds: { Args: { search_term: string }; Returns: string[] }
+      search_lawyers: {
+        Args: {
+          p_id?: string
+          p_limit?: number
+          p_offset?: number
+          p_search_term?: string
+        }
+        Returns: {
+          bio: string
+          file_name: string
+          id: string
+          name: string
+          specialty: string[]
+          total_count: number
+        }[]
+      }
       unaccent: { Args: { "": string }; Returns: string }
     }
     Enums: {

@@ -1,15 +1,17 @@
 import { BackButton } from "@/app/admin/(security)/shared/components/back-button";
 import { RenderFormCategories } from "./components/render-form-categories";
-import { TCategoryIdPageProps } from "./page.type";
-import { getCategoryById } from "./utils/get-category-by-id";
 import { APP_ROUTE } from "@/routes/app.route";
+import { getCategoryById } from "@/libs/supabase/categories/get-categories";
+import { IPageParamsProps } from "@/types/global.type";
 
-const EditCategoryPage = async ({ params }: TCategoryIdPageProps) => {
+const EditCategoryPage = async ({
+  params,
+}: IPageParamsProps<{ "category-id"?: string }>) => {
   const { "category-id": categoryId } = await params;
 
-  const { success, data } = await getCategoryById(categoryId);
+  if (!categoryId) throw new Error("Parâmetro não encontrado!");
 
-  if (!success) throw new Error("Tivemos problemas ao buscar a categoria");
+  const { category } = await getCategoryById(categoryId);
 
   return (
     <main className="mx-auto w-full max-w-7xl space-y-8 py-8">
@@ -18,7 +20,7 @@ const EditCategoryPage = async ({ params }: TCategoryIdPageProps) => {
         href={APP_ROUTE.ADMIN.CATEGORIES.ROOT()}
       />
 
-      <RenderFormCategories categoryId={categoryId} category={data} />
+      <RenderFormCategories categoryId={categoryId} category={category} />
     </main>
   );
 };

@@ -1,5 +1,5 @@
-import { imagePropsVerification } from "@/app/admin/(security)/fraud/shared/components/form-fraud/constants/image.constant";
-import { videoPropsVerification } from "@/app/admin/(security)/fraud/shared/components/form-fraud/constants/video.constant";
+import { imagePropsVerification } from "@/app/admin/(security)/constants/image.constant";
+import { videoPropsVerification } from "@/app/admin/(security)/constants/video.constant";
 import z from "zod";
 
 const fileOrUrlSchema = (config: {

@@ -81,7 +81,10 @@ export const RenderFormEditFraud = ({
 
   return (
     <>
-      <DeleteButton onDelete={() => mutateDeleteFraud()} />
+      <DeleteButton
+        onDelete={() => mutateDeleteFraud()}
+        modalMessage="Tem certeza de que deseja excluir este item? Esta ação não poderá ser desfeita."
+      />
 
       <FormFraud
         isPending={isPendingEditFraud || isPendingDeleteFraud}

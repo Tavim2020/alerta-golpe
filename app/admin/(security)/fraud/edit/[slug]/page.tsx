@@ -1,18 +1,24 @@
 import { RenderFormEditFraud } from "./components/render-form-edit-fraud";
-import { getFraudBySlug } from "@/utils/frauds/get-fraud-by-slug";
-import { TSlugPageProps } from "@/types/global.type";
+import { IPageParamsProps } from "@/types/global.type";
 import { BackButton } from "../../../shared/components/back-button";
 import { getCategoriesOptions } from "@/libs/supabase/categories/get-categories";
 import { getSubCategoriesOptions } from "@/libs/supabase/sub-categories/get-sub-categories";
 import { APP_ROUTE } from "@/routes/app.route";
+import { getFraudBySlug } from "@/libs/supabase/frauds/get-frauds";
 
-export default async function EditFraud({ params }: TSlugPageProps) {
+export default async function EditFraud({
+  params,
+}: IPageParamsProps<{ slug?: string }>) {
+  const { slug } = await params;
+
+  if (!slug) throw new Error("Parâmetro não encontrado!");
+
   const [
-    { fraud, slug },
+    { fraud },
     { success: successCategoryOptions, data: allCategoriesOptions },
     { success: successSubCategoryOptions, data: allSubCategoriesOptions },
   ] = await Promise.all([
-    getFraudBySlug(params),
+    getFraudBySlug(slug),
     getCategoriesOptions(),
     getSubCategoriesOptions(),
   ]);

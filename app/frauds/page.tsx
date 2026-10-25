@@ -7,9 +7,9 @@ import { EmptyVideos } from "@/components/videos/empty-videos";
 import { APP_ROUTE } from "@/routes/app.route";
 import { TipCard } from "./components/tip-card";
 import { fraudsPageTips } from "./constants/frauds.constant";
-import { IFraudPageProps } from "./page.type";
 import { Pagination } from "../../components/pagination";
 import { WrapperFraudsFormSearch } from "./components/wrapper-frauds-form-search";
+import { ISearchParamsDefaultProps } from "@/types/global.type";
 
 export const revalidate = 3600;
 
@@ -22,7 +22,9 @@ export const metadata: Metadata = {
   alternates: { canonical: APP_ROUTE.FRAUDS.ROOT() },
 };
 
-export default async function Frauds({ searchParams }: IFraudPageProps) {
+export default async function Frauds({
+  searchParams,
+}: ISearchParamsDefaultProps) {
   const { page, search } = await searchParams;
 
   const pageNumber = Number(page);

@@ -3,14 +3,14 @@ import { BackButton } from "../shared/components/back-button";
 import { SecurityEmptyCard } from "../shared/components/security-empty-card";
 import { SecurityInformationCard } from "../shared/components/security-information-card";
 import { APP_ROUTE } from "@/routes/app.route";
-import { ICategoriesPageProps } from "./page.type";
 import { Pagination } from "@/components/pagination";
 import { WrapperCategoriesFormSearch } from "./components/wrapper-categories-form-search";
 import { ButtonLink } from "@/components/buttons/button-link";
+import { ISearchParamsDefaultProps } from "@/types/global.type";
 
 export const dynamic = "force-dynamic";
 
-const CategoriesPage = async ({ searchParams }: ICategoriesPageProps) => {
+const CategoriesPage = async ({ searchParams }: ISearchParamsDefaultProps) => {
   const { page, search } = await searchParams;
 
   const pageNumber = Number(page);

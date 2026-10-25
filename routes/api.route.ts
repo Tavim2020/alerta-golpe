@@ -2,6 +2,7 @@ import { addSearchParams } from "./utils/add-search-params";
 
 const API_PREFIX = "/api";
 const ADMIN_PREFIX = `${API_PREFIX}/admin`;
+const LAWYERS_PREFIX = `${ADMIN_PREFIX}/lawyers`;
 const FRAUDS_PREFIX = `${ADMIN_PREFIX}/frauds`;
 const CATEGORIES_PREFIX = `${ADMIN_PREFIX}/categories`;
 const SUB_CATEGORIES_PREFIX = `${ADMIN_PREFIX}/sub-categories`;
@@ -9,6 +10,11 @@ const SUB_CATEGORIES_PREFIX = `${ADMIN_PREFIX}/sub-categories`;
 export const API_ROUTE = {
   ADMIN_LOGIN: `${API_PREFIX}/login`,
   ADMIN_LOG_OUT: `${API_PREFIX}/log-out`,
+  LAWYERS: {
+    CREATE: `${LAWYERS_PREFIX}/create`,
+    UPDATE_BY_ID: (id: string) => `${LAWYERS_PREFIX}/update/${id}`,
+    DELETE_BY_ID: (id: string) => `${LAWYERS_PREFIX}/delete/${id}`,
+  },
   FRAUDS: {
     GET: (objectWithParams: {
       page?: string | number;
