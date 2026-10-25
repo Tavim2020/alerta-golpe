@@ -1,3 +1,4 @@
+import { isProduction } from "@/constants/env.constant";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
 import { SignJWT } from "jose";
 import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
@@ -10,7 +11,7 @@ export class CookiesInstance {
 
   private cookieConfig: Partial<ResponseCookie> = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: isProduction,
     sameSite: "lax",
     path: "/",
     maxAge: 604800,

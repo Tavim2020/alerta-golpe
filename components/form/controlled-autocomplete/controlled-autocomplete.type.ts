@@ -1,8 +1,5 @@
 import { Control, FieldValues } from "react-hook-form";
-import {
-  IAutocompleteOption,
-  IAutoCompleteProps,
-} from "./components/autocomplete/autocomplete.type";
+import { IAutoCompleteProps } from "./components/autocomplete/autocomplete.type";
 
 export interface IControlledAutocompleteProps<
   GProps extends FieldValues,
