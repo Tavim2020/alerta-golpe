@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { handlerMiddleware, Middleware } from "@/app/api/utils/middleware";
 import { validateRequestData } from "@/app/api/utils/validators";
-import { formFraudSchema } from "@/app/admin/(security)/fraud/shared/components/form-fraud/schemas/form-fraud.schema";
+import { formFraudSchema } from "@/app/admin/fraud/shared/components/form-fraud/schemas/form-fraud.schema";
 import { db } from "@/libs/supabase/server";
 
 const createFraud: Middleware = async (req) => {

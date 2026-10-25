@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { handlerMiddleware, Middleware } from "@/app/api/utils/middleware";
 import { validateRequestData } from "@/app/api/utils/validators";
 import { db } from "@/libs/supabase/server";
-import { formCategoriesSchema } from "@/app/admin/(security)/categories/shared/components/form-categories/schemas/form-categories.schema";
+import { formCategoriesSchema } from "@/app/admin/categories/shared/components/form-categories/schemas/form-categories.schema";
 import { ConflictError } from "@/utils/errors";
 
 const createCategory: Middleware = async (req) => {
