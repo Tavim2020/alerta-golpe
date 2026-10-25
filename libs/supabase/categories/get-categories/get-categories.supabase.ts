@@ -1,6 +1,6 @@
 import { IAutocompleteOption } from "@/components/form/controlled-autocomplete/components/autocomplete/autocomplete.type";
 import { TServerDefaultResponse } from "@/types/global.type";
-import { db } from "../../server";
+import { db } from "@/libs/supabase/server";
 import { notFound } from "next/navigation";
 
 export async function getCategoriesOptions(): Promise<

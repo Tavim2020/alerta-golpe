@@ -2,8 +2,10 @@ import { TFraud, TServerDefaultResponse } from "@/types/global.type";
 import { db } from "@/libs/supabase/server";
 import { formatDateToBr } from "@/utils/format/dates";
 import { generateBucketUrl } from "@/utils/generate/links";
-import { thumbnailBucket, videoBucket } from "../../storages/supabase.storage";
-import { TSlugPageParam } from "@/types/global.type";
+import {
+  thumbnailBucket,
+  videoBucket,
+} from "@/libs/supabase/storages/supabase.storage";
 import { notFound } from "next/navigation";
 
 interface IGetFrauds {
@@ -113,4 +115,13 @@ export const getFraudBySlug = async (fraudSlug: string) => {
   if (!fraud) return notFound();
 
   return { fraud };
+};
+
+export const getOtherRecentFrauds = async (currentFraudId: string) => {
+  const { data: frauds, success } = await getFrauds({ limit: 4 });
+
+  if (!success)
+    throw new Error("Tivemos problemas ao buscar os vídeos mais recentes");
+
+  return frauds.filter((other) => other.id !== currentFraudId).slice(0, 3);
 };

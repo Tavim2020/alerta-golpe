@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { AlertCircle, ArrowLeft, Home, Search } from "lucide-react";
-
 import { APP_ROUTE } from "@/routes/app.route";
 import { useRouter } from "next/navigation";
 

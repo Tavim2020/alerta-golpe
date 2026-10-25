@@ -1,7 +1,6 @@
 "use client";
 
 import { Controller, FieldValues } from "react-hook-form";
-
 import { IControlledAutocompleteProps } from "./controlled-autocomplete.type";
 import { Autocomplete } from "./components/autocomplete";
 

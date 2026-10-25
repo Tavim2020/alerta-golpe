@@ -7,9 +7,9 @@ import type { RootLayoutProps } from "@/types/global.type";
 import { AdsScript } from "@/libs/ads/scripts";
 import { APP_INFO } from "@/constants/app.constant";
 import { ToastContainer } from "@/libs/react-toastify/components/toast-container";
+import { QueryProvider } from "@/libs/react-query/contexts/query-provider";
 
 import "./globals.css";
-import { QueryProvider } from "@/libs/react-query/contexts/query-provider";
 
 const { NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_ADSENSE_CLIENT } = SERVER_ENVIRONMENT;
 

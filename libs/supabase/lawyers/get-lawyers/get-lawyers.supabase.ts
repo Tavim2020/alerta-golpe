@@ -1,11 +1,7 @@
 import { IAutocompleteOption } from "@/components/form/controlled-autocomplete/components/autocomplete/autocomplete.type";
-import {
-  IGetUniqueDefaultParam,
-  ILawyer,
-  TServerDefaultResponse,
-} from "@/types/global.type";
-import { db } from "../../server";
-import { lawyersBucket } from "../../storages/supabase.storage";
+import { ILawyer, TServerDefaultResponse } from "@/types/global.type";
+import { db } from "@/libs/supabase/server";
+import { lawyersBucket } from "@/libs/supabase/storages/supabase.storage";
 import { generateBucketUrl } from "@/utils/generate/links";
 import { notFound } from "next/navigation";
 

@@ -1,7 +1,6 @@
 import { APP_INFO } from "@/constants/app.constant";
 import { APP_ROUTE } from "@/routes/app.route";
 import Link from "next/link";
-import React from "react";
 
 export const Header = () => {
   return (

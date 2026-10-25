@@ -29,9 +29,6 @@ export type CustomError = {
   message: string;
   statusCode: number;
 };
-
-export type TSlugPageParam = Promise<{ slug: string }>;
-
 export interface IGetUniqueDefaultParam {
   value?: string;
 }
@@ -39,10 +36,6 @@ export interface IGetUniqueDefaultParam {
 export interface IPageParamsProps<GParams> {
   params: Promise<GParams>;
 }
-
-export type TSlugPageProps = {
-  params: TSlugPageParam;
-};
 
 export type TServerDefaultResponse<GResponse> =
   | {

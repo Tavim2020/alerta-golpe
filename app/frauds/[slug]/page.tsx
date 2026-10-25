@@ -5,15 +5,17 @@ import { AdsSlot } from "@/libs/ads/components/ads-slot";
 import { APP_ROUTE } from "@/routes/app.route";
 import { generateWhatsAppShareLink } from "@/utils/generate/links";
 import { LdJsonScript } from "@/components/scripts/ld-json";
-import { getOtherRecentFrauds } from "./utils/get-other-recent-frauds";
 import { PreviewCard } from "@/components/videos/preview-video-card/components/preview-card";
 import { BadgeCategory } from "@/components/badges/badge-category";
 import { BadgeSubCategory } from "@/components/badges/badge-sub-category";
 import { PreventionTip } from "./components/prevention-tip";
 import { RenderMarkdown } from "@/components/markdown/render-markdown";
 import { ButtonLink } from "@/components/buttons/button-link";
-import { TSlugPageProps } from "@/types/global.type";
-import { getFraudBySlug } from "@/libs/supabase/frauds/get-frauds";
+import { IPageParamsProps } from "@/types/global.type";
+import {
+  getFraudBySlug,
+  getOtherRecentFrauds,
+} from "@/libs/supabase/frauds/get-frauds";
 
 export const revalidate = 3600;
 
@@ -21,8 +23,13 @@ const { NEXT_PUBLIC_ADSENSE_SLOT } = SERVER_ENVIRONMENT;
 
 export async function generateMetadata({
   params,
-}: TSlugPageProps): Promise<Metadata> {
-  const { fraud, slug } = await getFraudBySlug(params);
+}: IPageParamsProps<{ slug?: string }>): Promise<Metadata> {
+  const { slug } = await params;
+
+  if (!slug) throw new Error("Parâmetro não encontrado");
+
+  const { fraud } = await getFraudBySlug(slug);
+
   if (!fraud) return {};
 
   const description = `Veja como funcionou este golpe: ${fraud.title}`;
@@ -39,8 +46,14 @@ export async function generateMetadata({
   };
 }
 
-export default async function VideoPage({ params }: TSlugPageProps) {
-  const { fraud, slug } = await getFraudBySlug(params);
+export default async function FraudPublicPage({
+  params,
+}: IPageParamsProps<{ slug?: string }>) {
+  const { slug } = await params;
+
+  if (!slug) throw new Error("Parâmetro não encontrado");
+
+  const { fraud } = await getFraudBySlug(slug);
 
   if (!fraud) return notFound();
 
