@@ -15,6 +15,19 @@ const deleteCategory: Middleware<TIdDeleteRoute> = async (
 
   if (!id) throw new Error("Parâmetro não encontrado!");
 
+  const { data: dataGetSubCategory, error: errorGetSubCategory } = await db()
+    .from("sub_categories")
+    .select()
+    .eq("category_id", id)
+    .maybeSingle();
+
+  if (errorGetSubCategory) throw errorGetSubCategory;
+
+  if (dataGetSubCategory)
+    throw new Error(
+      `Existe sub categoria vinculada com o nome: ${dataGetSubCategory.name}`,
+    );
+
   const { error } = await db().from("categories").delete().eq("id", id);
 
   if (error) throw error;
