@@ -1,6 +1,29 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-Deno.serve(async (req) => {
+const BATCH_SIZE = 10;
+const MAX_ATTEMPTS = 10;
+const MAX_BACKOFF_SECONDS = 3600;
+
+const ALLOWED_BUCKETS = new Set(["videos", "thumbnails", "lawyers_photos"]);
+
+type MediaDeletionJob = {
+  id: string;
+  source_id: string | null;
+  media_type: "video" | "thumbnail" | "lawyer_photo";
+  bucket_id: string;
+  file_path: string;
+  status: string;
+  attempts: number;
+};
+
+function getBackoffSeconds(attempts: number): number {
+  return Math.min(
+    30 * 2 ** Math.min(Math.max(attempts - 1, 0), 7),
+    MAX_BACKOFF_SECONDS,
+  );
+}
+
+Deno.serve(async (req: Request) => {
   if (req.method !== "POST") {
     return Response.json({ error: "Method not allowed" }, { status: 405 });
   }
@@ -11,26 +34,34 @@ Deno.serve(async (req) => {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const supabase = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-      },
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    console.error("Missing Supabase environment variables.");
+
+    return Response.json(
+      { error: "Server configuration error" },
+      { status: 500 },
+    );
+  }
+
+  const supabase = createClient(supabaseUrl, serviceRoleKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
     },
-  );
+  });
 
   const { data: jobs, error: claimError } = await supabase.rpc(
-    "claim_video_deletion_jobs",
+    "claim_media_deletion_jobs",
     {
-      p_limit: 10,
+      p_limit: BATCH_SIZE,
     },
   );
 
   if (claimError) {
-    console.error("Failed to claim jobs:", claimError.message);
+    console.error("Failed to claim media deletion jobs:", claimError.message);
 
     return Response.json({ error: "Failed to claim jobs" }, { status: 500 });
   }
@@ -38,32 +69,35 @@ Deno.serve(async (req) => {
   let processed = 0;
   let failed = 0;
 
-  for (const job of jobs ?? []) {
+  for (const job of (jobs ?? []) as MediaDeletionJob[]) {
     try {
-      // Remove o vídeo.
-      const { error: videoError } = await supabase.storage
-        .from("videos")
-        .remove([job.video_path]);
-
-      if (videoError) {
-        throw new Error(`TFraud: ${videoError.message}`);
+      // Não permita que uma linha da fila escolha buckets arbitrários.
+      if (!ALLOWED_BUCKETS.has(job.bucket_id)) {
+        throw new Error(`Bucket not allowed: ${job.bucket_id}`);
       }
 
-      // Remove a thumbnail.
-      const { error: thumbnailError } = await supabase.storage
-        .from("thumbnails")
-        .remove([job.thumbnail_path]);
-
-      if (thumbnailError) {
-        throw new Error(`Thumbnail: ${thumbnailError.message}`);
+      if (!job.file_path?.trim()) {
+        throw new Error("Empty file path");
       }
+
+      // O caminho deve ser relativo ao bucket.
+      // Não passe URLs públicas completas.
+      const { error: storageError } = await supabase.storage
+        .from(job.bucket_id)
+        .remove([job.file_path]);
+
+      if (storageError) {
+        throw new Error(`Storage (${job.bucket_id}): ${storageError.message}`);
+      }
+
+      const now = new Date().toISOString();
 
       const { error: updateError } = await supabase
-        .from("video_deletion_queue")
+        .from("media_deletion_queue")
         .update({
           status: "processed",
-          processed_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
+          processed_at: now,
+          updated_at: now,
           locked_at: null,
           last_error: null,
         })
@@ -78,22 +112,16 @@ Deno.serve(async (req) => {
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
 
-      console.error(`Job ${job.id} failed:`, message);
-
-      // Backoff: 30s, 60s, 120s... máximo de 1 hora.
-      const delaySeconds = Math.min(
-        30 * 2 ** Math.min(job.attempts - 1, 7),
-        3600,
-      );
+      console.error(`Media deletion job ${job.id} failed:`, message);
 
       const nextAttempt = new Date(
-        Date.now() + delaySeconds * 1000,
+        Date.now() + getBackoffSeconds(job.attempts) * 1000,
       ).toISOString();
 
       const { error: updateError } = await supabase
-        .from("video_deletion_queue")
+        .from("media_deletion_queue")
         .update({
-          status: job.attempts >= 10 ? "failed" : "pending",
+          status: job.attempts >= MAX_ATTEMPTS ? "failed" : "pending",
           next_attempt_at: nextAttempt,
           updated_at: new Date().toISOString(),
           locked_at: null,
