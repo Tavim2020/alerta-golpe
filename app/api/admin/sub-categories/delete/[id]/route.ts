@@ -15,6 +15,17 @@ const deleteSubCategory: Middleware<TIdDeleteRoute> = async (
 
   if (!id) throw new Error("Parâmetro não encontrado!");
 
+  const { data: dataGetFraud, error: errorGetFraud } = await db()
+    .from("frauds")
+    .select()
+    .eq("sub_category_id", id)
+    .maybeSingle();
+
+  if (errorGetFraud) throw errorGetFraud;
+
+  if (dataGetFraud)
+    throw new Error(`Existe fraude vinculada com o slug: ${dataGetFraud.slug}`);
+
   const { error } = await db().from("sub_categories").delete().eq("id", id);
 
   if (error) throw error;
