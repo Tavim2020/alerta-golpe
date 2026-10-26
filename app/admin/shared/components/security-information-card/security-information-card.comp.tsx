@@ -19,7 +19,7 @@ export const SecurityInformationCard = ({
                 alt={title}
                 width={100}
                 height={100}
-                className="min-w-50 min-h-50 object-contain sm:min-w-25 sm:min-h-25"
+                className="min-w-50 min-h-50 object-cover sm:min-w-25 sm:min-h-25"
               />
             </div>
           )}

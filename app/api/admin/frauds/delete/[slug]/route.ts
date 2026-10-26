@@ -1,16 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { handlerMiddleware, Middleware } from "@/app/api/utils/middleware";
-import { validateRequestData } from "@/app/api/utils/validators";
-import { formFraudSchema } from "@/app/admin/fraud/shared/components/form-fraud/schemas/form-fraud.schema";
 import { db } from "@/libs/supabase/server";
 
 type TSlugUpdateRoute = { params: Promise<{ slug?: string }> };
 
-const deleteFraud: Middleware<TSlugUpdateRoute> = async (
-  req,
-  _,
-  otherProps,
-) => {
+const deleteFraud: Middleware<TSlugUpdateRoute> = async (_, __, otherProps) => {
   if (!otherProps) throw new Error("Parâmetro não encontrado!");
 
   const { slug } = await otherProps?.params;
