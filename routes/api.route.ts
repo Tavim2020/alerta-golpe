@@ -1,5 +1,3 @@
-import { addSearchParams } from "./utils/add-search-params";
-
 const API_PREFIX = "/api";
 const ADMIN_PREFIX = `${API_PREFIX}/admin`;
 const LAWYERS_PREFIX = `${ADMIN_PREFIX}/lawyers`;
@@ -16,11 +14,6 @@ export const API_ROUTE = {
     DELETE_BY_ID: (id: string) => `${LAWYERS_PREFIX}/delete/${id}`,
   },
   FRAUDS: {
-    GET: (objectWithParams: {
-      page?: string | number;
-      search?: string;
-      limit?: string | number;
-    }) => `${FRAUDS_PREFIX}/get${addSearchParams(objectWithParams)}`,
     CREATE: `${FRAUDS_PREFIX}/create`,
     UPDATE_BY_SLUG: (slug: string) => `${FRAUDS_PREFIX}/update/${slug}`,
     DELETE_BY_SLUG: (slug: string) => `${FRAUDS_PREFIX}/delete/${slug}`,

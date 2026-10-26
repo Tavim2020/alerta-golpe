@@ -44,7 +44,7 @@ export const RenderFormCreateFraud = ({
     },
     onSuccess: () => {
       toast.success("Fraude cadastrada com sucesso!");
-      router.push(APP_ROUTE.ADMIN.DASHBOARD.ROOT);
+      router.push(APP_ROUTE.ADMIN.DASHBOARD.ROOT());
     },
     onError: (error) =>
       toast.error(error?.message || "Tivemos problemas ao cadastrar a fraude."),
@@ -54,7 +54,7 @@ export const RenderFormCreateFraud = ({
     <>
       <BackButton
         title="Cadastro de Fraud"
-        href={APP_ROUTE.ADMIN.DASHBOARD.ROOT}
+        href={APP_ROUTE.ADMIN.DASHBOARD.ROOT()}
       />
 
       <FormFraud

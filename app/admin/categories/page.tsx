@@ -31,7 +31,10 @@ const CategoriesPage = async ({ searchParams }: ISearchParamsDefaultProps) => {
   return (
     <main className="mx-auto w-full max-w-7xl space-y-8 py-8">
       <div className="flex items-center justify-between">
-        <BackButton title="Categorias" href={APP_ROUTE.ADMIN.DASHBOARD.ROOT} />
+        <BackButton
+          title="Categorias"
+          href={APP_ROUTE.ADMIN.DASHBOARD.ROOT()}
+        />
 
         <ButtonLink
           href={APP_ROUTE.ADMIN.CATEGORIES.CREATE}

@@ -48,7 +48,7 @@ export const RenderFormEditFraud = ({
       },
       onSuccess: () => {
         toast.success("Fraude editada com sucesso!");
-        router.push(APP_ROUTE.ADMIN.DASHBOARD.ROOT);
+        router.push(APP_ROUTE.ADMIN.DASHBOARD.ROOT());
       },
       onError: (error) =>
         toast.error(error?.message || "Tivemos problemas ao editar a fraude."),
@@ -73,7 +73,7 @@ export const RenderFormEditFraud = ({
       },
       onSuccess: () => {
         toast.success("Fraude deletada com sucesso!");
-        router.push(APP_ROUTE.ADMIN.DASHBOARD.ROOT);
+        router.push(APP_ROUTE.ADMIN.DASHBOARD.ROOT());
       },
       onError: (error) =>
         toast.error(error?.message || "Tivemos problemas ao deletar a fraude."),
