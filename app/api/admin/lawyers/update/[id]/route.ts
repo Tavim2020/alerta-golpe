@@ -44,25 +44,7 @@ const updateLawyer: Middleware<TIdUpdateRoute> = async (req, _, otherProps) => {
     body: formData,
   });
 
-  if (error) {
-    console.error("[save-lawyer] Falha ao invocar Edge Function:", {
-      name: error.name,
-      message: error.message,
-    });
-
-    if (error instanceof FunctionsHttpError) {
-      const response = error.context;
-
-      console.error("[save-lawyer] Resposta HTTP:", {
-        status: response.status,
-        body: await response.clone().text(),
-      });
-    } else if (error instanceof FunctionsRelayError) {
-      console.error("[save-lawyer] Erro no relay:", error.message);
-    } else if (error instanceof FunctionsFetchError) {
-      console.error("[save-lawyer] Erro de comunicação:", error.message);
-    }
-  }
+  if (error) throw error;
 
   if (!data?.success)
     throw new Error(data?.error || "Não foi possível salvar o(a) advogado(a).");

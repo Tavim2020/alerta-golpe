@@ -189,6 +189,8 @@ class ProjectSchema {
       .refine((value) => value.length, { error: "Deve sempre haver uma dica" }),
     video_file: this.video,
     thumbnail_file: this.images,
+
+    lawyer: this.trimString.optional(),
   };
 
   lawyer = {

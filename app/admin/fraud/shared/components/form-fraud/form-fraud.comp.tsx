@@ -23,6 +23,7 @@ export const FormFraud = ({
   fraud,
   allCategoriesOptions,
   allSubCategoriesOptions,
+  allLawyersOptions,
 }: IFormFraudProps) => {
   const {
     control,
@@ -41,6 +42,7 @@ export const FormFraud = ({
       tips: fraud?.tips || [],
       video_file: fraud?.video_url || null,
       thumbnail_file: fraud?.thumbnail_url || null,
+      lawyer: fraud?.lawyer_id || "",
     },
   });
 
@@ -172,6 +174,14 @@ export const FormFraud = ({
         name={"thumbnail_file"}
         accept={imagePropsVerification.imagesAccepts.join(", ")}
         label="Imagem de Thumbnail da fraud: *"
+      />
+
+      <ControlledAutocomplete
+        control={control}
+        name="lawyer"
+        options={allLawyersOptions}
+        label={"Advogado: *"}
+        placeholder="Ex: Dr.Rogério..."
       />
 
       <ButtonDefault
