@@ -64,6 +64,7 @@ export default function AdminLogin() {
         type="email"
         required
         placeholder="E-mail"
+        maxLength={300}
       />
 
       <ControlledInputText
