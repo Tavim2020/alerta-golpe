@@ -1,3 +1,4 @@
+import { IPageParams } from "@/types/global.type";
 import { addSearchParams } from "./utils/add-search-params";
 
 const FRAUDS_ROOT = "/frauds";
@@ -12,7 +13,7 @@ export const APP_ROUTE = {
     ROOT: "/",
   },
   FRAUDS: {
-    ROOT: (objectWithParams?: { page?: string | number; search?: string }) =>
+    ROOT: (objectWithParams?: IPageParams) =>
       `${FRAUDS_ROOT}${addSearchParams(objectWithParams)}`,
     SLUG: (slug: string) => `${FRAUDS_ROOT}/${slug}`,
   },
@@ -21,26 +22,27 @@ export const APP_ROUTE = {
   },
   ADMIN: {
     DASHBOARD: {
-      ROOT: `${ADMIN_PREFIX}/dashboard`,
+      ROOT: (objectWithParams?: IPageParams) =>
+        `${ADMIN_PREFIX}/dashboard${addSearchParams(objectWithParams)}`,
     },
     FRAUD: {
       CREATE: `${ADMIN_FRAUD_PREFIX}/create`,
       EDIT: (slug: string) => `${ADMIN_FRAUD_PREFIX}/edit/${slug}`,
     },
     CATEGORIES: {
-      ROOT: (objectWithParams?: { page?: string | number; search?: string }) =>
+      ROOT: (objectWithParams?: IPageParams) =>
         `${ADMIN_CATEGORIES_ROOT}${addSearchParams(objectWithParams)}`,
       CREATE: `${ADMIN_CATEGORIES_ROOT}/create`,
       EDIT: (id: string) => `${ADMIN_CATEGORIES_ROOT}/edit/${id}`,
     },
     LAWYERS: {
-      ROOT: (objectWithParams?: { page?: string | number; search?: string }) =>
+      ROOT: (objectWithParams?: IPageParams) =>
         `${ADMIN_LAWYERS_ROOT}${addSearchParams(objectWithParams)}`,
       CREATE: `${ADMIN_LAWYERS_ROOT}/create`,
       EDIT: (id: string) => `${ADMIN_LAWYERS_ROOT}/edit/${id}`,
     },
     SUB_CATEGORIES: {
-      ROOT: (objectWithParams?: { page?: string | number; search?: string }) =>
+      ROOT: (objectWithParams?: IPageParams) =>
         `${ADMIN_SUB_CATEGORIES_ROOT}${addSearchParams(objectWithParams)}`,
       CREATE: `${ADMIN_SUB_CATEGORIES_ROOT}/create`,
       EDIT: (id: string) => `${ADMIN_SUB_CATEGORIES_ROOT}/edit/${id}`,

@@ -36,7 +36,7 @@ const SubCategoriesPage = async ({
       <div className="flex items-center justify-between">
         <BackButton
           title="Sub Categorias"
-          href={APP_ROUTE.ADMIN.DASHBOARD.ROOT}
+          href={APP_ROUTE.ADMIN.DASHBOARD.ROOT()}
         />
 
         <ButtonLink

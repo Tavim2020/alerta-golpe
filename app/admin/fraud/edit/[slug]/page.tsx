@@ -30,7 +30,7 @@ export default async function EditFraud({
     <>
       <BackButton
         title="Edição de Fraud"
-        href={APP_ROUTE.ADMIN.DASHBOARD.ROOT}
+        href={APP_ROUTE.ADMIN.DASHBOARD.ROOT()}
       />
 
       <RenderFormEditFraud
