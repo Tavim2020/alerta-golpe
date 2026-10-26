@@ -31,17 +31,43 @@ class ProjectSchema {
       });
 
   // validators
-  images = z.union([
-    z.string({ error: "O valor deve ser uma string" }),
-    this.fileOrUrlSchema({
-      maxSize: imagePropsVerification.maxSize,
-      mbSize: imagePropsVerification.mbSize,
-      accepts: imagePropsVerification.imagesAccepts,
-      formats: imagePropsVerification.formats,
-      label: "Imagem",
-    }),
-    z.null(),
-  ]);
+  images = z
+    .custom<string | File | null>(
+      (value) =>
+        value === null ||
+        typeof value === "string" ||
+        (typeof File !== "undefined" && value instanceof File) ||
+        (typeof FileList !== "undefined" && value instanceof FileList),
+      { error: this.stringDefaultError },
+    )
+    .transform((value): string | File | null => {
+      if (typeof FileList !== "undefined" && value instanceof FileList) {
+        return value.item(0);
+      }
+
+      return value as string | File | null;
+    })
+    .pipe(
+      z.union([
+        z.string({ error: this.stringDefaultError }),
+        this.fileOrUrlSchema({
+          maxSize: imagePropsVerification.maxSize,
+          mbSize: imagePropsVerification.mbSize,
+          accepts: imagePropsVerification.imagesAccepts,
+          formats: imagePropsVerification.formats,
+          label: "Imagem",
+        }),
+        z.null(),
+      ]),
+    )
+    .superRefine((value, ctx) => {
+      if (value === null) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Imagem é obrigatória",
+        });
+      }
+    });
 
   email = z
     .email({ error: "E-mail inválido" })
@@ -53,17 +79,43 @@ class ProjectSchema {
 
   trimString = z.string({ error: this.stringDefaultError }).trim();
 
-  video = z.union([
-    z.string({ error: "O valor deve ser uma string" }),
-    this.fileOrUrlSchema({
-      maxSize: videoPropsVerification.maxSize,
-      mbSize: videoPropsVerification.mbSize,
-      accepts: videoPropsVerification.videosAccepts,
-      formats: videoPropsVerification.formats,
-      label: "Vídeo",
-    }),
-    z.null(),
-  ]);
+  video = z
+    .custom<string | File | null>(
+      (value) =>
+        value === null ||
+        typeof value === "string" ||
+        (typeof File !== "undefined" && value instanceof File) ||
+        (typeof FileList !== "undefined" && value instanceof FileList),
+      { error: this.stringDefaultError },
+    )
+    .transform((value): string | File | null => {
+      if (typeof FileList !== "undefined" && value instanceof FileList) {
+        return value.item(0);
+      }
+
+      return value as string | File | null;
+    })
+    .pipe(
+      z.union([
+        z.string({ error: this.stringDefaultError }).nullable(),
+        this.fileOrUrlSchema({
+          maxSize: videoPropsVerification.maxSize,
+          mbSize: videoPropsVerification.mbSize,
+          accepts: videoPropsVerification.videosAccepts,
+          formats: videoPropsVerification.formats,
+          label: "Vídeo",
+        }),
+        z.null(),
+      ]),
+    )
+    .superRefine((value, ctx) => {
+      if (value === null) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Vídeo é obrigatório",
+        });
+      }
+    });
 
   name = this.trimString
     .min(3, { error: this.minCaracteresError(3) })
@@ -81,6 +133,34 @@ class ProjectSchema {
   category = {
     name: this.name,
   };
+
+  instagram = z.url("Informe uma URL válida.").refine((value) => {
+    try {
+      const url = new URL(value);
+
+      return (
+        ["instagram.com", "www.instagram.com"].includes(
+          url.hostname.toLowerCase(),
+        ) &&
+        /^\/[a-zA-Z0-9._]+\/?$/.test(url.pathname) &&
+        !url.search &&
+        !url.hash
+      );
+    } catch {
+      return false;
+    }
+  }, "Informe uma URL válida de perfil do Instagram.");
+
+  phone = this.nonEmptyString.min(1, this.minCaracteresError(1)).pipe(
+    z
+      .string()
+      .regex(/^\d{10,11}$/, "Informe um telefone válido com DDD.")
+      .refine((value) => {
+        const number = value.slice(2);
+
+        return number.length === 8 || number.length === 9;
+      }, "Informe um telefone válido."),
+  );
 
   fraud = {
     title: this.trimString
@@ -107,22 +187,8 @@ class ProjectSchema {
         }),
       )
       .refine((value) => value.length, { error: "Deve sempre haver uma dica" }),
-    video_file: this.video.superRefine((value, ctx) => {
-      if (value === null) {
-        ctx.addIssue({
-          code: "custom",
-          message: "Vídeo é obrigatório",
-        });
-      }
-    }),
-    thumbnail_file: this.images.superRefine((value, ctx) => {
-      if (value === null) {
-        ctx.addIssue({
-          code: "custom",
-          message: "Imagem é obrigatória",
-        });
-      }
-    }),
+    video_file: this.video,
+    thumbnail_file: this.images,
   };
 
   lawyer = {
@@ -141,14 +207,9 @@ class ProjectSchema {
       .refine((value) => value.length, {
         error: "Deve sempre haver uma especialidade",
       }),
-    photo_file: this.images.superRefine((value, ctx) => {
-      if (value === null) {
-        ctx.addIssue({
-          code: "custom",
-          message: "Imagem é obrigatória",
-        });
-      }
-    }),
+    phone: this.phone,
+    instagram: this.instagram,
+    photo_file: this.images,
   };
 
   sub_category = {

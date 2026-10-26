@@ -6,12 +6,14 @@ interface IValidateRequestData<GSchema extends z.ZodTypeAny> {
   schema: GSchema;
   req: NextRequest;
   formType?: "form-data" | "json";
+  fieldsKeyArray?: string[];
 }
 
 export async function validateRequestData<GSchema extends z.ZodTypeAny>({
   schema,
   req,
   formType = "json",
+  fieldsKeyArray,
 }: IValidateRequestData<GSchema>): Promise<z.infer<GSchema>> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let body: Record<string, any> = {};
@@ -30,11 +32,7 @@ export async function validateRequestData<GSchema extends z.ZodTypeAny>({
         else if (value === "false") {
           parsedValue = false;
         } else {
-          try {
-            parsedValue = JSON.parse(value);
-          } catch {
-            parsedValue = value;
-          }
+          if (fieldsKeyArray?.includes(key)) parsedValue = JSON.parse(value);
         }
       }
 

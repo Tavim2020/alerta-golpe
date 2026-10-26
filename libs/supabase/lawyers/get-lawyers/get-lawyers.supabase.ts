@@ -66,16 +66,13 @@ export async function getAllLayers({
     const total = data?.[0]?.total_count ?? 0;
 
     const lawyers: ILawyer[] = await Promise.all(
-      (data ?? []).map(async (lawyer) => {
+      (data ?? []).map((lawyer) => {
         const { data: lawyerPhotoData } = lawyersBucket.getPublicUrl(
           lawyer.file_name,
         );
 
         return {
-          id: lawyer.id,
-          name: lawyer.name,
-          bio: lawyer.bio,
-          specialty: lawyer.specialty,
+          ...lawyer,
           photo_url: generateBucketUrl(lawyerPhotoData.publicUrl),
         };
       }),

@@ -13,6 +13,8 @@ import { ControlledFile } from "@/components/form/controlled-file";
 import { ControlledMarkdown } from "@/components/form/controlled-markdown";
 import { imagePropsVerification } from "@/app/admin/constants/image.constant";
 import { DynamicFields } from "@/app/admin/shared/components/dynamic-fields";
+import { formatPhoneDisplay, formatPhoneStorage } from "@/utils/format/phones";
+import { formatOnlyLetters } from "@/utils/format/letters";
 
 export const FormLawyer = ({ isPending, submit, lawyer }: IFormLawyerProps) => {
   const {
@@ -24,6 +26,8 @@ export const FormLawyer = ({ isPending, submit, lawyer }: IFormLawyerProps) => {
     defaultValues: {
       name: lawyer?.name || "",
       bio: lawyer?.bio || "",
+      phone: lawyer?.phone || "",
+      instagram: lawyer?.instagram || "",
       specialty: lawyer?.specialty
         ? lawyer.specialty.map((value) => ({
             content: value,
@@ -50,6 +54,7 @@ export const FormLawyer = ({ isPending, submit, lawyer }: IFormLawyerProps) => {
         required
         maxLength={100}
         placeholder="Nome (ex: Bianca)..."
+        formatOnChange={formatOnlyLetters}
       />
 
       <ControlledMarkdown
@@ -58,6 +63,27 @@ export const FormLawyer = ({ isPending, submit, lawyer }: IFormLawyerProps) => {
         label="Biografia: *"
         placeholder="Advogado(a) há tantos anos..."
         required
+      />
+
+      <ControlledInputText
+        control={control}
+        name="phone"
+        label="Telefone: *"
+        required
+        minLength={15}
+        maxLength={15}
+        placeholder="Telefone (ex: (99) 99999-9999)"
+        formatOnValue={formatPhoneDisplay}
+        formatOnChange={formatPhoneStorage}
+      />
+
+      <ControlledInputText
+        control={control}
+        name="instagram"
+        label="Instagram: *"
+        required
+        placeholder="seu.perfil"
+        prefixes={["https://www.instagram.com/", "https://instagram.com/"]}
       />
 
       <DynamicFields
@@ -80,7 +106,7 @@ export const FormLawyer = ({ isPending, submit, lawyer }: IFormLawyerProps) => {
             maxLength={50}
           />
         )}
-        fieldError={errors?.specialty}
+        fieldError={errors?.specialty?.root}
       />
 
       <ControlledFile

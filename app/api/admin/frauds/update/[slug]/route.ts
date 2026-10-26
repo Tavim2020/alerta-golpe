@@ -21,6 +21,7 @@ const updateFraud: Middleware<TSlugUpdateRoute> = async (
     schema: formFraudSchema,
     req,
     formType: "form-data",
+    fieldsKeyArray: ["tips"],
   });
 
   if (!body.video_file) throw new Error("Vídeo não encontrado!");

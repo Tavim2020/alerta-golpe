@@ -10,9 +10,10 @@ export interface IControlledInputText<GProps extends FieldValues> {
   type?: "text" | "password" | "email";
   formatOnValue?: (value: string) => string;
   formatOnChange?: (value: string) => string;
-  placeholder: string;
+  placeholder?: string;
   minLength?: number;
   maxLength?: number;
   disabled?: boolean;
   required?: boolean;
+  prefixes?: string[];
 }

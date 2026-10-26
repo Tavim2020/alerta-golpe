@@ -5,15 +5,15 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { APP_ROUTE } from "@/routes/app.route";
 import { API_ROUTE } from "@/routes/api.route";
-import { FormFraudSchema } from "@/app/admin/fraud/shared/components/form-fraud/schemas/form-fraud.schema";
 import { BackButton } from "@/app/admin/shared/components/back-button";
 import { FormLawyer } from "../shared/components/form-lawyer";
+import { FormLawyerSchema } from "../shared/components/form-lawyer/schemas/form-lawyer.schema";
 
 const CreateLawyers = () => {
   const router = useRouter();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (data: FormFraudSchema) => {
+    mutationFn: async (data: FormLawyerSchema) => {
       const formData = new FormData();
 
       Object.entries(data).forEach(([key, value]) => {
@@ -55,7 +55,7 @@ const CreateLawyers = () => {
         href={APP_ROUTE.ADMIN.LAWYERS.ROOT()}
       />
 
-      <FormLawyer isPending={isPending} submit={(data) => console.log(data)} />
+      <FormLawyer isPending={isPending} submit={(data) => mutate(data)} />
     </>
   );
 };
