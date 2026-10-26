@@ -63,6 +63,8 @@ export interface ILawyer {
   name: string;
   bio: string;
   specialty: string[];
+  phone: string;
+  instagram: string;
   photo_url: string;
 }
 

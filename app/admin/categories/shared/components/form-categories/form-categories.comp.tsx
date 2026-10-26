@@ -9,6 +9,7 @@ import {
 import { IFormCategoriesProps } from "./form-categories.type";
 import { ButtonDefault } from "@/components/buttons/button-default";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { formatOnlyLetters } from "@/utils/format/letters";
 
 export const FormCategories = ({
   category,
@@ -35,6 +36,7 @@ export const FormCategories = ({
         minLength={3}
         maxLength={25}
         placeholder="Nome (ex: Online)..."
+        formatOnChange={formatOnlyLetters}
       />
 
       <ButtonDefault

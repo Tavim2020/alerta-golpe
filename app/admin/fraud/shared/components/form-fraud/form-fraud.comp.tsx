@@ -15,6 +15,7 @@ import { ControlledAutocomplete } from "@/components/form/controlled-autocomplet
 import { IAutocompleteOption } from "@/components/form/controlled-autocomplete/components/autocomplete/autocomplete.type";
 import { useMemo } from "react";
 import { DynamicFields } from "@/app/admin/shared/components/dynamic-fields";
+import { formatOnlyLetters } from "@/utils/format/letters";
 
 export const FormFraud = ({
   isPending,
@@ -75,6 +76,7 @@ export const FormFraud = ({
         required
         maxLength={100}
         placeholder="Título (ex: Golpe da falsa central do banco)..."
+        formatOnChange={formatOnlyLetters}
       />
 
       <ControlledTextArea
@@ -155,7 +157,7 @@ export const FormFraud = ({
             />
           </>
         )}
-        fieldError={errors?.tips}
+        fieldError={errors?.tips?.root}
       />
 
       <ControlledFile
