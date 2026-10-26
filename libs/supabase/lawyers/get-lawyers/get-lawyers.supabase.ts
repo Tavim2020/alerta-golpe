@@ -24,7 +24,7 @@ export async function getLawyersOptions(): Promise<
         return {
           value: lawyer.id,
           label: lawyer.name,
-          photoUrl: lawyerPhotoData.publicUrl,
+          photoUrl: generateBucketUrl(lawyerPhotoData.publicUrl),
         };
       }),
       totalPages: 1,

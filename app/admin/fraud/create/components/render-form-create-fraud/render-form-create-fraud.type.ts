@@ -4,4 +4,5 @@ import { TSubCategoriesOptions } from "@/libs/supabase/sub-categories/get-sub-ca
 export interface IRenderFormCreateFraudProps {
   allCategoriesOptions: IAutocompleteOption[];
   allSubCategoriesOptions: TSubCategoriesOptions[];
+  allLawyersOptions: IAutocompleteOption[];
 }

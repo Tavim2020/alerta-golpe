@@ -27,11 +27,24 @@ const createFraud: Middleware = async (req) => {
   formData.append("video", body.video_file);
   formData.append("thumbnail", body.thumbnail_file);
 
+  formData.append("lawyer_id", body.lawyer || "");
+
   const { error } = await db().functions.invoke("save-fraud", {
     body: formData,
   });
 
-  if (error) throw error;
+  if (error) {
+    console.error("Erro ao executar save-fraud:", error);
+
+    const context = (error as { context?: unknown }).context;
+
+    if (context instanceof Response) {
+      console.error("HTTP status:", context.status);
+      console.error("Resposta da Edge Function:", await context.clone().text());
+    }
+
+    throw error;
+  }
 
   return NextResponse.json({
     message: "Fraude criada com sucesso!",

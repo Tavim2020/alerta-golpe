@@ -7,4 +7,5 @@ export interface IRenderFormEditFraudProps {
   slug: string;
   allCategoriesOptions: IAutocompleteOption[];
   allSubCategoriesOptions: TSubCategoriesOptions[];
+  allLawyersOptions: IAutocompleteOption[];
 }

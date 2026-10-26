@@ -15,6 +15,7 @@ export const RenderFormEditFraud = ({
   slug,
   allCategoriesOptions,
   allSubCategoriesOptions,
+  allLawyersOptions,
 }: IRenderFormEditFraudProps) => {
   const router = useRouter();
 
@@ -92,6 +93,7 @@ export const RenderFormEditFraud = ({
         fraud={fraud}
         allCategoriesOptions={allCategoriesOptions}
         allSubCategoriesOptions={allSubCategoriesOptions}
+        allLawyersOptions={allLawyersOptions}
       />
     </>
   );

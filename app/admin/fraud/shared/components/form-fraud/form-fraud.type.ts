@@ -9,4 +9,5 @@ export interface IFormFraudProps {
   fraud?: TFraud;
   allCategoriesOptions: IAutocompleteOption[];
   allSubCategoriesOptions: TSubCategoriesOptions[];
+  allLawyersOptions: IAutocompleteOption[];
 }
