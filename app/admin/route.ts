@@ -1,6 +1,6 @@
 import { APP_ROUTE } from "@/routes/app.route";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
-  return NextResponse.redirect(APP_ROUTE.HOME.ROOT);
+export async function GET(req: NextRequest) {
+  return NextResponse.redirect(new URL(APP_ROUTE.HOME.ROOT, req.url));
 }

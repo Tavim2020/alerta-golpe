@@ -1,55 +1,34 @@
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
-import { API_ROUTE } from "@/routes/api.route";
 import { APP_ROUTE } from "@/routes/app.route";
-import { useSearchParams } from "next/navigation";
-import {
-  TFraudDashboard,
-  TNextServerGetFrauds,
-} from "@/app/api/admin/frauds/get/route.type";
 import { DashboardHeader } from "./components/dashboard-header";
 import { DashboardManagerButton } from "./components/dashboard-manager-button";
-import { SecurityLoading } from "../shared/components/security-loading";
-import { SecurityErrorCard } from "../shared/components/security-error-card";
 import { SecurityEmptyCard } from "../shared/components/security-empty-card";
 import { SecurityInformationCard } from "../shared/components/security-information-card";
+import { getFrauds } from "@/libs/supabase/frauds/get-frauds";
+import { ISearchParamsDefaultProps } from "@/types/global.type";
+import { WrapperFraudsFormSearch } from "@/components/frauds/wrapper-frauds-form-search";
+import { Pagination } from "@/components/pagination";
 
-async function getFrauds(objectWithParams: {
-  page?: string | number;
-  search?: string;
-  limit?: string | number;
-}): Promise<TFraudDashboard[]> {
-  const response = await fetch(API_ROUTE.FRAUDS.GET(objectWithParams));
+export const dynamic = "force-dynamic";
 
-  if (!response.ok) throw new Error("Não foi possível carregar as fraudes.");
+export default async function AdminDashboard({
+  searchParams,
+}: ISearchParamsDefaultProps) {
+  const { page, search } = await searchParams;
 
-  const responseData = (await response.json()) as TNextServerGetFrauds;
+  const pageNumber = Number(page);
 
-  if (!responseData.success)
-    throw new Error("Não foi possível carregar as fraudes.");
+  if (page && isNaN(pageNumber))
+    throw new Error("Parâmetro de busca(page) inválido!");
 
-  return responseData.data;
-}
-
-export default function AdminDashboard() {
-  const searchParams = useSearchParams();
-  const page = searchParams.get("page") || "";
-  const search = searchParams.get("search") || "";
+  const currentPage = pageNumber || 1;
 
   const {
-    data: frauds = [],
-    isPending,
-    isError,
-    refetch,
-  } = useQuery({
-    queryKey: ["frauds"],
-    queryFn: async () => getFrauds({ page, limit: 10, search }),
-    staleTime: 0,
-    gcTime: 0,
-    refetchOnMount: "always",
-    refetchOnWindowFocus: true,
-  });
+    success,
+    data: frauds,
+    totalPages,
+  } = await getFrauds({ page: currentPage, limit: 10, search });
+
+  if (!success) throw new Error("Tivemos problemas ao buscar os advogados.");
 
   return (
     <main className="mx-auto w-full max-w-7xl space-y-8 py-8">
@@ -76,6 +55,8 @@ export default function AdminDashboard() {
         />
       </section>
 
+      <WrapperFraudsFormSearch page="dashboard" />
+
       <section className="space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -86,18 +67,14 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {isPending && <SecurityLoading />}
-
-        {isError && <SecurityErrorCard refetch={refetch} />}
-
-        {!isPending && !isError && frauds.length === 0 && (
+        {frauds.length === 0 && (
           <SecurityEmptyCard
             href={APP_ROUTE.ADMIN.FRAUD.CREATE}
             title="fraud"
           />
         )}
 
-        {!isPending && !isError && frauds.length > 0 && (
+        {frauds.length > 0 && (
           <div className="divide-y divide-ink/10 border border-ink/15 bg-white">
             {frauds.map((fraud) => (
               <SecurityInformationCard
@@ -118,6 +95,12 @@ export default function AdminDashboard() {
             ))}
           </div>
         )}
+
+        <Pagination
+          basePath={(page) => APP_ROUTE.ADMIN.DASHBOARD.ROOT({ page, search })}
+          totalPages={totalPages}
+          currentPage={currentPage}
+        />
       </section>
     </main>
   );

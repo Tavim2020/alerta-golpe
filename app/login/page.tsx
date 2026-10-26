@@ -45,7 +45,7 @@ export default function AdminLogin() {
     },
     onSuccess: () => {
       toast.success("Login efetuado com sucesso!");
-      router.push(APP_ROUTE.ADMIN.DASHBOARD.ROOT);
+      router.push(APP_ROUTE.ADMIN.DASHBOARD.ROOT());
     },
     onError: (error) =>
       toast.error(error?.message ?? "Não foi possível fazer o login."),

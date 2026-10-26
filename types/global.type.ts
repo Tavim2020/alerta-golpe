@@ -49,8 +49,13 @@ export type TServerDefaultResponse<GResponse> =
       success: false;
     };
 
+export interface IPageParams {
+  page?: string | number;
+  search?: string;
+}
+
 export interface ISearchParamsDefaultProps {
-  searchParams: Promise<{ page?: string; search?: string }>;
+  searchParams: Promise<IPageParams>;
 }
 
 export interface ILawyer {
