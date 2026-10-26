@@ -159,6 +159,54 @@ export type Database = {
         }
         Relationships: []
       }
+      media_deletion_queue: {
+        Row: {
+          attempts: number
+          bucket_id: string
+          created_at: string
+          file_path: string
+          id: string
+          last_error: string | null
+          locked_at: string | null
+          media_type: string
+          next_attempt_at: string
+          processed_at: string | null
+          source_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          bucket_id: string
+          created_at?: string
+          file_path: string
+          id?: string
+          last_error?: string | null
+          locked_at?: string | null
+          media_type: string
+          next_attempt_at?: string
+          processed_at?: string | null
+          source_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          bucket_id?: string
+          created_at?: string
+          file_path?: string
+          id?: string
+          last_error?: string | null
+          locked_at?: string | null
+          media_type?: string
+          next_attempt_at?: string
+          processed_at?: string | null
+          source_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       sub_categories: {
         Row: {
           category_id: string
@@ -191,75 +239,31 @@ export type Database = {
           },
         ]
       }
-      video_deletion_queue: {
-        Row: {
-          attempts: number
-          created_at: string
-          id: string
-          last_error: string | null
-          locked_at: string | null
-          next_attempt_at: string
-          processed_at: string | null
-          status: string
-          thumbnail_path: string
-          updated_at: string
-          video_id: string
-          video_path: string
-        }
-        Insert: {
-          attempts?: number
-          created_at?: string
-          id?: string
-          last_error?: string | null
-          locked_at?: string | null
-          next_attempt_at?: string
-          processed_at?: string | null
-          status?: string
-          thumbnail_path: string
-          updated_at?: string
-          video_id: string
-          video_path: string
-        }
-        Update: {
-          attempts?: number
-          created_at?: string
-          id?: string
-          last_error?: string | null
-          locked_at?: string | null
-          next_attempt_at?: string
-          processed_at?: string | null
-          status?: string
-          thumbnail_path?: string
-          updated_at?: string
-          video_id?: string
-          video_path?: string
-        }
-        Relationships: []
-      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      claim_video_deletion_jobs: {
+      claim_media_deletion_jobs: {
         Args: { p_limit?: number }
         Returns: {
           attempts: number
+          bucket_id: string
           created_at: string
+          file_path: string
           id: string
           last_error: string | null
           locked_at: string | null
+          media_type: string
           next_attempt_at: string
           processed_at: string | null
+          source_id: string | null
           status: string
-          thumbnail_path: string
           updated_at: string
-          video_id: string
-          video_path: string
         }[]
         SetofOptions: {
           from: "*"
-          to: "video_deletion_queue"
+          to: "media_deletion_queue"
           isOneToOne: false
           isSetofReturn: true
         }

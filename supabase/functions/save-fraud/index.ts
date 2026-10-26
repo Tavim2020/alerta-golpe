@@ -20,10 +20,24 @@ const MAX_SIZE: Record<string, number> = {
   [THUMBNAIL_BUCKET]: 3 * 1024 * 1024,
 };
 
+const ALLOWED_EXTENSIONS: Record<string, string[]> = {
+  [VIDEO_BUCKET]: ["mp4", "webm"],
+  [THUMBNAIL_BUCKET]: ["png", "jpg", "jpeg"],
+};
+
 type FraudFile = {
   bucket: string;
   path: string;
   previousBlob: Blob | null;
+};
+
+type FraudRecord = {
+  id: string;
+  slug: string;
+  file_name: string | null;
+  thumbnail: string | null;
+  lawyer_id: string | null;
+  [key: string]: unknown;
 };
 
 function json(data: unknown, status = 200) {
@@ -36,14 +50,27 @@ function json(data: unknown, status = 200) {
   });
 }
 
-function getString(form: FormData, key: string) {
+function getString(form: FormData, key: string): string {
   const value = form.get(key);
   return typeof value === "string" ? value.trim() : "";
 }
 
 function parseTips(value: string): unknown {
   if (!value) return [];
-  return JSON.parse(value);
+
+  const parsed: unknown = JSON.parse(value);
+
+  if (!Array.isArray(parsed)) {
+    throw new Error("O campo tips deve ser um array JSON.");
+  }
+
+  return parsed;
+}
+
+function isValidUuid(value: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+    value,
+  );
 }
 
 function getExtension(file: File, bucket: string): string {
@@ -53,12 +80,7 @@ function getExtension(file: File, bucket: string): string {
     throw new Error(`Arquivo sem extensão válida: ${file.name}`);
   }
 
-  const allowedExtensions: Record<string, string[]> = {
-    [VIDEO_BUCKET]: ["mp4", "webm"],
-    [THUMBNAIL_BUCKET]: ["png", "jpg", "jpeg"],
-  };
-
-  const allowed = allowedExtensions[bucket];
+  const allowed = ALLOWED_EXTENSIONS[bucket];
 
   if (!allowed) {
     throw new Error(`Bucket não suportado: ${bucket}`);
@@ -72,17 +94,30 @@ function getExtension(file: File, bucket: string): string {
 
   return extension;
 }
-function normalizePath(value: string, bucket: string) {
+
+function normalizePath(value: string, bucket: string): string {
   if (!value) return "";
 
-  // Aceita nome do arquivo ou URL pública do Storage.
   const marker = `/storage/v1/object/public/${bucket}/`;
   const index = value.indexOf(marker);
 
-  const path =
-    index >= 0 ? decodeURIComponent(value.slice(index + marker.length)) : value;
+  let path: string;
 
-  if (path.startsWith("/") || path.split("/").some((part) => part === "..")) {
+  try {
+    path =
+      index >= 0
+        ? decodeURIComponent(value.slice(index + marker.length))
+        : value;
+  } catch {
+    throw new Error(`URL inválida no bucket ${bucket}.`);
+  }
+
+  if (
+    !path ||
+    path.startsWith("/") ||
+    path.includes("\\") ||
+    path.split("/").some((part) => part === "..")
+  ) {
     throw new Error(`Caminho inválido no bucket ${bucket}.`);
   }
 
@@ -93,10 +128,11 @@ async function objectExists(
   supabase: ReturnType<typeof createClient>,
   bucket: string,
   path: string,
-) {
-  const { data, error } = await supabase.storage
-    .from(bucket)
-    .list("", { search: path, limit: 100 });
+): Promise<boolean> {
+  const { data, error } = await supabase.storage.from(bucket).list("", {
+    search: path,
+    limit: 100,
+  });
 
   if (error) throw error;
 
@@ -109,10 +145,10 @@ async function uploadFile(
   slug: string,
   file: File,
   changes: FraudFile[],
-) {
+): Promise<string> {
   const allowedTypes = MIME_TYPES[bucket];
 
-  if (!allowedTypes.includes(file.type)) {
+  if (!allowedTypes?.includes(file.type)) {
     throw new Error(`Tipo de arquivo não permitido em ${bucket}: ${file.type}`);
   }
 
@@ -125,7 +161,6 @@ async function uploadFile(
   const extension = getExtension(file, bucket);
   const path = `${slug}.${extension}`;
 
-  // Guardamos o conteúdo anterior antes de sobrescrever.
   const exists = await objectExists(supabase, bucket, path);
   let previousBlob: Blob | null = null;
 
@@ -133,11 +168,12 @@ async function uploadFile(
     const { data, error } = await supabase.storage.from(bucket).download(path);
 
     if (error) throw error;
+
     previousBlob = data;
   }
 
-  // Registramos a operação antes do upload para possibilitar
-  // o rollback mesmo se o upload retornar erro.
+  // Registrar antes do upload permite restaurar o arquivo anterior
+  // caso uma etapa posterior da operação falhe.
   changes.push({ bucket, path, previousBlob });
 
   const { error } = await supabase.storage.from(bucket).upload(path, file, {
@@ -154,7 +190,7 @@ async function uploadFile(
 async function rollbackFiles(
   supabase: ReturnType<typeof createClient>,
   changes: FraudFile[],
-) {
+): Promise<string[]> {
   const errors: string[] = [];
 
   for (const change of [...changes].reverse()) {
@@ -176,14 +212,18 @@ async function rollbackFiles(
         if (error) throw error;
       }
     } catch (error) {
-      errors.push(`${change.bucket}/${change.path}: ${String(error)}`);
+      errors.push(
+        `${change.bucket}/${change.path}: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
     }
   }
 
   return errors;
 }
 
-Deno.serve(async (req) => {
+Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
@@ -196,6 +236,8 @@ Deno.serve(async (req) => {
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
   if (!supabaseUrl || !serviceRoleKey) {
+    console.error("Missing Supabase environment variables.");
+
     return json({ error: "Configuração do Supabase ausente." }, 500);
   }
 
@@ -221,7 +263,7 @@ Deno.serve(async (req) => {
     // A presença do slug indica edição.
     const isUpdate = Boolean(requestedSlug);
 
-    let current: Record<string, unknown> | null = null;
+    let current: FraudRecord | null = null;
     let slug = requestedSlug;
 
     if (isUpdate) {
@@ -237,11 +279,9 @@ Deno.serve(async (req) => {
         return json({ error: "Fraude não encontrada." }, 404);
       }
 
-      current = data as Record<string, unknown>;
-      // Preservamos o slug atual durante a edição.
-      slug = String(current.slug);
+      current = data as FraudRecord;
+      slug = current.slug;
     } else {
-      // Usa a função SQL já existente no projeto.
       const { data, error } = await supabase.rpc("generate_unique_slug", {
         title_text: title,
       });
@@ -253,6 +293,51 @@ Deno.serve(async (req) => {
       }
 
       slug = data;
+    }
+
+    // Validar lawyer_id antes de fazer upload de qualquer arquivo.
+    // undefined significa preservar o vínculo durante a edição.
+    // null significa salvar sem advogado.
+    let lawyerIdToSave: string | null | undefined;
+
+    const lawyerValue = form.get("lawyer_id");
+
+    if (lawyerValue === null) {
+      lawyerIdToSave = isUpdate ? undefined : null;
+    } else {
+      if (typeof lawyerValue !== "string") {
+        return json({ error: "Campo inválido: lawyer_id." }, 400);
+      }
+
+      const lawyerId = lawyerValue.trim();
+
+      if (!lawyerId) {
+        lawyerIdToSave = null;
+      } else {
+        if (!isValidUuid(lawyerId)) {
+          return json(
+            { error: "O campo lawyer_id deve conter um UUID válido." },
+            400,
+          );
+        }
+
+        const { data: lawyer, error: lawyerError } = await supabase
+          .from("lawyers")
+          .select("id")
+          .eq("id", lawyerId)
+          .maybeSingle();
+
+        if (lawyerError) throw lawyerError;
+
+        if (!lawyer) {
+          return json(
+            { error: "O advogado informado não foi encontrado." },
+            400,
+          );
+        }
+
+        lawyerIdToSave = lawyer.id;
+      }
     }
 
     const videoValue = form.get("video");
@@ -271,8 +356,6 @@ Deno.serve(async (req) => {
     const thumbnailString =
       typeof thumbnailValue === "string" ? thumbnailValue.trim() : "";
 
-    // Em edição, a ausência de arquivo mantém a mídia atual.
-    // Em cadastro, ambos os arquivos ou referências devem ser enviados.
     if (!isUpdate && !videoFile && !videoString) {
       return json({ error: "O vídeo é obrigatório." }, 400);
     }
@@ -327,15 +410,23 @@ Deno.serve(async (req) => {
     for (const field of fields) {
       const value = form.get(field);
 
-      // Campos omitidos na edição preservam o valor atual.
-      if (value === null && isUpdate) continue;
+      // Na edição, campos omitidos preservam o valor atual.
       if (value === null) continue;
 
       if (typeof value !== "string") {
         throw new Error(`Campo inválido: ${field}`);
       }
 
-      payload[field] = field === "tips" ? parseTips(value) : value || null;
+      if (field === "tips") {
+        payload[field] = parseTips(value);
+      } else {
+        payload[field] = value.trim() || null;
+      }
+    }
+
+    // Não sobrescreve lawyer_id se o campo foi omitido na edição.
+    if (lawyerIdToSave !== undefined) {
+      payload.lawyer_id = lawyerIdToSave;
     }
 
     let fraud: unknown;
@@ -349,6 +440,7 @@ Deno.serve(async (req) => {
         .single();
 
       if (error) throw error;
+
       fraud = data;
     } else {
       const { data, error } = await supabase
@@ -358,11 +450,12 @@ Deno.serve(async (req) => {
         .single();
 
       if (error) throw error;
+
       fraud = data;
     }
 
-    // A operação principal foi concluída.
-    // Removemos arquivos antigos apenas se não forem mais referenciados.
+    // O registro foi salvo. Agora tentamos limpar arquivos substituídos.
+    // Uma falha na limpeza não invalida o salvamento do registro.
     const oldVideo = current?.file_name ? String(current.file_name) : "";
 
     const oldThumbnail = current?.thumbnail ? String(current.thumbnail) : "";
@@ -370,7 +463,11 @@ Deno.serve(async (req) => {
     const cleanupErrors: string[] = [];
 
     const obsoleteFiles = [
-      { bucket: VIDEO_BUCKET, oldPath: oldVideo, newPath: fileName },
+      {
+        bucket: VIDEO_BUCKET,
+        oldPath: oldVideo,
+        newPath: fileName,
+      },
       {
         bucket: THUMBNAIL_BUCKET,
         oldPath: oldThumbnail,
@@ -382,15 +479,22 @@ Deno.serve(async (req) => {
       if (!item.oldPath || item.oldPath === item.newPath) continue;
 
       try {
+        const path = normalizePath(item.oldPath, item.bucket);
+
         const { error } = await supabase.storage
           .from(item.bucket)
-          .remove([normalizePath(item.oldPath, item.bucket)]);
+          .remove([path]);
 
         if (error) throw error;
       } catch (error) {
-        // A fraude já foi salva. Falha de limpeza não invalida
-        // a operação principal; registramos para monitoramento.
-        cleanupErrors.push(String(error));
+        const message = error instanceof Error ? error.message : String(error);
+
+        console.error(
+          `Failed to clean up ${item.bucket}/${item.oldPath}:`,
+          message,
+        );
+
+        cleanupErrors.push(`${item.bucket}/${item.oldPath}: ${message}`);
       }
     }
 
@@ -402,6 +506,8 @@ Deno.serve(async (req) => {
       ...(cleanupErrors.length > 0 ? { cleanup_warning: cleanupErrors } : {}),
     });
   } catch (error) {
+    console.error("save-fraud failed:", error);
+
     const rollbackErrors = await rollbackFiles(supabase, changes);
 
     return json(

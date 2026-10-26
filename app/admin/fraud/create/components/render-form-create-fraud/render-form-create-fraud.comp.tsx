@@ -13,6 +13,7 @@ import { IRenderFormCreateFraudProps } from "./render-form-create-fraud.type";
 export const RenderFormCreateFraud = ({
   allCategoriesOptions,
   allSubCategoriesOptions,
+  allLawyersOptions,
 }: IRenderFormCreateFraudProps) => {
   const router = useRouter();
 
@@ -62,6 +63,7 @@ export const RenderFormCreateFraud = ({
         submit={(data) => mutate(data)}
         allCategoriesOptions={allCategoriesOptions}
         allSubCategoriesOptions={allSubCategoriesOptions}
+        allLawyersOptions={allLawyersOptions}
       />
     </>
   );
