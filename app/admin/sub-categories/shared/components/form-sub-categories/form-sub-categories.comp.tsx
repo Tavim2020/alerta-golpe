@@ -10,6 +10,7 @@ import { IFormSubCategoriesProps } from "./form-sub-categories.type";
 import { ButtonDefault } from "@/components/buttons/button-default";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ControlledAutocomplete } from "@/components/form/controlled-autocomplete";
+import { formatOnlyLetters } from "@/utils/format/letters";
 
 export const FormSubCategories = ({
   subCategory,
@@ -47,6 +48,7 @@ export const FormSubCategories = ({
         minLength={3}
         maxLength={25}
         placeholder="Nome (ex: Banco)..."
+        formatOnChange={formatOnlyLetters}
       />
 
       <ButtonDefault

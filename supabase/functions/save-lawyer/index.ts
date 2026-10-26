@@ -9,6 +9,8 @@ const MIME_TYPES: Record<string, string[]> = {
   png: ["image/png"],
 };
 
+const PUBLIC_STORAGE_PREFIX = `/storage/v1/object/public/${BUCKET}/`;
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -57,6 +59,54 @@ function normalizeName(name: string): string {
     .replace(/_+/g, "_");
 }
 
+/**
+ * Normaliza referências recebidas do frontend ou do banco.
+ * O banco deve armazenar somente o nome do arquivo.
+ *
+ * Exemplos:
+ * renata-0123456.jpg
+ * /storage/v1/object/public/lawyers_photos/renata-0123456.jpg
+ * https://projeto.supabase.co/storage/v1/object/public/lawyers_photos/renata-0123456.jpg
+ * URLs com o caminho duplicado também são tratadas.
+ */
+function normalizeFileName(value: string): string {
+  let fileName = value.trim();
+
+  if (!fileName) return "";
+
+  // Remove query string e fragmento da URL.
+  fileName = fileName.split(/[?#]/)[0];
+
+  // Extrai o nome após o prefixo público, mesmo que esteja duplicado.
+  while (fileName.includes(PUBLIC_STORAGE_PREFIX)) {
+    fileName = fileName.slice(
+      fileName.indexOf(PUBLIC_STORAGE_PREFIX) + PUBLIC_STORAGE_PREFIX.length,
+    );
+  }
+
+  // Se houver uma URL completa ou outro caminho, mantém apenas o arquivo.
+  fileName = fileName.split("/").pop() ?? "";
+
+  try {
+    fileName = decodeURIComponent(fileName);
+  } catch {
+    throw new Error("O nome da imagem contém uma codificação inválida.");
+  }
+
+  // Impede caminhos ou nomes inesperados.
+  if (
+    !fileName ||
+    fileName === "." ||
+    fileName === ".." ||
+    fileName.includes("/") ||
+    fileName.includes("\\")
+  ) {
+    throw new Error("Nome de imagem inválido.");
+  }
+
+  return fileName;
+}
+
 function getExtension(file: File): string {
   const extension = file.name.split(".").pop()?.toLowerCase();
 
@@ -86,14 +136,21 @@ function parseSpecialty(value: string): string[] | null {
     throw new Error("O campo specialty deve ser um array JSON de strings.");
   }
 
-  if (
-    !Array.isArray(parsed) ||
-    !parsed.every((item) => typeof item === "string" && item.trim().length > 0)
-  ) {
-    throw new Error("O campo specialty deve conter apenas strings.");
+  if (!Array.isArray(parsed)) {
+    throw new Error("O campo specialty deve ser um array de strings.");
   }
 
-  return parsed.map((item: string) => item.trim());
+  if (!parsed.every((item) => typeof item === "string")) {
+    throw new Error("Cada especialidade deve ser uma string.");
+  }
+
+  const specialties = parsed.map((item: string) => item.trim());
+
+  if (specialties.some((item: string) => !item)) {
+    throw new Error("As especialidades não podem conter valores vazios.");
+  }
+
+  return [...new Set(specialties)];
 }
 
 function isUuid(value: string): boolean {
@@ -106,13 +163,14 @@ async function objectExists(
   supabase: ReturnType<typeof createClient>,
   path: string,
 ): Promise<boolean> {
-  const { data, error } = await supabase.storage
-    .from(BUCKET)
-    .list("", { search: path, limit: 100 });
+  const { data, error } = await supabase.storage.from(BUCKET).list("", {
+    search: path,
+    limit: 100,
+  });
 
   if (error) throw error;
 
-  return (data ?? []).some((item) => item.name === path);
+  return (data ?? []).some((item: { name: string }) => item.name === path);
 }
 
 async function uploadPhoto(
@@ -131,8 +189,6 @@ async function uploadPhoto(
 
   const path = `${lawyerId}_${safeName}.${extension}`;
 
-  // Guardamos o arquivo anterior para possibilitar o rollback
-  // caso o upload sobrescreva uma imagem já existente.
   const exists = await objectExists(supabase, path);
 
   let previousBlob: Blob | null = null;
@@ -147,7 +203,6 @@ async function uploadPhoto(
     previousContentType = data.type || null;
   }
 
-  // Registrar antes do upload permite compensar falhas posteriores.
   changes.push({
     path,
     previousBlob,
@@ -204,14 +259,17 @@ Deno.serve(async (req) => {
   }
 
   if (req.method !== "POST") {
-    return json({ error: "Método não permitido." }, 405);
+    return json({ success: false, error: "Método não permitido." }, 405);
   }
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
   if (!supabaseUrl || !serviceRoleKey) {
-    return json({ error: "Configuração do Supabase ausente." }, 500);
+    return json(
+      { success: false, error: "Configuração do Supabase ausente." },
+      500,
+    );
   }
 
   const supabase = createClient(supabaseUrl, serviceRoleKey, {
@@ -230,17 +288,20 @@ Deno.serve(async (req) => {
     const name = getString(form, "name");
 
     if (!name) {
-      return json({ error: "O campo name é obrigatório." }, 400);
+      return json(
+        { success: false, error: "O campo name é obrigatório." },
+        400,
+      );
     }
 
     if (idValue && !isUuid(idValue)) {
-      return json({ error: "O ID informado não é um UUID válido." }, 400);
+      return json(
+        { success: false, error: "O ID informado não é um UUID válido." },
+        400,
+      );
     }
 
     const isUpdate = Boolean(idValue);
-
-    // No cadastro, geramos o ID antes do upload.
-    // Na edição, utilizamos o ID recebido.
     const lawyerId = idValue || crypto.randomUUID();
 
     let current: Record<string, unknown> | null = null;
@@ -255,7 +316,7 @@ Deno.serve(async (req) => {
       if (error) throw error;
 
       if (!data) {
-        return json({ error: "Advogado não encontrado." }, 404);
+        return json({ success: false, error: "Advogado não encontrado." }, 404);
       }
 
       current = data as Record<string, unknown>;
@@ -265,15 +326,17 @@ Deno.serve(async (req) => {
     const photoFile =
       photoValue instanceof File && photoValue.size > 0 ? photoValue : null;
 
-    const photoString = typeof photoValue === "string" ? photoValue.trim() : "";
+    const photoString =
+      typeof photoValue === "string" ? normalizeFileName(photoValue) : "";
 
-    // Aceita file_name como alternativa para enviar uma referência
-    // textual, caso o frontend ainda utilize esse nome de campo.
     const fileNameValue = form.get("file_name");
     const fileNameString =
-      typeof fileNameValue === "string" ? fileNameValue.trim() : "";
+      typeof fileNameValue === "string" ? normalizeFileName(fileNameValue) : "";
 
-    let fileName = current?.file_name ? String(current.file_name) : null;
+    // Normaliza também os dados antigos, que podem conter uma URL completa.
+    let fileName = current?.file_name
+      ? normalizeFileName(String(current.file_name))
+      : null;
 
     if (photoFile) {
       fileName = await uploadPhoto(
@@ -284,11 +347,11 @@ Deno.serve(async (req) => {
         changes,
       );
     } else if (photoString || fileNameString) {
-      // Strings são referências já existentes: não fazemos upload.
+      // Armazena apenas o nome, nunca a URL pública.
       fileName = photoString || fileNameString;
     }
 
-    const payload: Record<string, unknown> = {
+    const payload: Partial<LawyerPayload> = {
       id: lawyerId,
       name,
       file_name: fileName,
@@ -299,19 +362,19 @@ Deno.serve(async (req) => {
     for (const field of fields) {
       const value = form.get(field);
 
-      // Campos omitidos na edição preservam os valores atuais.
+      // Na edição, campos omitidos preservam os valores atuais.
       if (value === null && isUpdate) continue;
-      if (value === null) {
-        payload[field] = null;
-        continue;
-      }
 
-      if (typeof value !== "string") {
+      if (value !== null && typeof value !== "string") {
         throw new Error(`Campo inválido: ${field}`);
       }
 
-      payload[field] =
-        field === "specialty" ? parseSpecialty(value) : value.trim() || null;
+      if (field === "specialty") {
+        payload.specialty = value === null ? null : parseSpecialty(value);
+        continue;
+      }
+
+      payload[field] = value?.trim() || null;
     }
 
     let lawyer: Record<string, unknown>;
@@ -339,18 +402,15 @@ Deno.serve(async (req) => {
       lawyer = data as Record<string, unknown>;
     }
 
-    // O banco foi atualizado. Agora podemos remover a foto antiga,
-    // mas somente quando um novo arquivo foi enviado.
-    const oldFileName = current?.file_name ? String(current.file_name) : "";
+    // A atualização foi concluída. Remove a foto anterior apenas
+    // quando um novo arquivo foi enviado e o nome realmente mudou.
+    const oldFileName = current?.file_name
+      ? normalizeFileName(String(current.file_name))
+      : "";
 
     const cleanupErrors: string[] = [];
 
-    if (
-      photoFile &&
-      oldFileName &&
-      oldFileName !== fileName &&
-      !oldFileName.includes("/storage/v1/object/")
-    ) {
+    if (photoFile && oldFileName && oldFileName !== fileName) {
       const { error } = await supabase.storage
         .from(BUCKET)
         .remove([oldFileName]);

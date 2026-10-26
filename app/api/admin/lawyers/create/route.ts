@@ -1,42 +1,45 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { handlerMiddleware, Middleware } from "@/app/api/utils/middleware";
 import { validateRequestData } from "@/app/api/utils/validators";
-import { formFraudSchema } from "@/app/admin/fraud/shared/components/form-fraud/schemas/form-fraud.schema";
 import { db } from "@/libs/supabase/server";
+import { formLawyerSchema } from "@/app/admin/lawyers/shared/components/form-lawyer/schemas/form-lawyer.schema";
 
-const createFraud: Middleware = async (req) => {
+const createLawyer: Middleware = async (req) => {
   const body = await validateRequestData({
-    schema: formFraudSchema,
+    schema: formLawyerSchema,
     req,
     formType: "form-data",
+    fieldsKeyArray: ["specialty"],
   });
 
-  if (!body.video_file) throw new Error("Vídeo não encontrado!");
-  if (!body.thumbnail_file) throw new Error("Imagem não encontrado!");
+  if (!body.photo_file) throw new Error("Foto não encontrada!");
 
   const formData = new FormData();
 
-  formData.append("title", body.title);
-  formData.append("description", body.description);
-  formData.append("context", body.context);
-  formData.append("content", body.content);
-  formData.append("tips", JSON.stringify(body.tips));
-  formData.append("sub_category_id", body.sub_category);
+  formData.append("name", body.name);
+  formData.append("bio", body.bio);
+  formData.append(
+    "specialty",
+    JSON.stringify(body.specialty.map((object) => object.content)),
+  );
+  formData.append("phone", body.phone);
+  formData.append("instagram", body.instagram);
+  formData.append("photo", body.photo_file);
 
-  formData.append("video", body.video_file);
-  formData.append("thumbnail", body.thumbnail_file);
-
-  const { error } = await db().functions.invoke("save-fraud", {
+  const { data, error } = await db().functions.invoke("save-lawyer", {
     body: formData,
   });
 
   if (error) throw error;
 
+  if (!data?.success)
+    throw new Error(data?.error || "Não foi possível salvar o(a) advogado(a).");
+
   return NextResponse.json({
-    message: "Fraude criada com sucesso!",
+    message: "Advogado(a) criado(a) com sucesso!",
   });
 };
 
 export async function POST(req: NextRequest) {
-  return await handlerMiddleware(createFraud)(req);
+  return await handlerMiddleware(createLawyer)(req);
 }

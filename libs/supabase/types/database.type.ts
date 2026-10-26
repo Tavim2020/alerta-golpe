@@ -278,7 +278,9 @@ export type Database = {
           bio: string
           file_name: string
           id: string
+          instagram: string
           name: string
+          phone: string
           specialty: string[]
           total_count: number
         }[]
