@@ -1,7 +1,6 @@
 import { APP_INFO } from "@/constants/app.constant";
 import { APP_ROUTE } from "@/routes/app.route";
 import Link from "next/link";
-import React from "react";
 
 export const Header = () => {
   return (
@@ -19,7 +18,7 @@ export const Header = () => {
             Início
           </Link>
 
-          <Link href={APP_ROUTE.FRAUDS.ROOT} className="hover:text-sun">
+          <Link href={APP_ROUTE.FRAUDS.ROOT()} className="hover:text-sun">
             Golpes sofridos
           </Link>
         </nav>

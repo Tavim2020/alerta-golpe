@@ -4,8 +4,10 @@ import { Footer } from "@/components/footer";
 import { fontAnton, fontPublicSans } from "@/fonts/global.font";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
 import type { RootLayoutProps } from "@/types/global.type";
-import { AdsScript } from "@/lib/ads/scripts";
+import { AdsScript } from "@/libs/ads/scripts";
 import { APP_INFO } from "@/constants/app.constant";
+import { ToastContainer } from "@/libs/react-toastify/components/toast-container";
+import { QueryProvider } from "@/libs/react-query/contexts/query-provider";
 
 import "./globals.css";
 
@@ -15,7 +17,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(NEXT_PUBLIC_SITE_URL),
   title: {
     default: `${APP_INFO.name} | Veja como os golpistas agem e não caia`,
-    template: `%s | ${APP_INFO.name}`,
+    template: `${APP_INFO.name} | %s`,
   },
   description:
     "Vídeos reais de golpes sofridos por pessoas comuns. Entenda como os criminosos agem e proteja você e sua família.",
@@ -29,12 +31,15 @@ export default function RootLayout({ children }: RootLayoutProps) {
       lang="pt-BR"
       className={`${fontAnton.variable} ${fontPublicSans.variable}`}
     >
-      <body className="bg-paper min-h-dvh font-body flex flex-col text-ink antialiased">
-        <Header />
-        <main>{children}</main>
-        <Footer />
+      <body className="bg-paper min-h-dvh font-body flex flex-col text-ink antialiased min-w-85">
+        <QueryProvider>
+          <Header />
+          <ToastContainer />
+          <main>{children}</main>
+          <Footer />
 
-        <AdsScript />
+          <AdsScript />
+        </QueryProvider>
       </body>
     </html>
   );
