@@ -18,7 +18,18 @@ const deleteLawyer: Middleware<TIdUpdateRoute> = async (_, __, otherProps) => {
     .select("id")
     .maybeSingle();
 
-  if (error) throw error;
+  if (error) {
+    console.error("Erro ao executar delete-lawyer:", error);
+
+    const context = (error as { context?: unknown }).context;
+
+    if (context instanceof Response) {
+      console.error("HTTP status:", context.status);
+      console.error("Resposta:", await context.clone().text());
+    }
+
+    throw error;
+  }
 
   if (!data) throw new Error("Advogado(a) não encontrado(a)!");
 

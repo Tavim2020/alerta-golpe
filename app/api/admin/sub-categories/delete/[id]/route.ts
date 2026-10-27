@@ -28,7 +28,18 @@ const deleteSubCategory: Middleware<TIdDeleteRoute> = async (
 
   const { error } = await db().from("sub_categories").delete().eq("id", id);
 
-  if (error) throw error;
+  if (error) {
+    console.error("Erro ao executar delete-sub-category:", error);
+
+    const context = (error as { context?: unknown }).context;
+
+    if (context instanceof Response) {
+      console.error("HTTP status:", context.status);
+      console.error("Resposta:", await context.clone().text());
+    }
+
+    throw error;
+  }
 
   return NextResponse.json({
     message: "Sub categoria deletada com sucesso!",
