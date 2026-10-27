@@ -143,7 +143,13 @@ export default async function FraudPublicPage({
           </section>
         )}
 
-        {lawyer && <LawyerCard {...lawyer} />}
+        {lawyer && (
+          <LawyerCard
+            {...lawyer}
+            fraudSlug={fraud.slug}
+            fraudTitle={fraud.title}
+          />
+        )}
 
         <ButtonLink
           href={generateWhatsAppShareLink({ fraudTitle: fraud.title, slug })}
