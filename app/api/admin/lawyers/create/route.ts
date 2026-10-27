@@ -30,7 +30,18 @@ const createLawyer: Middleware = async (req) => {
     body: formData,
   });
 
-  if (error) throw error;
+  if (error) {
+    console.error("Erro ao executar save-lawyer no create:", error);
+
+    const context = (error as { context?: unknown }).context;
+
+    if (context instanceof Response) {
+      console.error("HTTP status:", context.status);
+      console.error("Resposta da Edge Function:", await context.clone().text());
+    }
+
+    throw error;
+  }
 
   if (!data?.success)
     throw new Error(data?.error || "Não foi possível salvar o(a) advogado(a).");

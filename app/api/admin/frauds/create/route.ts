@@ -34,7 +34,7 @@ const createFraud: Middleware = async (req) => {
   });
 
   if (error) {
-    console.error("Erro ao executar save-fraud:", error);
+    console.error("Erro ao executar save-fraud no create:", error);
 
     const context = (error as { context?: unknown }).context;
 

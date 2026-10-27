@@ -16,6 +16,7 @@ import {
   getFraudBySlug,
   getOtherRecentFrauds,
 } from "@/libs/supabase/frauds/get-frauds";
+import { LawyerCard } from "./components/lawyer-card";
 
 export const revalidate = 3600;
 
@@ -53,9 +54,7 @@ export default async function FraudPublicPage({
 
   if (!slug) throw new Error("Parâmetro não encontrado");
 
-  const { fraud } = await getFraudBySlug(slug);
-
-  if (!fraud) return notFound();
+  const { fraud, lawyer } = await getFraudBySlug(slug);
 
   const otherRecentFrauds = await getOtherRecentFrauds(fraud.id);
 
@@ -143,6 +142,8 @@ export default async function FraudPublicPage({
             </ul>
           </section>
         )}
+
+        {lawyer && <LawyerCard {...lawyer} />}
 
         <ButtonLink
           href={generateWhatsAppShareLink({ fraudTitle: fraud.title, slug })}

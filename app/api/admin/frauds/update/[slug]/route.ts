@@ -47,7 +47,7 @@ const updateFraud: Middleware<TSlugUpdateRoute> = async (
   });
 
   if (error) {
-    console.error("Erro ao executar save-fraud:", error);
+    console.error("Erro ao executar save-fraud no update:", error);
 
     const context = (error as { context?: unknown }).context;
 
