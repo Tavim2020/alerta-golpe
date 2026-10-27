@@ -42,7 +42,18 @@ const createSubCategory: Middleware = async (req) => {
   if (error?.code === "23505")
     throw new ConflictError("Sub categoria já cadastrada");
 
-  if (error) throw error;
+  if (error) {
+    console.error("Erro ao executar create-sub-category:", error);
+
+    const context = (error as { context?: unknown }).context;
+
+    if (context instanceof Response) {
+      console.error("HTTP status:", context.status);
+      console.error("Resposta:", await context.clone().text());
+    }
+
+    throw error;
+  }
 
   return NextResponse.json({
     message: "Sub categoria criada com sucesso!",

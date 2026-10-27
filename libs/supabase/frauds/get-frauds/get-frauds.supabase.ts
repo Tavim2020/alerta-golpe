@@ -1,4 +1,4 @@
-import { TFraud, TServerDefaultResponse } from "@/types/global.type";
+import { ILawyer, TFraud, TServerDefaultResponse } from "@/types/global.type";
 import { db } from "@/libs/supabase/server";
 import { formatDateToBr } from "@/utils/format/dates";
 import { generateBucketUrl } from "@/utils/generate/links";
@@ -7,6 +7,7 @@ import {
   videoBucket,
 } from "@/libs/supabase/storages/supabase.storage";
 import { notFound } from "next/navigation";
+import { getLawyerById } from "../../lawyers/get-lawyers";
 
 interface IGetFrauds {
   page?: number;
@@ -102,19 +103,27 @@ export async function getFrauds({
 }
 
 export const getFraudBySlug = async (fraudSlug: string) => {
-  const { data: frauds, success } = await getFrauds({
+  const { data: frauds, success: successFrauds } = await getFrauds({
     limit: 1,
     slug: fraudSlug,
   });
 
-  if (!success)
+  if (!successFrauds)
     throw new Error("Tivemos problemas ao buscar a informação do golpe");
 
   const fraud = frauds?.[0];
 
   if (!fraud) return notFound();
 
-  return { fraud };
+  let lawyer: ILawyer | undefined = undefined;
+
+  if (fraud?.lawyer_id) {
+    const { lawyer: responseLawyer } = await getLawyerById(fraud.lawyer_id);
+
+    lawyer = responseLawyer;
+  }
+
+  return { fraud, lawyer };
 };
 
 export const getOtherRecentFrauds = async (currentFraudId: string) => {
