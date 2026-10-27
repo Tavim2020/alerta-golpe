@@ -1,8 +1,10 @@
 import Image from "next/image";
 import { MessageCircle, ShieldCheck } from "lucide-react";
-import { ILawyer } from "@/types/global.type";
 import Link from "next/link";
 import { RenderMarkdown } from "@/components/markdown/render-markdown";
+import { generateWhatsAppLawyerLink } from "@/utils/generate/links";
+import { ILawyerCardProps } from "./lawyer-card.type";
+import { InstagramIcon } from "./components/instagram-icon";
 
 export function LawyerCard({
   bio,
@@ -11,7 +13,9 @@ export function LawyerCard({
   phone,
   photo_url,
   specialty,
-}: ILawyer) {
+  fraudTitle,
+  fraudSlug,
+}: ILawyerCardProps) {
   return (
     <aside
       aria-label="Advogado responsável pela orientação jurídica"
@@ -73,7 +77,11 @@ export function LawyerCard({
           <div className="mt-6 flex flex-wrap gap-3 border-t border-ink/10 pt-5">
             {phone && (
               <Link
-                href={`https://wa.me/55${phone}`}
+                href={generateWhatsAppLawyerLink({
+                  lawyerPhone: phone,
+                  fraudTitle,
+                  fraudSlug,
+                })}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-ink px-4 py-2.5 text-sm font-semibold text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-alarm focus-visible:ring-offset-2"
@@ -91,30 +99,7 @@ export function LawyerCard({
                 aria-label={`Instagram de ${name || "advogado parceiro"}`}
                 className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-sm font-semibold text-ink transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-alarm focus-visible:ring-offset-2"
               >
-                <svg
-                  aria-hidden="true"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  className="size-4.5"
-                >
-                  <rect
-                    x="3"
-                    y="3"
-                    width="18"
-                    height="18"
-                    rx="5"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                  />
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="4"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                  />
-                  <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" />
-                </svg>
+                <InstagramIcon />
                 Instagram
               </Link>
             )}
