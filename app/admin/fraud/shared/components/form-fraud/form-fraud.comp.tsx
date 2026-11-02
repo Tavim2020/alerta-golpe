@@ -35,6 +35,8 @@ export const FormFraud = ({
     defaultValues: {
       title: fraud?.title || "",
       description: fraud?.description || "",
+      city: fraud?.city || "",
+      state: fraud?.state || "",
       category: fraud?.sub_category?.category?.id || "",
       sub_category: fraud?.sub_category?.id || "",
       context: fraud?.context || "",
@@ -89,6 +91,24 @@ export const FormFraud = ({
         rows={5}
         minLength={30}
         maxLength={255}
+      />
+
+      <ControlledInputText
+        control={control}
+        name="city"
+        label="Cidade: *"
+        required
+        maxLength={100}
+        placeholder="Cidade (ex: São Paulo)..."
+      />
+
+      <ControlledInputText
+        control={control}
+        name="state"
+        label="Estado: *"
+        required
+        maxLength={100}
+        placeholder="Estado (ex: SP)..."
       />
 
       <ControlledAutocomplete
@@ -189,7 +209,7 @@ export const FormFraud = ({
         disabled={isPending}
         className="w-full bg-sun text-black py-3 hover:bg-sun hover:text-black hover:brightness-95"
       >
-        {isPending ? "Publicando…" : "Publicar vídeo"}
+        {isPending ? "Publicando…" : "Publicar fraude"}
       </ButtonDefault>
     </form>
   );

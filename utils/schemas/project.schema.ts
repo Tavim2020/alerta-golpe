@@ -169,6 +169,8 @@ class ProjectSchema {
     description: this.trimString
       .min(30, { error: this.minCaracteresError(30) })
       .max(255, { error: this.maxCaracteresError(255) }),
+    city: this.nonEmptyString,
+    state: this.nonEmptyString,
     category: this.nonEmptyString,
     sub_category: this.nonEmptyString,
     context: this.markdown,
