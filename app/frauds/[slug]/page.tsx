@@ -66,11 +66,20 @@ export default async function FraudPublicPage({
         Voltar para golpes sofridos
       </ButtonLink>
 
-      {fraud.updated_at && (
-        <p className="mt-3 text-xs text-ink/60">
-          Atualizado em {fraud.updated_at}
-        </p>
-      )}
+      <div className="flex items-center justify-between gap-4 mt-3 ">
+        {(fraud?.city || fraud?.state) && (
+          <p className="text-sm text-ink/80">
+            {fraud.city}
+            {fraud.state && `, ${fraud.state}`}
+          </p>
+        )}
+
+        {fraud.updated_at && (
+          <p className="text-sm text-ink/80">
+            Atualizado em {fraud.updated_at}
+          </p>
+        )}
+      </div>
 
       <video
         src={fraud.video_url}

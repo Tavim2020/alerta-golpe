@@ -19,6 +19,8 @@ const createFraud: Middleware = async (req) => {
 
   formData.append("title", body.title);
   formData.append("description", body.description);
+  formData.append("city", body.city || "");
+  formData.append("state", body.state || "");
   formData.append("context", body.context);
   formData.append("content", body.content);
   formData.append("tips", JSON.stringify(body.tips));

@@ -62,6 +62,7 @@ export type Database = {
       }
       frauds: {
         Row: {
+          city: string
           content: string
           context: string
           created_at: string
@@ -70,6 +71,7 @@ export type Database = {
           id: string
           lawyer_id: string | null
           slug: string
+          state: string
           sub_category_id: string
           thumbnail: string
           tips: Json
@@ -77,6 +79,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          city: string
           content: string
           context: string
           created_at?: string
@@ -85,6 +88,7 @@ export type Database = {
           id?: string
           lawyer_id?: string | null
           slug: string
+          state: string
           sub_category_id: string
           thumbnail: string
           tips: Json
@@ -92,6 +96,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          city?: string
           content?: string
           context?: string
           created_at?: string
@@ -100,6 +105,7 @@ export type Database = {
           id?: string
           lawyer_id?: string | null
           slug?: string
+          state?: string
           sub_category_id?: string
           thumbnail?: string
           tips?: Json

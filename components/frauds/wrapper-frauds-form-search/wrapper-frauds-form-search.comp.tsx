@@ -12,7 +12,7 @@ export const WrapperFraudsFormSearch = ({
   return (
     <FormSearch
       currentRoute={currentRoute}
-      placeholder="Buscar por título, descrição, contexto, conteúdo, dica...."
+      placeholder="Buscar por título, descrição, contexto, conteúdo, dica, cidade, estado...."
     />
   );
 };

@@ -62,6 +62,13 @@ export const PreviewCard = ({ fraud }: IPreviewCardProps) => {
             Atualizado em {fraud.updated_at}
           </p>
         )}
+
+        {(fraud?.city || fraud?.state) && (
+          <p className="mt-1 text-xs text-ink/60">
+            {fraud.city}
+            {fraud.state && `, ${fraud.state}`}
+          </p>
+        )}
       </div>
     </Link>
   );
