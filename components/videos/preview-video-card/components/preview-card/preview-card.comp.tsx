@@ -47,7 +47,7 @@ export const PreviewCard = ({ fraud }: IPreviewCardProps) => {
         )}
 
         {fraud?.title && (
-          <h3 className="line-clamp-2 text-lg font-bold leading-snug">
+          <h3 className="line-clamp-2 text-lg font-bold text-wrap leading-snug">
             {fraud.title}
           </h3>
         )}
