@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { APP_ROUTE } from "@/routes/app.route";
+import { ButtonLink } from "@/components/buttons/button-link";
 
 export const AlertHits = () => {
   return (
@@ -14,12 +14,9 @@ export const AlertHits = () => {
           agem e proteja sua família.
         </p>
 
-        <Link
-          href={APP_ROUTE.FRAUDS.ROOT}
-          className="mt-8 inline-block bg-ink px-6 py-3 font-bold text-sun hover:bg-black"
-        >
+        <ButtonLink href={APP_ROUTE.FRAUDS.ROOT()} className="mt-8">
           Ver golpes sofridos
-        </Link>
+        </ButtonLink>
       </div>
 
       <div className="hazard" />

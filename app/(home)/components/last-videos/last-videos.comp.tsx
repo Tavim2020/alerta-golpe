@@ -1,13 +1,16 @@
-import { AdsSlot } from "@/lib/ads/components/ads-slot";
+import { AdsSlot } from "@/libs/ads/components/ads-slot";
 import { EmptyVideos } from "@/components/videos/empty-videos";
-import { ShowVideos } from "@/components/videos/show-videos";
+import { PreviewVideosCard } from "@/components/videos/preview-video-card";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
-import { getVideos } from "@/lib/server";
+import { getFrauds } from "@/libs/supabase/frauds/get-frauds";
 
 const { NEXT_PUBLIC_ADSENSE_SLOT } = SERVER_ENVIRONMENT;
 
 export const LastVideos = async () => {
-  const videos = await getVideos({ limit: 12 });
+  const { data: frauds, success } = await getFrauds({ limit: 12 });
+
+  if (!success)
+    throw new Error("Tivemos problemas ao buscar os últimos vídeos");
 
   return (
     <div className="mx-auto max-w-6xl px-4">
@@ -15,7 +18,7 @@ export const LastVideos = async () => {
 
       <h2 className="mb-5 font-display text-3xl">Últimos golpes</h2>
 
-      {videos.length ? <ShowVideos videos={videos} /> : <EmptyVideos />}
+      {frauds.length ? <PreviewVideosCard frauds={frauds} /> : <EmptyVideos />}
 
       <AdsSlot slotNumber={NEXT_PUBLIC_ADSENSE_SLOT} />
     </div>

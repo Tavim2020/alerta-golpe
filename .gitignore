@@ -6,3 +6,6 @@ node_modules
 # environemnts
 .env
 *.env.*
+
+# Supabase CLI local
+supabase
