@@ -1,16 +1,17 @@
-import Link from "next/link";
 import { IPreviewCardProps } from "./preview-card.type";
 import { APP_ROUTE } from "@/routes/app.route";
 import Image from "next/image";
 import { BadgeCategory } from "@/components/badges/badge-category";
 import { BadgeSubCategory } from "@/components/badges/badge-sub-category";
 import { ContentUnavailable } from "@/components/videos/content-unavailable";
+import { ButtonLink } from "@/components/buttons/button-link";
 
 export const PreviewCard = ({ fraud }: IPreviewCardProps) => {
   if (!fraud?.slug) return null;
 
   return (
-    <Link
+    <ButtonLink
+      variant="clean"
       href={APP_ROUTE.FRAUDS.SLUG(fraud.slug)}
       className="group block border border-ink/15 bg-white transition hover:border-ink hover:shadow-[6px_6px_0_#ffd60a]"
     >
@@ -70,6 +71,6 @@ export const PreviewCard = ({ fraud }: IPreviewCardProps) => {
           </p>
         )}
       </div>
-    </Link>
+    </ButtonLink>
   );
 };

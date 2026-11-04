@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { IDashboardManagerButtonProps } from "./dashboard-manager-button.type";
 import { cn } from "@/libs/utils";
+import { ButtonLink } from "@/components/buttons/button-link";
 
 export const DashboardManagerButton = ({
   href,
@@ -9,7 +9,8 @@ export const DashboardManagerButton = ({
   className,
 }: IDashboardManagerButtonProps) => {
   return (
-    <Link
+    <ButtonLink
+      variant="clean"
       href={href}
       className={cn(
         "group flex items-center gap-4 border border-ink/15 bg-white p-5 transition hover:border-ink/40",
@@ -30,6 +31,6 @@ export const DashboardManagerButton = ({
       <span className="text-xl transition-transform group-hover:translate-x-1">
         →
       </span>
-    </Link>
+    </ButtonLink>
   );
 };

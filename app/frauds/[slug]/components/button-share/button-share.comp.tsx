@@ -1,0 +1,17 @@
+"use client";
+
+import { ButtonDefault } from "@/components/buttons/button-default";
+import { generateShareLink } from "@/utils/generate/links";
+import { IButtonShareProps } from "./button-share.type";
+
+export const ButtonShare = ({ fraudTitle, slug }: IButtonShareProps) => {
+  return (
+    <ButtonDefault
+      onClick={() => generateShareLink({ fraudTitle, slug })}
+      variant="outline"
+      className="flex-1 sm:flex-none"
+    >
+      Outros aplicativos
+    </ButtonDefault>
+  );
+};

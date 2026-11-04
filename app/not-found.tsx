@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { AlertCircle, ArrowLeft, Home, Search } from "lucide-react";
 import { APP_ROUTE } from "@/routes/app.route";
 import { useRouter } from "next/navigation";
+import { ButtonLink } from "@/components/buttons/button-link";
 
 export default function NotFoundPage() {
   const router = useRouter();
@@ -29,21 +29,23 @@ export default function NotFoundPage() {
         </p>
 
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <Link
+          <ButtonLink
+            variant="clean"
             href={APP_ROUTE.HOME.ROOT}
             className="inline-flex items-center justify-center gap-2 bg-ink px-5 py-3 font-bold text-sun transition hover:bg-black"
           >
             <Home className="size-4" aria-hidden="true" />
             Ir para o início
-          </Link>
+          </ButtonLink>
 
-          <Link
+          <ButtonLink
+            variant="clean"
             href={APP_ROUTE.FRAUDS.ROOT()}
             className="inline-flex items-center justify-center gap-2 border border-ink/20 px-5 py-3 font-bold text-ink transition hover:bg-ink/5"
           >
             <AlertCircle className="size-4" aria-hidden="true" />
             Explorar golpes
-          </Link>
+          </ButtonLink>
         </div>
 
         <button

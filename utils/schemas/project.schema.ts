@@ -165,10 +165,10 @@ class ProjectSchema {
   fraud = {
     title: this.trimString
       .min(3, { error: this.minCaracteresError(3) })
-      .max(100, { error: this.maxCaracteresError(100) }),
+      .max(150, { error: this.maxCaracteresError(150) }),
     description: this.trimString
       .min(30, { error: this.minCaracteresError(30) })
-      .max(255, { error: this.maxCaracteresError(255) }),
+      .max(500, { error: this.maxCaracteresError(500) }),
     city: this.nonEmptyString,
     state: this.nonEmptyString,
     category: this.nonEmptyString,
@@ -185,7 +185,7 @@ class ProjectSchema {
           description: z
             .string({ error: this.stringDefaultError })
             .min(15, { error: this.minCaracteresError(15) })
-            .max(150, { error: this.maxCaracteresError(150) }),
+            .max(200, { error: this.maxCaracteresError(200) }),
         }),
       )
       .refine((value) => value.length, { error: "Deve sempre haver uma dica" }),

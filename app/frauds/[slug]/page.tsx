@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
 import { AdsSlot } from "@/libs/ads/components/ads-slot";
@@ -17,6 +16,7 @@ import {
   getOtherRecentFrauds,
 } from "@/libs/supabase/frauds/get-frauds";
 import { LawyerCard } from "./components/lawyer-card";
+import { ButtonShare } from "./components/button-share";
 
 export const revalidate = 3600;
 
@@ -160,14 +160,25 @@ export default async function FraudPublicPage({
           />
         )}
 
-        <ButtonLink
-          href={generateWhatsAppShareLink({ fraudTitle: fraud.title, slug })}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-6"
-        >
-          Compartilhar no WhatsApp
-        </ButtonLink>
+        <div>
+          <h4 className="text-lg font-semibold mb-2">Compartilhar</h4>
+
+          <div className="grid grid-cols-2 sm:flex sm:items-center gap-4">
+            <ButtonLink
+              href={generateWhatsAppShareLink({
+                fraudTitle: fraud.title,
+                slug,
+              })}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 sm:flex-none"
+            >
+              WhatsApp
+            </ButtonLink>
+
+            <ButtonShare fraudTitle={fraud.title} slug={fraud.slug} />
+          </div>
+        </div>
       </div>
 
       <AdsSlot slotNumber={NEXT_PUBLIC_ADSENSE_SLOT} />

@@ -6,8 +6,8 @@ const CATEGORIES_PREFIX = `${ADMIN_PREFIX}/categories`;
 const SUB_CATEGORIES_PREFIX = `${ADMIN_PREFIX}/sub-categories`;
 
 export const API_ROUTE = {
-  ADMIN_LOGIN: `${API_PREFIX}/login`,
-  ADMIN_LOG_OUT: `${API_PREFIX}/log-out`,
+  LOGIN: `${API_PREFIX}/login`,
+  LOG_OUT: `${API_PREFIX}/log-out`,
   LAWYERS: {
     CREATE: `${LAWYERS_PREFIX}/create`,
     UPDATE_BY_ID: (id: string) => `${LAWYERS_PREFIX}/update/${id}`,

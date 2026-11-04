@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { ISecurityEmptyCardProps } from "./security-empty-card.type";
+import { ButtonLink } from "@/components/buttons/button-link";
 
 export const SecurityEmptyCard = ({ title, href }: ISecurityEmptyCardProps) => {
   return (
@@ -9,12 +9,13 @@ export const SecurityEmptyCard = ({ title, href }: ISecurityEmptyCardProps) => {
         Comece adicionando o primeiro conteúdo.
       </p>
 
-      <Link
+      <ButtonLink
+        variant="clean"
         href={href}
         className="mt-5 inline-flex bg-sun px-5 py-3 font-medium text-black hover:brightness-95"
       >
         Cadastrar primeira {title}
-      </Link>
+      </ButtonLink>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ISecurityInformationCardProps } from "./security-information-card.type";
 import Image from "next/image";
+import { ButtonLink } from "@/components/buttons/button-link";
 
 export const SecurityInformationCard = ({
   imageUrl,
@@ -30,12 +31,13 @@ export const SecurityInformationCard = ({
         {children}
       </div>
 
-      <Link
+      <ButtonLink
         href={href}
+        variant="clean"
         className="inline-flex shrink-0 items-center justify-center border border-ink/20 px-4 py-2 text-sm transition hover:bg-ink/5"
       >
         Visualizar / editar →
-      </Link>
+      </ButtonLink>
     </article>
   );
 };

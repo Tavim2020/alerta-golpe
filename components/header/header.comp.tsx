@@ -1,26 +1,35 @@
 import { APP_INFO } from "@/constants/app.constant";
 import { APP_ROUTE } from "@/routes/app.route";
-import Link from "next/link";
+import { ButtonLink } from "../buttons/button-link";
 
 export const Header = () => {
   return (
     <header className="bg-ink text-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <Link
+        <ButtonLink
           href={APP_ROUTE.HOME.ROOT}
+          variant="clean"
           className="font-display text-2xl text-sun"
         >
           {APP_INFO.name}
-        </Link>
+        </ButtonLink>
 
         <nav className="flex gap-5 text-sm font-semibold">
-          <Link href={APP_ROUTE.HOME.ROOT} className="hover:text-sun">
+          <ButtonLink
+            href={APP_ROUTE.HOME.ROOT}
+            variant="clean"
+            className="hover:text-sun"
+          >
             Início
-          </Link>
+          </ButtonLink>
 
-          <Link href={APP_ROUTE.FRAUDS.ROOT()} className="hover:text-sun">
+          <ButtonLink
+            href={APP_ROUTE.FRAUDS.ROOT()}
+            variant="clean"
+            className="hover:text-sun"
+          >
             Golpes sofridos
-          </Link>
+          </ButtonLink>
         </nav>
       </div>
     </header>

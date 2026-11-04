@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 
 import { IPaginationProps } from "./pagination.type";
+import { ButtonLink } from "../buttons/button-link";
 
 export const Pagination = ({
   currentPage,
@@ -50,14 +50,15 @@ export const Pagination = ({
       className="mt-10 flex flex-wrap items-center justify-center gap-2"
     >
       {currentPage > 1 && (
-        <Link
+        <ButtonLink
           href={getPageHref(currentPage - 1)}
           aria-label="Página anterior"
+          variant="clean"
           className={`${linkClass} ${inactiveClass}`}
           scroll={false}
         >
           <ChevronLeft className="size-5" />
-        </Link>
+        </ButtonLink>
       )}
 
       {pages.map((page, index) => {
@@ -67,17 +68,18 @@ export const Pagination = ({
         return (
           <span key={page} className="contents">
             {hasGap && (
-              <Link
+              <ButtonLink
                 href={getPageHref(getEllipsisTarget(index - 1))}
                 aria-label={`Avançar para páginas entre ${previousPage} e ${page}`}
+                variant="clean"
                 className={`${linkClass} ${inactiveClass}`}
                 scroll={false}
               >
                 <MoreHorizontal className="size-5" />
-              </Link>
+              </ButtonLink>
             )}
 
-            <Link
+            <ButtonLink
               href={getPageHref(page)}
               aria-current={page === currentPage ? "page" : undefined}
               className={`${linkClass} ${
@@ -85,23 +87,25 @@ export const Pagination = ({
                   ? "border-ink bg-ink text-sun"
                   : inactiveClass
               }`}
+              variant="clean"
               scroll={false}
             >
               {page}
-            </Link>
+            </ButtonLink>
           </span>
         );
       })}
 
       {currentPage < totalPages && (
-        <Link
+        <ButtonLink
           href={getPageHref(currentPage + 1)}
           aria-label="Próxima página"
+          variant="clean"
           className={`${linkClass} ${inactiveClass}`}
           scroll={false}
         >
           <ChevronRight className="size-5" />
-        </Link>
+        </ButtonLink>
       )}
     </nav>
   );
