@@ -19,13 +19,10 @@ export class CookiesInstance {
     maxAge: 604800,
   };
 
-  async checkCookies(): Promise<boolean> {
+  async verifyAdminToken(token?: string): Promise<boolean> {
+    if (!token) return false;
+
     try {
-      const cookieStore = await cookies();
-      const token = cookieStore.get(this.key)?.value;
-
-      if (!token) return false;
-
       const { payload } = await jwtVerify(token, this.secret, {
         algorithms: ["HS256"],
       });
@@ -34,6 +31,12 @@ export class CookiesInstance {
     } catch {
       return false;
     }
+  }
+
+  async checkCookies(): Promise<boolean> {
+    const cookieStore = await cookies();
+
+    return this.verifyAdminToken(cookieStore.get(this.key)?.value);
   }
 
   async setCookies() {

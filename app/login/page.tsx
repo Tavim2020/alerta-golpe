@@ -27,7 +27,7 @@ export default function AdminLogin() {
 
   const { mutate: login, isPending } = useMutation({
     mutationFn: async (data: AdminLoginSchema) => {
-      const response = await fetch(API_ROUTE.ADMIN_LOGIN, {
+      const response = await fetch(API_ROUTE.LOGIN, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

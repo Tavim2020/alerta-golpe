@@ -1,10 +1,11 @@
 import { APP_INFO } from "@/constants/app.constant";
 import { CLIENT_ENVIRONMENT } from "@/environments/client.environment";
 import { APP_ROUTE } from "@/routes/app.route";
+import { toast } from "react-toastify";
 
 const { NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_SUPABASE_URL } = CLIENT_ENVIRONMENT;
 
-interface IGenerateWhatsAppShareLink {
+interface IGenerateShareLink {
   fraudTitle: string;
   slug: string;
 }
@@ -15,8 +16,24 @@ const generateFraudUrl = (slug: string) =>
 export const generateWhatsAppShareLink = ({
   fraudTitle,
   slug,
-}: IGenerateWhatsAppShareLink) =>
+}: IGenerateShareLink) =>
   `https://wa.me/?text=${encodeURIComponent(`Olha esse golpe: ${fraudTitle} \n${generateFraudUrl(slug)}`)}`;
+
+export const generateShareLink = async ({
+  fraudTitle,
+  slug,
+}: IGenerateShareLink) => {
+  if (!navigator?.share) {
+    toast.error("Compartilhamento não suportado neste navegador");
+    return;
+  }
+
+  await navigator?.share({
+    title: fraudTitle,
+    text: `Olha esse golpe: ${fraudTitle}`,
+    url: generateFraudUrl(slug),
+  });
+};
 
 export const generateBucketUrl = (bucketInitialUrl: string) =>
   bucketInitialUrl.replace(NEXT_PUBLIC_SUPABASE_URL, "");

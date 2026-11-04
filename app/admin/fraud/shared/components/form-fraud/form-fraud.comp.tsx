@@ -78,7 +78,7 @@ export const FormFraud = ({
         name="title"
         label="Título: *"
         required
-        maxLength={100}
+        maxLength={150}
         placeholder="Título (ex: Golpe da falsa central do banco)..."
         formatOnChange={formatOnlyLetters}
       />
@@ -90,7 +90,7 @@ export const FormFraud = ({
         placeholder="Descrição do golpe..."
         rows={5}
         minLength={30}
-        maxLength={255}
+        maxLength={500}
       />
 
       <ControlledInputText
@@ -174,7 +174,7 @@ export const FormFraud = ({
               name={`tips.${index}.description`}
               placeholder="Descrição da dica..."
               minLength={15}
-              maxLength={150}
+              maxLength={200}
               required
             />
           </>

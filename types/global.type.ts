@@ -29,10 +29,6 @@ export type CustomError = {
   message: string;
   statusCode: number;
 };
-export interface IGetUniqueDefaultParam {
-  value?: string;
-}
-
 export interface IPageParamsProps<GParams> {
   params: Promise<GParams>;
 }

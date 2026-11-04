@@ -10,6 +10,9 @@ export const ButtonLink = ({
   href,
   target,
   rel,
+  scroll,
+  "aria-label": ariaLabel,
+  prefetch,
 }: IButtonLinkProps) => {
   const variantClassName = buttonVariants[variant];
 
@@ -23,6 +26,9 @@ export const ButtonLink = ({
         className,
       )}
       rel={rel}
+      scroll={scroll}
+      aria-label={ariaLabel}
+      prefetch={prefetch}
     >
       {children}
     </Link>

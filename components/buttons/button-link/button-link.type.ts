@@ -5,4 +5,6 @@ export interface IButtonLinkProps extends IButtonProps {
   href: string;
   target?: ComponentProps<"a">["target"];
   rel?: "noopener noreferrer";
+  scroll?: boolean;
+  prefetch?: boolean | "auto" | null;
 }

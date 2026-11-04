@@ -7,6 +7,7 @@ import { cn } from "@/libs/utils";
 import Link from "next/link";
 import { IInputFileProps } from "./input-file.type";
 import { FieldValues } from "react-hook-form";
+import { ButtonLink } from "@/components/buttons/button-link";
 
 export const InputFile = <GProps extends FieldValues>({
   field,
@@ -29,14 +30,14 @@ export const InputFile = <GProps extends FieldValues>({
 
       {isUrl && (
         <div className="flex items-center justify-between gap-3 border border-ink/15 p-3">
-          <Link
+          <ButtonLink
             href={currentFile}
+            variant="underline"
             target="_blank"
             rel="noopener noreferrer"
-            className="truncate text-sm text-blue-600 underline"
           >
             Visualizar arquivo cadastrado
-          </Link>
+          </ButtonLink>
 
           <ButtonDefault
             variant="clean"

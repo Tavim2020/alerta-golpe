@@ -1,10 +1,10 @@
 import Image from "next/image";
 import { MessageCircle, ShieldCheck } from "lucide-react";
-import Link from "next/link";
 import { RenderMarkdown } from "@/components/markdown/render-markdown";
 import { generateWhatsAppLawyerLink } from "@/utils/generate/links";
 import { ILawyerCardProps } from "./lawyer-card.type";
 import { InstagramIcon } from "./components/instagram-icon";
+import { ButtonLink } from "@/components/buttons/button-link";
 
 export function LawyerCard({
   bio,
@@ -76,7 +76,8 @@ export function LawyerCard({
         {(phone || instagram) && (
           <div className="mt-6 flex flex-wrap gap-3 border-t border-ink/10 pt-5">
             {phone && (
-              <Link
+              <ButtonLink
+                variant="clean"
                 href={generateWhatsAppLawyerLink({
                   lawyerPhone: phone,
                   fraudTitle,
@@ -88,11 +89,12 @@ export function LawyerCard({
               >
                 <MessageCircle size={17} className="text-sun" />
                 Entrar em contato
-              </Link>
+              </ButtonLink>
             )}
 
             {instagram && (
-              <Link
+              <ButtonLink
+                variant="clean"
                 href={instagram}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -101,7 +103,7 @@ export function LawyerCard({
               >
                 <InstagramIcon />
                 Instagram
-              </Link>
+              </ButtonLink>
             )}
           </div>
         )}

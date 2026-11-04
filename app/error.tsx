@@ -2,9 +2,9 @@
 
 import { useEffect } from "react";
 import { AlertTriangle, ArrowLeft, Home, RefreshCw } from "lucide-react";
-import Link from "next/link";
 import { APP_ROUTE } from "@/routes/app.route";
 import { useRouter } from "next/navigation";
+import { ButtonLink } from "@/components/buttons/button-link/button-link.comp";
 
 export default function ErrorPage({
   error,
@@ -55,13 +55,14 @@ export default function ErrorPage({
             Tentar novamente
           </button>
 
-          <Link
+          <ButtonLink
+            variant="clean"
             href={APP_ROUTE.HOME.ROOT}
             className="inline-flex items-center justify-center gap-2 border border-ink/20 px-5 py-3 font-bold text-ink transition hover:bg-ink/5"
           >
             <Home className="size-4" aria-hidden="true" />
             Ir para o início
-          </Link>
+          </ButtonLink>
         </div>
 
         <button

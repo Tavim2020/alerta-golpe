@@ -6,4 +6,5 @@ export interface IButtonProps {
   variant?: TButtonVariants;
   className?: string;
   children: ReactNode;
+  "aria-label"?: string;
 }

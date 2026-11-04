@@ -1,26 +1,5 @@
 import { CustomError } from "@/types/global.type";
 
-class BadRequestError extends Error implements CustomError {
-  readonly action: string;
-  readonly statusCode: number;
-
-  constructor(message: string) {
-    super(message);
-    this.name = "BadRequestError";
-    this.action = "Dados ou requisição inválida. Corrija-os e tente novamente.";
-    this.statusCode = 400;
-  }
-
-  toJSON() {
-    return {
-      name: this.name,
-      message: this.message,
-      action: this.action,
-      statusCode: this.statusCode,
-    };
-  }
-}
-
 class ValidationError extends Error implements CustomError {
   readonly action: string;
   readonly statusCode: number;
@@ -43,48 +22,6 @@ class ValidationError extends Error implements CustomError {
   }
 }
 
-class UnauthorizedError extends Error implements CustomError {
-  readonly action: string;
-  readonly statusCode: number;
-
-  constructor(message: string) {
-    super(message);
-    this.name = "UnauthorizedError";
-    this.action = "Faça novamente o login para continuar.";
-    this.statusCode = 401;
-  }
-
-  toJSON() {
-    return {
-      name: this.name,
-      message: this.message,
-      action: this.action,
-      statusCode: this.statusCode,
-    };
-  }
-}
-
-class ForbiddenError extends Error implements CustomError {
-  readonly action: string;
-  readonly statusCode: number;
-
-  constructor(message: string) {
-    super(message);
-    this.name = "ForbiddenError";
-    this.action = "Método ou ação não permitida.";
-    this.statusCode = 403;
-  }
-
-  toJSON() {
-    return {
-      name: this.name,
-      message: this.message,
-      action: this.action,
-      statusCode: this.statusCode,
-    };
-  }
-}
-
 class NotFoundError extends Error implements CustomError {
   readonly action: string;
   readonly statusCode: number;
@@ -94,27 +31,6 @@ class NotFoundError extends Error implements CustomError {
     this.name = "NotFoundError";
     this.action = "O recurso solicitado não foi encontrado.";
     this.statusCode = 404;
-  }
-
-  toJSON() {
-    return {
-      name: this.name,
-      message: this.message,
-      action: this.action,
-      statusCode: this.statusCode,
-    };
-  }
-}
-
-class TimeoutError extends Error implements CustomError {
-  readonly action: string;
-  readonly statusCode: number;
-
-  constructor(message: string) {
-    super(message);
-    this.name = "TimeoutError";
-    this.action = "O recurso solicitado não foi encontrado.";
-    this.statusCode = 408;
   }
 
   toJSON() {
@@ -169,13 +85,4 @@ class InternalServerError extends Error implements CustomError {
   }
 }
 
-export {
-  BadRequestError,
-  ConflictError,
-  ForbiddenError,
-  InternalServerError,
-  NotFoundError,
-  TimeoutError,
-  UnauthorizedError,
-  ValidationError,
-};
+export { ConflictError, InternalServerError, NotFoundError, ValidationError };

@@ -3,18 +3,23 @@ import { APP_ROUTE } from "./routes/app.route";
 import { CookiesInstance } from "./utils/cookies";
 
 export async function proxy(req: NextRequest) {
-  const checkCheck = await new CookiesInstance().checkCookies();
-
   const { pathname } = req.nextUrl;
-  if (pathname.startsWith("/api") && !checkCheck)
+
+  const isAdmin = await new CookiesInstance().checkCookies();
+
+  if (pathname.startsWith("/api") && !isAdmin) {
     return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+  }
 
-  if (pathname.startsWith("/admin") && !checkCheck)
+  if (pathname.startsWith("/admin/") && !isAdmin) {
     return NextResponse.redirect(new URL(APP_ROUTE.LOGIN.ROOT, req.url));
+  }
 
-  const res = NextResponse.next();
-  res.headers.set("X-Robots-Tag", "noindex, nofollow");
-  return res;
+  const response = NextResponse.next();
+
+  response.headers.set("X-Robots-Tag", "noindex, nofollow");
+
+  return response;
 }
 
 export const config = {
