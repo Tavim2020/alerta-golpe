@@ -53,7 +53,7 @@ export const PreviewCard = ({ fraud }: IPreviewCardProps) => {
         )}
 
         {fraud?.description && (
-          <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-ink/70">
+          <p className="mt-2 line-clamp-3 text-wrap text-sm leading-relaxed text-ink/70">
             {fraud.description}
           </p>
         )}
