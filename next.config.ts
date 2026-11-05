@@ -2,20 +2,9 @@ import type { NextConfig } from "next";
 import { SERVER_ENVIRONMENT } from "./environments/server.environment";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  // images: {
-  //   remotePatterns: [
-  //     {
-  //       protocol: "https",
-  //       hostname: "**",
-  //     },
-  //     {
-  //       protocol: "http",
-  //       hostname: "**",
-  //     },
-  //   ],
-  // },
-  // allowedDevOrigins: ["*"],
+  experimental: {
+    middlewareClientMaxBodySize: "50mb",
+  },
   env: {
     ...SERVER_ENVIRONMENT,
   },
