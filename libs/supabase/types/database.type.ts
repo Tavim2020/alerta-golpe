@@ -39,6 +39,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      articles: {
+        Row: {
+          content: string
+          context: string
+          created_at: string
+          description: string
+          id: string
+          slug: string
+          thumbnail: string
+          tips: Json
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          context: string
+          created_at?: string
+          description: string
+          id?: string
+          slug: string
+          thumbnail: string
+          tips: Json
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          context?: string
+          created_at?: string
+          description?: string
+          id?: string
+          slug?: string
+          thumbnail?: string
+          tips?: Json
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string

@@ -1,6 +1,6 @@
 import { AdsSlot } from "@/libs/ads/components/ads-slot";
 import { EmptyVideos } from "@/components/videos/empty-videos";
-import { PreviewVideosCard } from "@/components/videos/preview-video-card";
+import { PreviewsCards } from "@/components/previews-cards";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
 import { getFrauds } from "@/libs/supabase/frauds/get-frauds";
 
@@ -18,7 +18,7 @@ export const LastVideos = async () => {
 
       <h2 className="mb-5 font-display text-3xl">Últimos golpes</h2>
 
-      {frauds.length ? <PreviewVideosCard frauds={frauds} /> : <EmptyVideos />}
+      {frauds.length ? <PreviewsCards previews={frauds} /> : <EmptyVideos />}
 
       <AdsSlot slotNumber={NEXT_PUBLIC_ADSENSE_SLOT} />
     </div>

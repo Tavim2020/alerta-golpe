@@ -4,10 +4,9 @@ import { AdsSlot } from "@/libs/ads/components/ads-slot";
 import { APP_ROUTE } from "@/routes/app.route";
 import { generateWhatsAppShareLink } from "@/utils/generate/links";
 import { LdJsonScript } from "@/components/scripts/ld-json";
-import { PreviewCard } from "@/components/videos/preview-video-card/components/preview-card";
+import { PreviewCard } from "@/components/previews-cards/components/preview-card";
 import { BadgeCategory } from "@/components/badges/badge-category";
 import { BadgeSubCategory } from "@/components/badges/badge-sub-category";
-import { PreventionTip } from "./components/prevention-tip";
 import { RenderMarkdown } from "@/components/markdown/render-markdown";
 import { ButtonLink } from "@/components/buttons/button-link";
 import { IPageParamsProps } from "@/types/global.type";
@@ -16,7 +15,8 @@ import {
   getOtherRecentFrauds,
 } from "@/libs/supabase/frauds/get-frauds";
 import { LawyerCard } from "./components/lawyer-card";
-import { ButtonShare } from "./components/button-share";
+import { ButtonShare } from "@/components/buttons/button-share";
+import { PreventionTip } from "@/components/tips/prevention-tip";
 
 export const revalidate = 3600;
 
@@ -166,8 +166,9 @@ export default async function FraudPublicPage({
           <div className="grid grid-cols-2 sm:flex sm:items-center gap-4">
             <ButtonLink
               href={generateWhatsAppShareLink({
-                fraudTitle: fraud.title,
+                title: fraud.title,
                 slug,
+                variant: "fraud",
               })}
               target="_blank"
               rel="noopener noreferrer"
@@ -176,7 +177,11 @@ export default async function FraudPublicPage({
               WhatsApp
             </ButtonLink>
 
-            <ButtonShare fraudTitle={fraud.title} slug={fraud.slug} />
+            <ButtonShare
+              fraudTitle={fraud.title}
+              slug={fraud.slug}
+              variant="fraud"
+            />
           </div>
         </div>
       </div>
@@ -189,7 +194,11 @@ export default async function FraudPublicPage({
 
           <div className="grid gap-6 sm:grid-cols-3">
             {otherRecentFrauds.map((recentVideos) => (
-              <PreviewCard key={recentVideos.id} fraud={recentVideos} />
+              <PreviewCard
+                key={recentVideos.id}
+                preview={recentVideos}
+                variant="fraud"
+              />
             ))}
           </div>
         </section>

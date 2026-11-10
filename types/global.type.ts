@@ -1,4 +1,4 @@
-import { IPreventionTipProps } from "@/app/frauds/[slug]/components/prevention-tip/prevention-tip.type";
+import { IPreventionTipProps } from "@/components/tips/prevention-tip/prevention-tip.type";
 import { Database } from "@/libs/supabase/types/database.type";
 import { ReactNode } from "react";
 
@@ -19,6 +19,14 @@ export type TFraud = Omit<
     };
   };
   video_url: string;
+  thumbnail_url: string;
+  tips: Array<Omit<IPreventionTipProps, "index">>;
+};
+
+export type TArticles = Omit<
+  Database["public"]["Tables"]["articles"]["Row"],
+  "tips"
+> & {
   thumbnail_url: string;
   tips: Array<Omit<IPreventionTipProps, "index">>;
 };

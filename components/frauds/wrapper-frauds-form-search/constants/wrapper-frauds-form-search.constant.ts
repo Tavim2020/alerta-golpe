@@ -1,6 +1,5 @@
 import { APP_ROUTE } from "@/routes/app.route";
 import { TPagesWithGetAllFrauds } from "../wrapper-frauds-form-search.type";
-import { IPageParams } from "@/types/global.type";
 
 export const wrapperFraudsConstants: Record<
   TPagesWithGetAllFrauds,
