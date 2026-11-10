@@ -11,7 +11,7 @@ export const ButtonShare = ({
 }: IButtonShareProps) => {
   return (
     <ButtonDefault
-      onClick={() => generateShareLink({ fraudTitle, slug, variant })}
+      onClick={() => generateShareLink({ title: fraudTitle, slug, variant })}
       variant="outline"
       className="flex-1 sm:flex-none"
     >
