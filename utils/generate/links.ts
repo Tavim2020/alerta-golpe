@@ -1,3 +1,4 @@
+import { TPreviewCardVariant } from "@/components/previews-cards/components/preview-card/preview-card.type";
 import { APP_INFO } from "@/constants/app.constant";
 import { CLIENT_ENVIRONMENT } from "@/environments/client.environment";
 import { APP_ROUTE } from "@/routes/app.route";
@@ -6,22 +7,33 @@ import { toast } from "react-toastify";
 const { NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_SUPABASE_URL } = CLIENT_ENVIRONMENT;
 
 interface IGenerateShareLink {
-  fraudTitle: string;
+  title: string;
   slug: string;
+  variant: TPreviewCardVariant;
 }
 
-const generateFraudUrl = (slug: string) =>
-  `${NEXT_PUBLIC_SITE_URL}${APP_ROUTE.FRAUDS.SLUG(slug)}`;
+const generateLinkUrl = ({
+  slug,
+  variant,
+}: Pick<IGenerateShareLink, "slug" | "variant">) => {
+  const correctLink =
+    variant === "article"
+      ? APP_ROUTE.ARTICLES.SLUG(slug)
+      : APP_ROUTE.FRAUDS.SLUG(slug);
+  return `${NEXT_PUBLIC_SITE_URL}${correctLink}`;
+};
 
 export const generateWhatsAppShareLink = ({
-  fraudTitle,
+  title,
   slug,
+  variant,
 }: IGenerateShareLink) =>
-  `https://wa.me/?text=${encodeURIComponent(`Olha esse golpe: ${fraudTitle} \n${generateFraudUrl(slug)}`)}`;
+  `https://wa.me/?text=${encodeURIComponent(`Olha esse ${variant === "fraud" ? "golpe" : "artigo"}: ${title} \n${generateLinkUrl({ slug, variant })}`)}`;
 
 export const generateShareLink = async ({
-  fraudTitle,
+  title,
   slug,
+  variant,
 }: IGenerateShareLink) => {
   if (!navigator?.share) {
     toast.error("Compartilhamento não suportado neste navegador");
@@ -29,9 +41,9 @@ export const generateShareLink = async ({
   }
 
   await navigator?.share({
-    title: fraudTitle,
-    text: `Olha esse golpe: ${fraudTitle}`,
-    url: generateFraudUrl(slug),
+    title,
+    text: `Olha esse golpe: ${title}`,
+    url: generateLinkUrl({ slug, variant }),
   });
 };
 
@@ -49,4 +61,7 @@ export const generateWhatsAppLawyerLink = ({
   fraudTitle,
   fraudSlug,
 }: IGenerateWhatsAppLawyerLink) =>
-  `https://wa.me/55${lawyerPhone}?text=${encodeURIComponent(`Estou entrando em contato com você por meio do ${APP_INFO.name}. Estava vendo a respeito do artigo: ${fraudTitle} \n${generateFraudUrl(fraudSlug)}`)}`;
+  `https://wa.me/55${lawyerPhone}?text=${encodeURIComponent(`Estou entrando em contato com você por meio do ${APP_INFO.name}. Estava vendo a respeito do artigo: ${fraudTitle} \n${generateLinkUrl({ slug: fraudSlug, variant: "fraud" })}`)}`;
+
+export const generateContactAlertaGolpeLink = () =>
+  `https://wa.me/55${APP_INFO.contactPhone}?text=${encodeURIComponent(`Olá, estou entrando em contato com você por meio do ${APP_INFO.name}.`)}`;

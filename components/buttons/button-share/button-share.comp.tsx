@@ -4,10 +4,14 @@ import { ButtonDefault } from "@/components/buttons/button-default";
 import { generateShareLink } from "@/utils/generate/links";
 import { IButtonShareProps } from "./button-share.type";
 
-export const ButtonShare = ({ fraudTitle, slug }: IButtonShareProps) => {
+export const ButtonShare = ({
+  fraudTitle,
+  slug,
+  variant,
+}: IButtonShareProps) => {
   return (
     <ButtonDefault
-      onClick={() => generateShareLink({ fraudTitle, slug })}
+      onClick={() => generateShareLink({ fraudTitle, slug, variant })}
       variant="outline"
       className="flex-1 sm:flex-none"
     >

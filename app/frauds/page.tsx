@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getFrauds } from "@/libs/supabase/frauds/get-frauds";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
 import { AdsSlot } from "@/libs/ads/components/ads-slot";
-import { PreviewVideosCard } from "@/components/videos/preview-video-card";
+import { PreviewsCards } from "@/components/previews-cards";
 import { EmptyVideos } from "@/components/videos/empty-videos";
 import { APP_ROUTE } from "@/routes/app.route";
 import { TipCard } from "./components/tip-card";
@@ -61,7 +61,7 @@ export default async function PublicFrauds({
 
       <AdsSlot slotNumber={NEXT_PUBLIC_ADSENSE_SLOT} />
 
-      {frauds.length ? <PreviewVideosCard frauds={frauds} /> : <EmptyVideos />}
+      {frauds.length ? <PreviewsCards previews={frauds} /> : <EmptyVideos />}
 
       <Pagination
         basePath={(page) => APP_ROUTE.FRAUDS.ROOT({ page, search })}

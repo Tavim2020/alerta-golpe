@@ -2,6 +2,7 @@ import { IPageParams } from "@/types/global.type";
 import { addSearchParams } from "./utils/add-search-params";
 
 const FRAUDS_ROOT = "/frauds";
+const ARTICLES_ROOT = "/articles";
 const ADMIN_PREFIX = "/admin";
 const ADMIN_FRAUD_PREFIX = `${ADMIN_PREFIX}/fraud`;
 const ADMIN_CATEGORIES_ROOT = `${ADMIN_PREFIX}/categories`;
@@ -11,6 +12,9 @@ const ADMIN_LAWYERS_ROOT = `${ADMIN_PREFIX}/lawyers`;
 export const APP_ROUTE = {
   HOME: {
     ROOT: "/",
+  },
+  ARTICLES: {
+    SLUG: (slug: string) => `${ARTICLES_ROOT}/${slug}`,
   },
   FRAUDS: {
     ROOT: (objectWithParams?: IPageParams) =>
