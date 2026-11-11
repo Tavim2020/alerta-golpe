@@ -52,4 +52,13 @@ export const APP_ROUTE = {
       EDIT: (id: string) => `${ADMIN_SUB_CATEGORIES_ROOT}/edit/${id}`,
     },
   },
+  TERMS_OF_USE: {
+    ROOT: "/terms-of-use",
+  },
+  ABOUT: {
+    ROOT: "/about",
+  },
+  PRIVACY_POLICY: {
+    ROOT: "/privacy-policy",
+  },
 } as const;
