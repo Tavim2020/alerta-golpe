@@ -8,7 +8,7 @@ export const Footer = () => {
   return (
     <footer className="mt-auto bg-ink px-4 py-8 text-white/70">
       <div className="mx-auto flex flex-col gap-8 max-w-6xl px-4">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
+        <div className="flex flex-col gap-4 lg:flex-row">
           <Image
             src="/logo/logo.png"
             alt={APP_INFO.name}
@@ -18,7 +18,7 @@ export const Footer = () => {
             priority
           />
 
-          <div className="flex flex-col gap-4 lg:ml-12">
+          <div className="flex flex-col gap-4 lg:ml-12 lg:mt-2">
             <ButtonLink
               href={APP_ROUTE.ABOUT.ROOT}
               variant="underline"

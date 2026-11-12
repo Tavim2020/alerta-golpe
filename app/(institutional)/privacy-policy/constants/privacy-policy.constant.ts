@@ -15,7 +15,7 @@ O Alerta Golpe é uma iniciativa independente e colaborativa voltada à divulga�
 
 Atualmente, a plataforma é administrada diretamente por uma pessoa física, responsável por receber os relatos, analisar as informações, organizar os conteúdos e realizar sua publicação.
 
-**Responsável pelo tratamento dos dados pessoais:** [INSERIR NOME COMPLETO DO RESPONSÁVEL].
+**Responsável pelo tratamento dos dados pessoais:** Otávio Dos Santos Lopes.
 
 Para assuntos relacionados à privacidade e à proteção de dados pessoais, o canal de comunicação disponibilizado é o WhatsApp oficial do Alerta Golpe, informado ao final desta política.
 
