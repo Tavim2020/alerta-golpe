@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getFrauds } from "@/libs/supabase/frauds/get-frauds";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
+import { APP_ROUTE } from "@/routes/app.route";
 
 export const revalidate = 3600;
 
@@ -14,12 +15,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     { url: NEXT_PUBLIC_SITE_URL, changeFrequency: "daily", priority: 1 },
     {
-      url: `${NEXT_PUBLIC_SITE_URL}/golpes`,
+      url: `${NEXT_PUBLIC_SITE_URL}${APP_ROUTE.FRAUDS.ROOT}`,
       changeFrequency: "daily",
       priority: 0.9,
     },
     ...videos.map((video) => ({
-      url: `${NEXT_PUBLIC_SITE_URL}/golpes/${video.title}`,
+      url: `${NEXT_PUBLIC_SITE_URL}${APP_ROUTE.FRAUDS.SLUG(video.slug)}`,
       ...(video.created_at && { lastModified: video.created_at }),
     })),
   ];
