@@ -21,7 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1,
     },
     {
-      url: `${NEXT_PUBLIC_SITE_URL}${APP_ROUTE.FRAUDS.ROOT}`,
+      url: `${NEXT_PUBLIC_SITE_URL}${APP_ROUTE.FRAUDS.ROOT()}`,
       changeFrequency: "daily",
       priority: 0.9,
     },
