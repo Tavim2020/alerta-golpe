@@ -2,15 +2,23 @@ import type { MetadataRoute } from "next";
 import { getFrauds } from "@/libs/supabase/frauds/get-frauds";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
 import { APP_ROUTE } from "@/routes/app.route";
+import { getArticles } from "@/libs/supabase/articles/get-articles";
+import { parseLastModified } from "@/utils/format/dates";
 
 export const revalidate = 3600;
 
 const { NEXT_PUBLIC_SITE_URL } = SERVER_ENVIRONMENT;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const { data: frauds, success } = await getFrauds({ limit: 50 });
+  const [
+  { data: frauds, success: successFrauds },
+  { data: articles, success: successArticles },
+] = await Promise.all([
+  getFrauds({ limit: 50 }),
+  getArticles({ limit: 3 }),
+]);
 
-  if (!success) {
+  if (!successFrauds || !successArticles) {
     throw new Error("Tivemos problemas ao buscar os golpes.");
   }
 
@@ -45,9 +53,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const fraudPages: MetadataRoute.Sitemap = frauds.map((fraud) => ({
     url: `${NEXT_PUBLIC_SITE_URL}${APP_ROUTE.FRAUDS.SLUG(fraud.slug)}`,
     ...(fraud.updated_at && {
-      lastModified: fraud.updated_at,
+      lastModified: parseLastModified(fraud.updated_at),
     }),
   }));
 
-  return [...staticPages, ...fraudPages];
+  const articlesPages: MetadataRoute.Sitemap = articles.map((article) => ({
+    url: `${NEXT_PUBLIC_SITE_URL}${APP_ROUTE.ARTICLES.SLUG(article.slug)}`,
+    ...(article.updated_at && {
+      lastModified: parseLastModified(article.updated_at),
+    }),
+  }));
+
+  return [...staticPages, ...fraudPages, ...articlesPages];
 }
