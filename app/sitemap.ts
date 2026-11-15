@@ -3,6 +3,7 @@ import { getFrauds } from "@/libs/supabase/frauds/get-frauds";
 import { SERVER_ENVIRONMENT } from "@/environments/server.environment";
 import { APP_ROUTE } from "@/routes/app.route";
 import { getArticles } from "@/libs/supabase/articles/get-articles";
+import { parseLastModified } from "@/utils/format/dates";
 
 export const revalidate = 3600;
 
@@ -52,14 +53,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const fraudPages: MetadataRoute.Sitemap = frauds.map((fraud) => ({
     url: `${NEXT_PUBLIC_SITE_URL}${APP_ROUTE.FRAUDS.SLUG(fraud.slug)}`,
     ...(fraud.updated_at && {
-      lastModified: new Date(fraud.updated_at),
+      lastModified: parseLastModified(fraud.updated_at),
     }),
   }));
 
   const articlesPages: MetadataRoute.Sitemap = articles.map((article) => ({
     url: `${NEXT_PUBLIC_SITE_URL}${APP_ROUTE.ARTICLES.SLUG(article.slug)}`,
     ...(article.updated_at && {
-      lastModified: new Date(article.updated_at),
+      lastModified: parseLastModified(article.updated_at),
     }),
   }));
 
