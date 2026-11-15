@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { EmptyAds } from "./components/empty-ads";
 import { CLIENT_ENVIRONMENT } from "@/environments/client.environment";
 import { AdsSlotProps } from "./ads-slot.type";
@@ -9,18 +9,23 @@ import { isProduction } from "@/constants/env.constant";
 const { NEXT_PUBLIC_ADSENSE_CLIENT } = CLIENT_ENVIRONMENT;
 
 export const AdsSlot = ({ slotNumber }: AdsSlotProps) => {
+  const [mounted, setMounted] = useState(false);
   const initialized = useRef(false);
 
   useEffect(() => {
-    if (!slotNumber || initialized.current) return;
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || !slotNumber || initialized.current) return;
 
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
       initialized.current = true;
     } catch (err) {
-      console.error(err);
+      console.error("Erro ao inicializar AdSense:", err);
     }
-  }, [slotNumber]);
+  }, [mounted, slotNumber]);
 
   if (!slotNumber) return isProduction ? null : <EmptyAds />;
 
@@ -30,14 +35,16 @@ export const AdsSlot = ({ slotNumber }: AdsSlotProps) => {
         Publicidade
       </p>
 
-      <ins
-        className="adsbygoogle"
-        style={{ display: "block", borderStyle: "dashed" }}
-        data-ad-client={NEXT_PUBLIC_ADSENSE_CLIENT}
-        data-ad-slot={slotNumber}
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-      />
+      {mounted && (
+        <ins
+          className="adsbygoogle"
+          style={{ display: "block", borderStyle: "dashed" }}
+          data-ad-client={NEXT_PUBLIC_ADSENSE_CLIENT}
+          data-ad-slot={slotNumber}
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
+      )}
     </div>
   );
 };
