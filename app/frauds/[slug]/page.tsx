@@ -33,7 +33,7 @@ export async function generateMetadata({
 
   if (!fraud) return {};
 
-  const description = `Veja como funcionou este golpe: ${fraud.title}`;
+  const description = fraud.description;
   return {
     title: fraud.title,
     description,
