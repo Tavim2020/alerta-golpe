@@ -1,5 +1,6 @@
 import Script from "next/script";
 import { LdJsonScriptProps } from "./ld-json.script.type";
+import { parseLastModified } from "@/utils/format/dates";
 
 export const LdJsonScript = ({ fraud }: LdJsonScriptProps) => {
   const ld = {
@@ -8,7 +9,7 @@ export const LdJsonScript = ({ fraud }: LdJsonScriptProps) => {
     name: fraud.title,
     description: fraud.title,
     thumbnailUrl: fraud.thumbnail_url,
-    uploadDate: fraud.created_at,
+    uploadDate: parseLastModified(fraud.updated_at),
     contentUrl: fraud.video_url,
   };
 

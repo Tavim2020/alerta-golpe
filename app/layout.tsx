@@ -35,7 +35,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <QueryProvider>
           <Header />
           <ToastContainer />
-          <main>{children}</main>
+          {children}
           <Footer />
 
           <AdsScript />
