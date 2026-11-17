@@ -30,7 +30,7 @@ export const AdsSlot = ({ slotNumber }: AdsSlotProps) => {
   if (!slotNumber) return isProduction ? null : <EmptyAds />;
 
   return (
-    <div className="my-8 flex flex-col gap-1">
+    <div className="my-8 flex flex-col gap-1 max-w-[100vw-1rem]">
       <p className="text-xs text-ink/40 border-b border-gray-500 pb-2 text-center">
         Publicidade
       </p>

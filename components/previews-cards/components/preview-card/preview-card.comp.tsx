@@ -18,7 +18,7 @@ export const PreviewCard = ({
     <ButtonLink
       variant="clean"
       href={href(preview.slug)}
-      className="group block border border-ink/15 bg-white transition hover:border-ink hover:shadow-[6px_6px_0_#ffd60a]"
+      className="group block border border-ink/15 bg-white transition hover:border-ink hover:shadow-[6px_6px_0_#ffd60a] max-w-[100vw-1rem]"
     >
       <div className="relative aspect-video bg-ink w-full">
         {preview?.thumbnail_url && preview.title ? (
