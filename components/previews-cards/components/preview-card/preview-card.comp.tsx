@@ -18,16 +18,16 @@ export const PreviewCard = ({
     <ButtonLink
       variant="clean"
       href={href(preview.slug)}
-      className="group block border border-ink/15 bg-white transition hover:border-ink hover:shadow-[6px_6px_0_#ffd60a] max-w-[100vw-1rem]"
+      className="group block border border-ink/15 bg-white transition hover:border-ink hover:shadow-[6px_6px_0_#ffd60a]"
     >
-      <div className="relative aspect-video bg-ink w-full max-w-[100vw-1rem] overflow-hidden">
+      <div className="relative aspect-video bg-ink w-full">
         {preview?.thumbnail_url && preview.title ? (
           <Image
             src={preview.thumbnail_url}
             alt={preview.title}
             width={200}
             height={200}
-            className="object-cover"
+            className="w-full object-cover"
           />
         ) : (
           <ContentUnavailable />
