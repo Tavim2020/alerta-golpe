@@ -32,7 +32,7 @@ const SubCategoriesPage = async ({
     throw new Error("Tivemos problemas ao buscar as sub categorias.");
 
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-8 py-8">
+    <main className="mx-auto w-full max-w-6xl space-y-8 py-8">
       <div className="flex items-center justify-between">
         <BackButton
           title="Sub Categorias"

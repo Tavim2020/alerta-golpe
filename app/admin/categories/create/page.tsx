@@ -40,7 +40,7 @@ const CreateCategoryPage = () => {
   });
 
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-8 py-8">
+    <main className="mx-auto w-full max-w-6xl space-y-8 py-8">
       <BackButton
         title="Cadastro de Categoria"
         href={APP_ROUTE.ADMIN.CATEGORIES.ROOT()}

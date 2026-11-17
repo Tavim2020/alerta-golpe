@@ -24,7 +24,7 @@ const EditSubCategoryPage = async ({
     throw new Error("Tivemos problemas ao buscar as informações");
 
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-8 py-8">
+    <main className="mx-auto w-full max-w-6xl space-y-8 py-8">
       <BackButton
         title="Edição de Sub Categoria"
         href={APP_ROUTE.ADMIN.SUB_CATEGORIES.ROOT()}

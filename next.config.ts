@@ -3,7 +3,7 @@ import { SERVER_ENVIRONMENT } from "./environments/server.environment";
 
 const nextConfig: NextConfig = {
   experimental: {
-    middlewareClientMaxBodySize: "50mb",
+    proxyClientMaxBodySize: "50mb",
   },
   env: {
     ...SERVER_ENVIRONMENT,
