@@ -31,7 +31,7 @@ export default async function AdminDashboard({
   if (!success) throw new Error("Tivemos problemas ao buscar os advogados.");
 
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-8 py-8">
+    <main className="mx-auto w-full max-w-6xl space-y-8 py-8">
       <DashboardHeader />
 
       <section className="grid gap-4 sm:grid-cols-2">

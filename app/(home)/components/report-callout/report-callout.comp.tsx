@@ -4,7 +4,7 @@ import { ShieldAlert, MessageSquareText, ArrowRight } from "lucide-react";
 
 export function ReportCallout() {
   return (
-    <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <section className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="relative overflow-hidden rounded-2xl border border-primary/10 bg-primary/[0.04] px-6 py-10 sm:px-10">
         <div className="relative z-10 max-w-2xl">
           <div className="mb-5 flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">

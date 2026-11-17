@@ -30,7 +30,7 @@ const LawyersPage = async ({ searchParams }: ISearchParamsDefaultProps) => {
   if (!success) throw new Error("Tivemos problemas ao buscar os advogados.");
 
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-8 py-8">
+    <main className="mx-auto w-full max-w-6xl space-y-8 py-8">
       <div className="flex flex-col justify-between gap-4 sm:items-center sm:flex-row">
         <BackButton title="Advogados" href={APP_ROUTE.ADMIN.DASHBOARD.ROOT()} />
 

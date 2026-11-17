@@ -31,7 +31,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       lang="pt-BR"
       className={`${fontAnton.variable} ${fontPublicSans.variable}`}
     >
-      <body className="bg-paper min-h-dvh font-body flex flex-col text-ink antialiased min-w-90">
+      <body className="bg-paper min-h-dvh font-body flex flex-col text-ink antialiased min-w-83">
         <QueryProvider>
           <Header />
           <ToastContainer />

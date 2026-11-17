@@ -43,7 +43,7 @@ export const RenderCreateSubCategories = ({
   });
 
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-8 py-8">
+    <main className="mx-auto w-full max-w-6xl space-y-8 py-8">
       <BackButton
         title="Cadastro de Sub Categoria"
         href={APP_ROUTE.ADMIN.SUB_CATEGORIES.ROOT()}
