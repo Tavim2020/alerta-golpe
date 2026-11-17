@@ -86,7 +86,7 @@ export default async function FraudPublicPage({
         controls
         preload="metadata"
         playsInline
-        className="mt-4 aspect-video w-full bg-black max-w-[100vw-1rem]"
+        className="mt-4 aspect-video w-full bg-black"
       />
 
       <div className="py-4">
