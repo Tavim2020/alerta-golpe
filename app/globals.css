@@ -9,3 +9,7 @@
 }
 .hazard { height: 14px; background: repeating-linear-gradient(-45deg, #1a1a1a 0 14px, #ffd60a 14px 28px); }
 :focus-visible { outline: 3px solid #1a1a1a; outline-offset: 2px; }
+
+* {
+  box-sizing: border-box;
+}
