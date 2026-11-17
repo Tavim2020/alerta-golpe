@@ -20,14 +20,14 @@ export const PreviewCard = ({
       href={href(preview.slug)}
       className="group block border border-ink/15 bg-white transition hover:border-ink hover:shadow-[6px_6px_0_#ffd60a] max-w-[100vw-1rem]"
     >
-      <div className="relative aspect-video bg-ink w-full">
+      <div className="relative aspect-video bg-ink w-full max-w-[100vw-1rem] overflow-hidden">
         {preview?.thumbnail_url && preview.title ? (
           <Image
             src={preview.thumbnail_url}
             alt={preview.title}
             width={200}
             height={200}
-            className="w-full object-cover"
+            className="object-cover"
           />
         ) : (
           <ContentUnavailable />
