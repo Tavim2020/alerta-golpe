@@ -30,22 +30,20 @@ export const AdsSlot = ({ slotNumber }: AdsSlotProps) => {
   if (!slotNumber) return isProduction ? null : <EmptyAds />;
 
   return (
-    // <div className="my-8 flex flex-col gap-1">
-    <div>
-      {/* <p className="text-xs text-ink/40 border-b border-gray-500 pb-2 text-center">
+    <div className="my-8 flex flex-col gap-1">
+      <p className="text-xs text-ink/40 border-b border-gray-500 pb-2 text-center">
         Publicidade
       </p>
 
       {mounted && (
         <ins
-          className="adsbygoogle"
-          style={{ display: "block", borderStyle: "dashed" }}
+          className="adsbygoogle block max-w-full w-full border-dashed"
           data-ad-client={NEXT_PUBLIC_ADSENSE_CLIENT}
           data-ad-slot={slotNumber}
           data-ad-format="auto"
-          data-full-width-responsive="true"
+          data-full-width-responsive="false"
         />
-      )} */}
+      )}
     </div>
   );
 };
